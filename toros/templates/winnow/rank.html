@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Training Page{% endblock %}
+
+{% block content %}
+<section id="content">
+<!--{ if user.is_authenticated }-->
+	<img src="{% url 'thumb' %}">
+	<h1>Select your choice</h1>
+	
+	<form id="page_form" method="post" action="{% url 'rank' %}">
+
+		{% csrf_token %}
+		{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+		{% endfor %}
+
+		{% for field in form.visible_fields %}
+		{{ field.errors }}
+		{{ field.help_text }}
+		{{ field }}
+	</br>
+	{% endfor %}
+	<input type="submit" name="submit" value="Rank Transient" />
+</form>
+<!--{ else }
+You need to be logged in in order to classify transients.
+{ endif }-->
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Index Page{% endblock %}
+
+{% block content %}
+
+		<section id="content">
+
+	    <article>
+				
+			
+			<h2>Welcome to the training workshop for TOROS </h2>
+			<div class="article-info">Posted on <time datetime="2015-03-23">23 March</time> by <a href=# rel="author">Martin Beroiz</a></div>
+
+            <p>TOROS will need an intelligent agent to differentiate bogus detection from the real ones.</p>
+            <p>For that, we need to train the agent by teaching him to learn to classify.
+				Your help is needed for this task. Please register an account and log in to start training Jarvis.</p>
+				
+			<p>Motivated by the need for a dedicated optical follow-up instrument for aLIGO/AdVirgo, scientists from The University of Texas at Brownsville, the Universidad Nacional de Cordoba and Texas A&M University have partnered to develop an astronomical observatory in the Southern hemisphere. </p>
+<p>The site at Cordon Macón is located at latitude 24.61 South and longitude 67.32 West, at an altitude of 4,650 meters in the province of Salta, Argentina. The northern province of Salta is located on the other side of the Andes where major European and American astronomical observatories are located in Chile in the vast region on both sides of the Andes called the Atacama Puna.
+			</p>
+
+		<a href="{% url 'rank' %}" class="button">Start Training</a>
+		<a href="#" class="button">Register</a>
+		<a href="#" class="button">Log In</a>
+
+
+		
+		</article>
+	</section>
+{% endblock %}
