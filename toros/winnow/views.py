@@ -2,10 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from winnow.forms import RankingForm
 from django.contrib.auth.decorators import login_required
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-import matplotlib.pyplot as plt
-
-import numpy as np
 
 def index(request):
     return render(request, 'winnow/index.html', {'page_index': 'selected'})
@@ -29,11 +25,15 @@ def rank(request):
 def about(request):
     return render(request, 'winnow/about.html', {'page_about': 'selected'})
     
-def generateTransientThumbnail(request):
+def thumb(request):
+    import numpy as np
     thumb_arr = np.random.random((10,10))
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
     fig = plt.figure(figsize=(5,5))
     plt.imshow(thumb_arr, interpolation='none')
-
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
     canvas = FigureCanvasAgg(fig)
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response)
