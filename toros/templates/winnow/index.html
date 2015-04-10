@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 
-{% block title %}Index Page{% endblock %}
+{% block title %}Welcome - TOROS training page{% endblock %}
 
 {% block content %}
 
@@ -18,10 +18,10 @@
             <p>For that, we need to train the agent by teaching him to learn to classify.
 				Your help is needed for this task. Please register an account and log in to start training Jarvis.</p>
 				
-			<p>Motivated by the need for a dedicated optical follow-up instrument for aLIGO/AdVirgo, scientists from The University of Texas at Brownsville, the Universidad Nacional de Cordoba and Texas A&M University have partnered to develop an astronomical observatory in the Southern hemisphere. </p>
-<p>The site at Cordon Macón is located at latitude 24.61 South and longitude 67.32 West, at an altitude of 4,650 meters in the province of Salta, Argentina. The northern province of Salta is located on the other side of the Andes where major European and American astronomical observatories are located in Chile in the vast region on both sides of the Andes called the Atacama Puna.
-			</p>
+			<p>This django web app is designed to "winnow the wheat from the chaff" in the Image Difference analysis of astronomical images.</p>
 
+			<p>Image Differencing will leave behind many fake objects due to bad subtraction that will be classified as bogus by a Machine Learning algorithm. This ML algorithm has to be 'trained' with labeled data and this website provides a web interface to generate this training set via human input classification.</p>
+			
 		<a href="{% url 'rank' %}" class="button">Start Training</a>
 		<a href="#" class="button">Register</a>
 		<a href="#" class="button">Log In</a>

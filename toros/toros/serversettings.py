@@ -1,5 +1,5 @@
 """
-Django settings for toros project.
+Django settings for proto_toros project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -12,19 +12,18 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4i&$vzscu&53t4dui3o*x_1an&+k(&wgq6+&b&hwd%^&hze+_^'
+SECRET_KEY = '7hvr2e)k^ddg2bbz+9eia+7=ubuqzz*m!cb^g2t)535bm$42r@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,7 +35,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'winnow'
+    'ml_training',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,9 +49,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'toros.urls'
+ROOT_URLCONF = 'proto_toros.urls'
 
-WSGI_APPLICATION = 'toros.wsgi.application'
+WSGI_APPLICATION = 'proto_toros.wsgi.application'
 
 
 # Database
@@ -82,9 +82,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
+STATIC_PATH = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (STATIC_PATH, )
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
-ASTRO_IMAGE_DIR = os.path.join(BASE_DIR, 'astro_images')
+LOGIN_URL = '/accounts/login'
+
+#These are for registration_redux package
+REGISTRATION_OPEN = True
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_REDIRECT_URL = '/training'
+LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not logged in,

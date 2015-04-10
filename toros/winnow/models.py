@@ -7,6 +7,10 @@ class UserProfile(models.Model):
     # The additional attributes we wish to include.
     website = models.URLField(blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
+    name = models.CharField(max_length=200)
+    def save(self, *args, **kwargs):
+        self.name = " ".join([self.user.first_name, self.user.last_name])
+        super(UserProfile, self).save(*args, **kwargs)
     def __str__(self):
         return self.name
         
@@ -16,24 +20,23 @@ class TransientCandidate(models.Model):
     dec = models.FloatField()
     x_pix = models.IntegerField()
     y_pix = models.IntegerField()
-    sigma_x = models.IntegerField()
-    sigma_y = models.IntegerField()
-    neg_pix_fraction = models.FloatField()
-    #Add the image where this comes from!!!
+    width = models.IntegerField()
+    height = models.IntegerField()
+    filename = models.CharField(max_length=100)
     def __str__(self):
-        return "Object at (%g, %g)" % (self.ra, self.dec)
+        return "Object at (%g, %g) from file: %s" % (self.ra, self.dec, self.filename)
 
     
 class Session(models.Model):
-    ranker = models.ForeignKey(User)
+    ranker = models.ForeignKey(UserProfile)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
 
   
 class Ranking(models.Model):
-    ranker = models.ForeignKey(User)
-    #trans_candidate = models.ForeignKey(TransientCandidate, blank=True)
-    trans_candidate = models.IntegerField()
+    ranker = models.ForeignKey(UserProfile)
+    trans_candidate = models.ForeignKey(TransientCandidate)
+    #trans_candidate = models.IntegerField()
     #session = models.ForeignKey(Session, default=0, blank=True)
     RANKING_OPTIONS = (('B', 'Bogus'),
                        ('R', 'Real'),
