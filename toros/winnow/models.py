@@ -3,17 +3,16 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
-    affiliation = models.CharField(max_length=200)
+    affiliation = models.CharField(max_length=200, blank=True)
     # The additional attributes we wish to include.
     website = models.URLField(blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
-    name = models.CharField(max_length=200)
+    fullname = models.CharField(max_length=200, blank=True)
     def save(self, *args, **kwargs):
-        self.name = " ".join([self.user.first_name, self.user.last_name])
+        self.fullname = " ".join([self.user.first_name, self.user.last_name])
         super(UserProfile, self).save(*args, **kwargs)
     def __str__(self):
-        return self.name
-        
+        return self.user.username        
     
 class TransientCandidate(models.Model):
     ra = models.FloatField()
@@ -26,13 +25,11 @@ class TransientCandidate(models.Model):
     def __str__(self):
         return "Object at (%g, %g) from file: %s" % (self.ra, self.dec, self.filename)
 
-    
 class Session(models.Model):
     ranker = models.ForeignKey(UserProfile)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
 
-  
 class Ranking(models.Model):
     ranker = models.ForeignKey(UserProfile)
     trans_candidate = models.ForeignKey(TransientCandidate)

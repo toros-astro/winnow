@@ -8,13 +8,11 @@
 	<title>{% block title %}CSTAR Training Center{% endblock %}</title>
 	
 	<div>
-		<!-- -->
 		{% if user.is_active %}
-			<a href="">{{ user.username }}</a> | <a href="{% url 'auth_logout' %}">Log out</a>
+			<a href="">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
 		{% else %}
-			<a href="{% url 'auth_login' %}">Log In</a> | <a href="{% url 'registration_register' %}">Register</a>
+			<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Register</a>
 		{% endif %}
-		<!-- -->
 	</div>
 </head>
 

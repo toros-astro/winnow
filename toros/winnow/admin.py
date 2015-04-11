@@ -7,8 +7,8 @@ class TransientCandidateAdmin(admin.ModelAdmin):
         ("Image Position", {'fields': ['x_pix', 'y_pix']}),
         ("Second Moments", {'fields': ['sigma_x', 'sigma_y']}),
         (None, {'fields': ['neg_pix_fraction']})
-    ]
-    
+    ]            
+            
 class RankingAdmin(admin.ModelAdmin):
     list_display = ('ranker', 'rank', 'isInteresting')
 

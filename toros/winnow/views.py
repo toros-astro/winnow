@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from winnow.forms import RankingForm
+from django.http import HttpResponse, HttpResponseRedirect
+from winnow.forms import RankingForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile
+from django.contrib.auth import authenticate, login, logout
 
 def index(request):
     return render(request, 'winnow/index.html', {'page_index': 'selected'})
 
+@login_required
 def rank(request):
     if request.method == "POST":
         form = RankingForm(request.POST)
@@ -23,8 +25,6 @@ def rank(request):
             print form.errors
             tc_id = int(request.POST.get('tc_id'))
     else:
-        
-        
         try:
             #Fetch any tc not ranked yet
             tc = TransientCandidate.objects.exclude(ranking=Ranking.objects.all())[0]
@@ -42,9 +42,7 @@ def rank(request):
             tc_id = tc.id
         
         form = RankingForm()
-        
     return render(request, 'winnow/rank.html', {'form': form, 'page_rank': 'selected', 'tc_id' : tc_id})
-    
 
 def about(request):
     return render(request, 'winnow/about.html', {'page_about': 'selected'})
@@ -73,3 +71,75 @@ def thumb(request, trans_candidate_id):
     canvas.print_png(response)
     plt.close()
     return response
+
+
+def register(request):
+    registered = False
+
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of both UserForm and UserProfileForm.
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+
+        # If the two forms are valid...
+        if user_form.is_valid() and profile_form.is_valid():
+            # Save the user's form data to the database.
+            user = user_form.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+
+            # Now sort out the UserProfile instance.
+            # Since we need to set the user attribute ourselves, we set commit=False.
+            # This delays saving the model until we're ready to avoid integrity problems.
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            # Did the user provide a profile picture?
+            # If so, we need to get it from the input form and put it in the UserProfile model.
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            # Now we save the UserProfile model instance.
+            profile.save()
+
+            # Update our variable to tell the template registration was successful.
+            registered = True
+
+        # Print form errors if any to the terminal
+        else:
+            print user_form.errors, profile_form.errors
+
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request, 'winnow/register.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+
+def user_login(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/training/')
+            else:
+                return HttpResponse("Your account is disabled.")
+        else:
+            print "Invalid login details: {0}, {1}".format(username, password)
+            return HttpResponse("Invalid login details supplied.")
+
+    else:
+        return render(request, 'winnow/login.html', {})
+        
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/training/')
