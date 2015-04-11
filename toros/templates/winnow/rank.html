@@ -5,28 +5,34 @@
 {% block title %}Training Page{% endblock %}
 
 {% block content %}
-<section id="content">
-<!--{ if user.is_authenticated }-->
-	<img src="{% url 'thumb' %}">
-	<h1>Select your choice</h1>
+	<section id="content">
+	{% if user.is_authenticated %}
+		{% if tc_id != -1 %}
+			<img src="../thumb/{{ tc_id }}">
+			<h1>Select your choice</h1>
 	
-	<form id="page_form" method="post" action="{% url 'rank' %}">
+			<form id="page_form" method="post" action="{% url 'rank' %}">
+			<input type="hidden" value="{{ tc_id }}" name="tc_id">
 
-		{% csrf_token %}
-		{% for hidden in form.hidden_fields %}
-		{{ hidden }}
-		{% endfor %}
+			{% csrf_token %}
+			{% for hidden in form.hidden_fields %}
+				{{ hidden }}
+			{% endfor %}
 
-		{% for field in form.visible_fields %}
-		{{ field.errors }}
-		{{ field.help_text }}
-		{{ field }}
-	</br>
-	{% endfor %}
-	<input type="submit" name="submit" value="Rank Transient" />
-</form>
-<!--{ else }
-You need to be logged in in order to classify transients.
-{ endif }-->
-</section>
+			{% for field in form.visible_fields %}
+				{{ field.errors }}
+				{{ field.help_text }}
+				{{ field }}
+			</br>
+			{% endfor %}
+			<input type="submit" name="submit" value="Rank Transient" />
+			</form>
+		{% else %}
+			<p>Congratulations! You classified all transients available at the moment.</p>
+		{% endif %}
+				
+	{% else %}
+		<p>You need to be logged in in order to classify transients.</p>
+	{% endif %}
+	</section>
 {% endblock %}
