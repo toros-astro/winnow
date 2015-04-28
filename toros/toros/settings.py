@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django_comments',
     'winnow',
 )
 
@@ -77,6 +79,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Used by django.contrib.sites
+SITE_ID = 1
+
+COMMENTS_ALLOW_PROFANITIES = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/

@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile
 from django.contrib.auth import authenticate, login, logout
 
+# For the comments
+from django_comments.models import Comment
+from django.contrib.sites.shortcuts import get_current_site
 
 def index(request):
     return render(request, 'winnow/index.html', {'page_index': 'selected'})
@@ -13,14 +16,30 @@ def index(request):
 def rank(request):
     if request.method == "POST":
         form = RankingForm(request.POST)
-        
+
         if form.is_valid():
             if request.user.is_authenticated():
                 r = form.save(commit=False)
                 r.ranker = UserProfile.objects.get(user=request.user)
                 tc_id = int(request.POST.get('tc_id'))
-                r.trans_candidate = TransientCandidate.objects.get(pk=tc_id)
+                tc = TransientCandidate.objects.get(pk=tc_id)
+                r.trans_candidate = tc
                 r.save()
+                
+                #Now save the comment if there is one.
+                comment_text = request.POST.get('comment')
+                if len(comment_text) > 0:
+                    #save the comment
+                    newComment = Comment()
+                    newComment.user = request.user
+                    newComment.user_name = request.user.username
+                    newComment.user_email = request.user.email
+                    newComment.user_url = UserProfile.objects.get(user=request.user).website
+                    newComment.comment = comment_text
+                    newComment.site = get_current_site(request)
+                    newComment.content_object = tc
+                    newComment.save()
+                
             return index(request)
         else:
             print form.errors
@@ -74,6 +93,11 @@ def thumb(request, trans_candidate_id):
     canvas.print_png(response)
     plt.close()
     return response
+    
+    
+def object_detail(request, trans_candidate_id):
+    print("I'm in")
+    return
 
 
 def register(request):
