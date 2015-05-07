@@ -96,8 +96,14 @@ def thumb(request, trans_candidate_id):
     
     
 def object_detail(request, trans_candidate_id):
-    print("I'm in")
-    return
+    
+    trans_obj = TransientCandidate.objects.filter(pk = trans_candidate_id)
+    ranked_interesting = Ranking.objects.filter(trans_candidate = trans_obj).filter(isInteresting = True)
+    int_users_list = UserProfile.objects.filter(ranking = ranked_interesting)
+    int_counts = len(int_users_list)
+    return render(request, 'winnow/trans_detail.html', {'tc_id' : str(trans_candidate_id), 
+                                                        'interesting_count': str(int_counts), 
+                                                        'interesting_user_list': int_users_list})
 
 
 def register(request):

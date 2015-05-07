@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load comments %}
+
+{% block title %}Detail View{% endblock %}
+
+{% block content %}
+	<section id="content">
+		<img src="../../thumb/{{ tc_id }}">
+		<br>
+		
+		<h2>Ranking</h2>
+		<p>It has been marked as interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:</p>
+		<ul>
+		{% for name in interesting_user_list %}
+			<li>{{ name }}</li>
+		{% endfor %}
+	    </ul>
+		
+		{% get_comment_count for winnow.transientcandidate tc_id as comment_count %}
+		<h2>This object has {{ comment_count }} comment{%if comment_count != "1" %}s{% endif %}</h2>
+		{% render_comment_list for winnow.transientcandidate tc_id %}
+		
+	</section>
+{% endblock %}
