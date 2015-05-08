@@ -40,7 +40,7 @@ def rank(request):
                     newComment.content_object = tc
                     newComment.save()
                 
-            return index(request)
+            return HttpResponseRedirect('/training/rank/')
         else:
             print form.errors
             tc_id = int(request.POST.get('tc_id'))
