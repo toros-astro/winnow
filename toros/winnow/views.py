@@ -97,10 +97,27 @@ def thumb(request, trans_candidate_id):
     
 def object_detail(request, trans_candidate_id):
     
-    trans_obj = TransientCandidate.objects.filter(pk = trans_candidate_id)
+    trans_obj = TransientCandidate.objects.get(pk = trans_candidate_id)
     ranked_interesting = Ranking.objects.filter(trans_candidate = trans_obj).filter(isInteresting = True)
     int_users_list = UserProfile.objects.filter(ranking = ranked_interesting)
     int_counts = len(int_users_list)
+    
+    if request.method == "POST":
+        if request.user.is_authenticated():  
+            #Save the comment if there is one.
+            comment_text = request.POST.get('comment')
+            if len(comment_text) > 0:
+                #save the comment
+                newComment = Comment()
+                newComment.user = request.user
+                newComment.user_name = request.user.username
+                newComment.user_email = request.user.email
+                newComment.user_url = UserProfile.objects.get(user=request.user).website
+                newComment.comment = comment_text
+                newComment.site = get_current_site(request)
+                newComment.content_object = trans_obj
+                newComment.save()
+                    
     return render(request, 'winnow/trans_detail.html', {'tc_id' : str(trans_candidate_id), 
                                                         'interesting_count': str(int_counts), 
                                                         'interesting_user_list': int_users_list})

@@ -11,15 +11,24 @@
 		<br>
 		
 		<h2>Ranking</h2>
-		<p>It has been marked as interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:</p>
-		<ul>
+		It has been marked as interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:<br>
 		{% for name in interesting_user_list %}
-			<li>{{ name }}</li>
+			{{ name }}, 
 		{% endfor %}
-	    </ul>
+		<p></p>
 		
 		{% get_comment_count for winnow.transientcandidate tc_id as comment_count %}
 		<h2>This object has {{ comment_count }} comment{%if comment_count != "1" %}s{% endif %}</h2>
+		
+		<form id="page_form" method="post" action="{% url 'object_detail' tc_id %}">
+		{% csrf_token %}
+		<input type="hidden" value="{{ tc_id }}" name="tc_id">
+		<p>Enter your comment below</p>
+		<textarea name="comment" rows="5" cols="50" wrap="soft" maxlength="3000"></textarea>
+		<br>
+		<input type="submit" name="submit" value="Comment" />
+		</form>
+		
 		{% render_comment_list for winnow.transientcandidate tc_id %}
 		
 	</section>
