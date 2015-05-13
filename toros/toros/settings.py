@@ -16,19 +16,26 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4i&$vzscu&53t4dui3o*x_1an&+k(&wgq6+&b&hwd%^&hze+_^'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+if not DEBUG:
+    from local_settings import * 
+else:
+    #This secret key should be used only for debug mode, use a different one for production
+    SECRET_KEY = '4i&$vzscu&53t4dui3o*x_1an&+k(&wgq6+&b&hwd%^&hze+_^'
+    ALLOWED_HOSTS = []
+    # Internationalization
+    # https://docs.djangoproject.com/en/1.7/topics/i18n/
+    LANGUAGE_CODE = 'en-us'
+    TIME_ZONE = 'America/Chicago'
+    USE_I18N = True
+    USE_L10N = True
+    USE_TZ = True
 
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'winnow',
 )
 
@@ -64,19 +72,6 @@ DATABASES = {
     }
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'America/Chicago'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -92,3 +87,4 @@ ASTRO_IMAGE_DIR = os.path.join(BASE_DIR, 'astro_images')
 LOGIN_URL = '/training/login/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
