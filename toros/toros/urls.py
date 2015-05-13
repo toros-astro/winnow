@@ -4,4 +4,5 @@ from django.contrib import admin
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^training/', include("winnow.urls")),
+    url(r'^comments/', include('django_comments.urls')),
 )

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load staticfiles %}
+{% load comments %}
 
 {% block title %}Training Page{% endblock %}
 
@@ -23,10 +24,20 @@
 				{{ field.errors }}
 				{{ field.help_text }}
 				{{ field }}
-			</br>
+			<br>
 			{% endfor %}
+			
+			Enter your comment below<br>
+			<textarea name="comment" rows="5" cols="50" wrap="soft" maxlength="3000"></textarea>
+			<br>
+			
 			<input type="submit" name="submit" value="Rank Transient" />
 			</form>
+			
+			{% get_comment_count for winnow.transientcandidate tc_id as comment_count %}
+			<p>{{ comment_count }} comments have been posted.</p>
+			{% render_comment_list for winnow.transientcandidate tc_id %}
+			
 		{% else %}
 			<p>Congratulations! You classified all transients available at the moment.</p>
 		{% endif %}

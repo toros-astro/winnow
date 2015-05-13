@@ -26,6 +26,7 @@ else:
     #This secret key should be used only for debug mode, use a different one for production
     SECRET_KEY = '4i&$vzscu&53t4dui3o*x_1an&+k(&wgq6+&b&hwd%^&hze+_^'
     ALLOWED_HOSTS = []
+    SITE_ID = 1
     # Internationalization
     # https://docs.djangoproject.com/en/1.7/topics/i18n/
     LANGUAGE_CODE = 'en-us'
@@ -44,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django_comments',
     'winnow',
 )
 
@@ -72,7 +74,6 @@ DATABASES = {
     }
 }
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
@@ -87,4 +88,6 @@ ASTRO_IMAGE_DIR = os.path.join(BASE_DIR, 'astro_images')
 LOGIN_URL = '/training/login/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+COMMENTS_ALLOW_PROFANITIES = True
 

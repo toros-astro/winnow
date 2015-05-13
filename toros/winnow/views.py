@@ -5,6 +5,10 @@ from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile
 from django.contrib.auth import authenticate, login, logout
 
+# For the comments
+from django_comments.models import Comment
+from django.contrib.sites.shortcuts import get_current_site
+
 def index(request):
     return render(request, 'winnow/index.html', {'page_index': 'selected'})
 
@@ -12,15 +16,30 @@ def index(request):
 def rank(request):
     if request.method == "POST":
         form = RankingForm(request.POST)
-        
         if form.is_valid():
             if request.user.is_authenticated():
                 r = form.save(commit=False)
                 r.ranker = UserProfile.objects.get(user=request.user)
                 tc_id = int(request.POST.get('tc_id'))
-                r.trans_candidate = TransientCandidate.objects.get(pk=tc_id)
+                tc = TransientCandidate.objects.get(pk=tc_id)
+                r.trans_candidate = tc
                 r.save()
-            return index(request)
+                
+                #Now save the comment if there is one.
+                comment_text = request.POST.get('comment')
+                if len(comment_text) > 0:
+                    #save the comment
+                    newComment = Comment()
+                    newComment.user = request.user
+                    newComment.user_name = request.user.username
+                    newComment.user_email = request.user.email
+                    newComment.user_url = UserProfile.objects.get(user=request.user).website
+                    newComment.comment = comment_text
+                    newComment.site = get_current_site(request)
+                    newComment.content_object = tc
+                    newComment.save()
+                
+            return HttpResponseRedirect('/training/rank/')
         else:
             print form.errors
             tc_id = int(request.POST.get('tc_id'))
@@ -42,7 +61,9 @@ def rank(request):
             tc_id = tc.id
         
         form = RankingForm()
+    
     return render(request, 'winnow/rank.html', {'form': form, 'page_rank': 'selected', 'tc_id' : tc_id})
+
 
 def about(request):
     return render(request, 'winnow/about.html', {'page_about': 'selected'})
@@ -71,6 +92,34 @@ def thumb(request, trans_candidate_id):
     canvas.print_png(response)
     plt.close()
     return response
+    
+    
+def object_detail(request, trans_candidate_id):
+    
+    trans_obj = TransientCandidate.objects.get(pk = trans_candidate_id)
+    ranked_interesting = Ranking.objects.filter(trans_candidate = trans_obj).filter(isInteresting = True)
+    int_users_list = UserProfile.objects.filter(ranking = ranked_interesting)
+    int_counts = len(int_users_list)
+    
+    if request.method == "POST":
+        if request.user.is_authenticated():  
+            #Save the comment if there is one.
+            comment_text = request.POST.get('comment')
+            if len(comment_text) > 0:
+                #save the comment
+                newComment = Comment()
+                newComment.user = request.user
+                newComment.user_name = request.user.username
+                newComment.user_email = request.user.email
+                newComment.user_url = UserProfile.objects.get(user=request.user).website
+                newComment.comment = comment_text
+                newComment.site = get_current_site(request)
+                newComment.content_object = trans_obj
+                newComment.save()
+                    
+    return render(request, 'winnow/trans_detail.html', {'tc_id' : str(trans_candidate_id), 
+                                                        'interesting_count': str(int_counts), 
+                                                        'interesting_user_list': int_users_list})
 
 
 def register(request):
