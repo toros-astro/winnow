@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import os
+from stdimage.models import StdImageField
 
 class UserProfile(models.Model):
     
@@ -14,7 +15,10 @@ class UserProfile(models.Model):
     affiliation = models.CharField(max_length=200, blank=True)
     # The additional attributes we wish to include.
     website = models.URLField(blank=True)
-    picture = models.ImageField(upload_to=__get_file_path, blank=True)
+    #picture = models.ImageField(upload_to=__get_file_path, blank=True)
+    picture = StdImageField(upload_to=__get_file_path, blank=True, variations={
+                            'thumbnail': (50, 50, True),
+                            'normal': (200, 200),})
     fullname = models.CharField(max_length=200, blank=True)
     def save(self, *args, **kwargs):
         self.fullname = " ".join([self.user.first_name, self.user.last_name])

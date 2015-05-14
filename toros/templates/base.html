@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 {% load staticfiles %}
+{% load sidebar_tags %}
 
 <html>
 <head>
@@ -9,6 +10,12 @@
 	
 	<div>
 		{% if user.is_active %}
+			{% get_userprofile user as userprofile %}
+			{% if userprofile.picture %}
+			    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
+			{% else %}
+			    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.normal.png"/></a><br>
+			{% endif %}
 			<a href="">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
 		{% else %}
 			<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Register</a>

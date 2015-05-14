@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_comments',
+    'stdimage',
     'winnow',
 )
 
@@ -98,3 +99,5 @@ ASTRO_IMAGE_DIR = os.path.join(BASE_DIR, 'astro_images')
 LOGIN_URL = '/training/login/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'

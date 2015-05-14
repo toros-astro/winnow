@@ -2,6 +2,7 @@
 
 {% load staticfiles %}
 {% load comments %}
+{% load sidebar_tags %}
 
 {% block title %}Training Page{% endblock %}
 
@@ -9,7 +10,7 @@
 	<section id="content">
 	{% if user.is_authenticated %}
 		{% if tc_id != -1 %}
-			<img src="../thumb/{{ tc_id }}">
+			<img src="{% url 'thumb' tc_id %}">
 			<h1>Select your choice</h1>
 	
 			<form id="page_form" method="post" action="{% url 'rank' %}">
@@ -27,6 +28,12 @@
 			<br>
 			{% endfor %}
 			
+			{% get_userprofile user as userprofile %}
+			{% if userprofile.picture %}
+			    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
+			{% else %}
+			    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.normal.png"/></a><br>
+			{% endif %}
 			Enter your comment below<br>
 			<textarea name="comment" rows="5" cols="50" wrap="soft" maxlength="3000"></textarea>
 			<br>

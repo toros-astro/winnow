@@ -63,7 +63,9 @@ def rank(request):
         
         form = RankingForm()
     
-    return render(request, 'winnow/rank.html', {'form': form, 'page_rank': 'selected', 'tc_id' : tc_id})
+    return render(request, 'winnow/rank.html', {'form':        form, 
+                                                'page_rank':   'selected', 
+                                                'tc_id' :      tc_id})
 
 
 def about(request):
