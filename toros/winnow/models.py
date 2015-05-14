@@ -1,12 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
+import os
 
 class UserProfile(models.Model):
+    
+    def __get_file_path(instance, filename):
+        ext = filename.split('.')[-1]
+        filename = "%s_profilepic.%s" % (instance.user.username, ext)
+        print("Should be saved with name %s" % (filename))
+        return os.path.join('profile_images', filename)
+    
     user = models.OneToOneField(User)
     affiliation = models.CharField(max_length=200, blank=True)
     # The additional attributes we wish to include.
     website = models.URLField(blank=True)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+    picture = models.ImageField(upload_to=__get_file_path, blank=True)
     fullname = models.CharField(max_length=200, blank=True)
     def save(self, *args, **kwargs):
         self.fullname = " ".join([self.user.first_name, self.user.last_name])
