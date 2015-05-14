@@ -14,7 +14,7 @@
 			{% if userprofile.picture %}
 			    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
 			{% else %}
-			    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.normal.png"/></a><br>
+			    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
 			{% endif %}
 			<a href="">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
 		{% else %}
@@ -48,29 +48,51 @@
 
 
 			<aside class="sidebar">
-				<h4>Latest interesting objects</h4>
-                <ul>
-                    <li>Interesting object 1</li>
-                    <li>Interesting object 2</li>
-                    <li>Interesting object 3</li>
-                </ul>
-			</aside>
-			<aside class="sidebar">
-				<h4>Most voted objects</h4>
-                <ul>
-                    <li>Interesting object 1</li>
-                    <li>Interesting object 2</li>
-                    <li>Interesting object 3</li>
-                </ul>
-			</aside>
-			
-			<aside class="sidebar">
-				<h4>Latest comments</h4>
-                <ul>
-                    <li class="text">On May 3 John Doe said...</li>
-                    <li class="text">"Check this out."</li>
-                 </ul>
-				
+			<ul>
+				<li>
+					<h4>Latest interesting objects</h4>
+					{% get_top3interesting as top3int %}
+                	<ul>
+						{% if top3int|length > 0 %}
+						{% for astro_object in top3int %}
+                    	<li>
+							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40">
+							<a href="{% url 'object_detail' astro_object.id %}">{{ astro_object }}</a>
+						</li>
+						{% endfor %}
+						{% else %}
+						<li>No objects found for this list.</li>
+						{% endif %}
+                	</ul>
+				</li>
+				<li>
+					<h4>Latest comments</h4>
+					{% get_last3comments as last3comm %}
+                	<ul>
+					{% for comment in last3comm %}
+					{% get_userprofile comment.user_name as userprofile %}
+					{% if userprofile.picture %}
+					    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
+					{% else %}
+					    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
+					{% endif %}
+                    <li class="text">On {{comment.submit_date}} {{comment.user_name}} 
+						commented on <a href="{% url 'object_detail' comment.content_object.id %}">object {{ comment.content_object.id }}:</a>
+						<br>
+                    	"{{ comment.comment }}"
+					</li>
+					{% endfor %}
+                 	</ul>
+				</li>
+				<li>
+					<h4>Most voted objects</h4>
+                	<ul>
+                    	<li>Interesting object 1</li>
+                    	<li>Interesting object 2</li>
+                    	<li>Interesting object 3</li>
+                	</ul>
+				</li>
+				</ul>
 			</aside>
 			<div class="clear"></div>
 		</div>
