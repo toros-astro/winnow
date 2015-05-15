@@ -16,7 +16,6 @@ def index(request):
 def rank(request):
     if request.method == "POST":
         form = RankingForm(request.POST)
-
         if form.is_valid():
             if request.user.is_authenticated():
                 r = form.save(commit=False)
