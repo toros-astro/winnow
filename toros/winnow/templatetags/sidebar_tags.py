@@ -25,8 +25,16 @@ def get_top3voters():
 
 @register.assignment_tag
 def get_userprofile(user):
+    userprof = None
     if isinstance(user, User):
         #Get userProfile instance for the user
-        return UserProfile.objects.get(user=user)
+        try:
+            userprof = UserProfile.objects.get(user=user)
+        except:
+            userprof = None
     if isinstance(user, basestring):
-        return UserProfile.objects.get(user=User.objects.get(username=user))
+        try:
+            userprof = UserProfile.objects.get(user=User.objects.get(username=user))
+        except:
+            userprof = None
+    return userprof

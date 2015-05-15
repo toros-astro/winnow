@@ -20,7 +20,9 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username', 'email', 'password')
 
-class UserProfileForm(forms.ModelForm):    
+class UserProfileForm(forms.ModelForm):
+    website = forms.URLField(label='Personal website', required=False)
+    picture = forms.ImageField(label='Profile picture', required=False)
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')
