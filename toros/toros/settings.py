@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_comments',
+    'stdimage',
     'winnow',
 )
 
@@ -91,3 +92,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 COMMENTS_ALLOW_PROFANITIES = True
 
+MEDIA_URL = '/media/'

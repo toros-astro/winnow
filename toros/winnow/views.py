@@ -62,7 +62,9 @@ def rank(request):
         
         form = RankingForm()
     
-    return render(request, 'winnow/rank.html', {'form': form, 'page_rank': 'selected', 'tc_id' : tc_id})
+    return render(request, 'winnow/rank.html', {'form':        form, 
+                                                'page_rank':   'selected', 
+                                                'tc_id' :      tc_id})
 
 
 def about(request):
@@ -151,7 +153,6 @@ def register(request):
             # If so, we need to get it from the input form and put it in the UserProfile model.
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
-
             # Now we save the UserProfile model instance.
             profile.save()
 

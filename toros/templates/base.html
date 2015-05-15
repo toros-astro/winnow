@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 {% load staticfiles %}
+{% load sidebar_tags %}
 
 <html>
 <head>
@@ -9,6 +10,12 @@
 	
 	<div>
 		{% if user.is_active %}
+			{% get_userprofile user as userprofile %}
+			{% if userprofile.picture %}
+			    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
+			{% else %}
+			    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
+			{% endif %}
 			<a href="">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
 		{% else %}
 			<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Register</a>
@@ -41,29 +48,51 @@
 
 
 			<aside class="sidebar">
-				<h4>Latest interesting objects</h4>
-                <ul>
-                    <li>Interesting object 1</li>
-                    <li>Interesting object 2</li>
-                    <li>Interesting object 3</li>
-                </ul>
-			</aside>
-			<aside class="sidebar">
-				<h4>Most voted objects</h4>
-                <ul>
-                    <li>Interesting object 1</li>
-                    <li>Interesting object 2</li>
-                    <li>Interesting object 3</li>
-                </ul>
-			</aside>
-			
-			<aside class="sidebar">
-				<h4>Latest comments</h4>
-                <ul>
-                    <li class="text">On May 3 Martin said...</li>
-                    <li class="text">"What is up with that"</li>
-                 </ul>
-				
+			<ul>
+				<li>
+					<h4>Latest interesting objects</h4>
+					{% get_top3interesting as top3int %}
+                	<ul>
+						{% if top3int|length > 0 %}
+						{% for astro_object in top3int %}
+                    	<li>
+							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40">
+							<a href="{% url 'object_detail' astro_object.id %}">{{ astro_object }}</a>
+						</li>
+						{% endfor %}
+						{% else %}
+						<li>No objects found for this list.</li>
+						{% endif %}
+                	</ul>
+				</li>
+				<li>
+					<h4>Latest comments</h4>
+					{% get_last3comments as last3comm %}
+                	<ul>
+					{% for comment in last3comm %}
+					{% get_userprofile comment.user_name as userprofile %}
+					{% if userprofile.picture %}
+					    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
+					{% else %}
+					    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
+					{% endif %}
+                    <li class="text">On {{comment.submit_date}} {{comment.user_name}} 
+						commented on <a href="{% url 'object_detail' comment.content_object.id %}">object {{ comment.content_object.id }}:</a>
+						<br>
+                    	"{{ comment.comment }}"
+					</li>
+					{% endfor %}
+                 	</ul>
+				</li>
+				<li>
+					<h4>Most voted objects</h4>
+                	<ul>
+                    	<li>Interesting object 1</li>
+                    	<li>Interesting object 2</li>
+                    	<li>Interesting object 3</li>
+                	</ul>
+				</li>
+				</ul>
 			</aside>
 			<div class="clear"></div>
 		</div>
@@ -72,17 +101,16 @@
 				<ul>
 					<li><h4>Useful links</h4></li>
 					<li><a href="http://www.utrgv.edu/en-us/">University of Texas at Rio Grande Valley</a></li>
-					<li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
+
 					<li><a href="http://toros.phys.utb.edu">TOROS main website</a></li>
+					<li><a href="http://cgwa.phys.utb.edu">Center for Gravitational Wave Astronomy (CGWA)</a>
+					<li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
 				</ul>
                         
 				<ul class="endfooter">
-					<li><h4>Suspendisse</h4></li>
-					<li><a href="#">Morbi hendrerit libero </a></li>
-					<li><a href="#">Proin placerat accumsan</a></li>
-					<li><a href="#">Rutrum nulla a ultrices</a></li>
-					<li><a href="#">Curabitur sit amet tellus</a></li>
-					<li><a href="#">Donec in ligula nisl.</a></li>
+					<li><h4>Participating Institutions</h4></li>
+					<li><a href="#">University of Texas at Rio Grande Valley</a></li>
+					<li><a href="#">Instituto de Astronomía Teórica y Experimental</a></li>
 				</ul>
             
 				<div class="clear"></div>

@@ -8,14 +8,21 @@
 <section id="content">
     <h1>Login</h1>
 
-    <form id="login_form" method="post" action="{% url 'login' %}">
-      {% csrf_token %}
-      Username: <input type="text" name="username" value="" size="50" />
-      <br />
-      Password: <input type="password" name="password" value="" size="50" />
-      <br />
+     <fieldset>
+     	<legend>Log in</legend>
+    	<form id="login_form" method="post" action="{% url 'login' %}">
+		{% csrf_token %}					
+		
+        <p><label for="name">Username:</label>
+        <input name="username" id="name" value="" type="text" /></p>
+		
+        <p><label for="name">Password:</label>
+        <input type="password" name="password" value="" /></p>
 
-      <input type="submit" value="submit" />
-    </form>
+
+        <p><input name="submit" style="margin-left: 150px;" class="formbutton" value="Log in" type="submit" /></p>
+        </form>
+    </fieldset>
+
 </section>
 {% endblock %}
