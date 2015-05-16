@@ -2,17 +2,21 @@
 {% load sidebar_tags %}
 
 {% get_comment_list for winnow.transientcandidate tc_id as comment_list %}
---------------------------------------------------------
-
+<hr width="90%" align="left">
 {% for comment in comment_list %}
 {% get_userprofile comment.user_name as userprofile %}
 <br>
 {% if userprofile.picture %}
-    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
+    <a href="{{ userprofile.picture.normal.url }}">
+		<img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle/>
+	</a>
 {% else %}
-    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
+    <a href="/media/profile_images/default.normal.png">
+		<img src="/media/profile_images/default.thumbnail.png" align=absmiddle/>
+	</a>
 {% endif %}
-<p>Posted by: {{ comment.user_name }} on {{ comment.submit_date }}</p>
-<p>Comment: {{ comment.comment }}</p>
---------------------------------------------------------
+<i>Posted by: {{ comment.user_name }} on {{ comment.submit_date }}</i>
+<br clear=all>
+<blockquote><p>{{ comment.comment }}</p></blockquote>
+<hr width="90%" align="left">
 {% endfor %}
