@@ -56,7 +56,7 @@
 						{% if top3int|length > 0 %}
 						{% for astro_object in top3int %}
                     	<li>
-							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40">
+							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40" align=bottom>
 							<a href="{% url 'object_detail' astro_object.id %}">{{ astro_object }}</a>
 						</li>
 						{% endfor %}
@@ -69,19 +69,28 @@
 					<h4>Latest comments</h4>
 					{% get_last3comments as last3comm %}
                 	<ul>
-					{% for comment in last3comm %}
-					{% get_userprofile comment.user_name as userprofile %}
-					{% if userprofile.picture %}
-					    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
-					{% else %}
-					    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
-					{% endif %}
-                    <li class="text">On {{comment.submit_date}} {{comment.user_name}} 
+					{% if last3comm %}
+						{% for comment in last3comm %}
+						{% get_userprofile comment.user_name as userprofile %}
+						{% if userprofile.picture %}
+					    	<a href="{{ userprofile.picture.normal.url }}">
+								<img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle />
+							</a>
+						{% else %}
+					    	<a href="/media/profile_images/default.normal.png">
+								<img src="/media/profile_images/default.thumbnail.png" align=absmiddle />
+							</a>
+						{% endif %}
+                    	On {{comment.submit_date}} {{comment.user_name}} 
 						commented on <a href="{% url 'object_detail' comment.content_object.id %}">object {{ comment.content_object.id }}:</a>
-						<br>
+						<br clear=all>
                     	"{{ comment.comment }}"
-					</li>
-					{% endfor %}
+						<br>
+						<hr>
+						{% endfor %}
+					{% else %}
+						<p>No comments to show.</p>
+					{% endif %}
                  	</ul>
 				</li>
 				<li>
