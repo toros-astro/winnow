@@ -88,13 +88,14 @@ def thumb(request, trans_candidate_id):
     import matplotlib.pyplot as plt
     fig = plt.figure(figsize=(5,5))
     plt.imshow(thumb_arr, interpolation='none')
+    plt.xticks([]); plt.yticks([]) #Remove tick marks
+    plt.tight_layout()
     from matplotlib.backends.backend_agg import FigureCanvasAgg
     canvas = FigureCanvasAgg(fig)
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response)
     plt.close()
     return response
-    
     
 def object_detail(request, trans_candidate_id):
     
@@ -122,7 +123,6 @@ def object_detail(request, trans_candidate_id):
     return render(request, 'winnow/trans_detail.html', {'tc_id' : str(trans_candidate_id), 
                                                         'interesting_count': str(int_counts), 
                                                         'interesting_user_list': int_users_list})
-
 
 def register(request):
     registered = False
