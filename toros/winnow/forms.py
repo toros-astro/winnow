@@ -16,9 +16,16 @@ class RankingForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
+    repeat_password = forms.CharField(widget=forms.PasswordInput())
+    def clean(self):
+        form_data = self.cleaned_data
+        if form_data['password'] != form_data['repeat_password']:
+            self._errors['password'] = ["Passwords do not match"] # Will raise a error message
+            del form_data['password']
+        return form_data
     class Meta:
         model = User
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password', 'repeat_password')
 
 class UserProfileForm(forms.ModelForm):
     website = forms.URLField(label='Personal website', required=False)
