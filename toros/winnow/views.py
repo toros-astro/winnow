@@ -158,6 +158,17 @@ def register(request):
 
             # Update our variable to tell the template registration was successful.
             registered = True
+            
+            #Now the user has been created, log them in            
+            newusername = request.POST.get('username')
+            newpassword = request.POST.get('password')
+            newuser = authenticate(username=newusername, password=newpassword)
+            if newuser:
+                if newuser.is_active:
+                    login(request, newuser)
+                    return HttpResponseRedirect('/training/')
+                else:
+                    return HttpResponse("Sorry, your account has been disabled.")
 
         # Print form errors if any to the terminal
         else:

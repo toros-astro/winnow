@@ -2,8 +2,19 @@
 
 {% load staticfiles %}
 {% load comments %}
+{% load sidebar_tags %}
 
 {% block title %}Detail View{% endblock %}
+{% block header_extra %}
+<script src="{% static "js/d3.v3.min.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/barplot.css" %}">
+{% get_votes_for_object tc_id as votes %}
+<script>
+var real_votes = {{ votes.real }}
+var bogus_votes = {{ votes.bogus }}
+var unknown_votes = {{ votes.unknown }}
+</script>
+{% endblock %}
 
 {% block content %}
 	<section id="content">
@@ -11,11 +22,18 @@
 		<br>
 		
 		<h2>Ranking</h2>
+		
+		
 		It has been marked as interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:<br>
 		{% for name in interesting_user_list %}
 			{{ name }}, 
 		{% endfor %}
 		<p></p>
+		
+		<div id=barplot>
+		</div>
+		
+		<script src="{% static "js/barplot.js" %}"></script>
 		
 		{% get_comment_count for winnow.transientcandidate tc_id as comment_count %}
 		<h2>This object has {{ comment_count }} comment{%if comment_count != "1" %}s{% endif %}</h2>

@@ -7,7 +7,9 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="{% static "css/styles.css" %}" />
 	<title>{% block title %}CSTAR Training Center{% endblock %}</title>
-	
+	{% block header_extra %}
+	{% endblock %}
+
 	<div>
 		{% if user.is_active %}
 			{% get_userprofile user as userprofile %}

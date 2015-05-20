@@ -8,6 +8,7 @@ register = template.Library()
 @register.assignment_tag
 def get_top3interesting():
     #Get the top 3 interesting objects
+    #This just returns 3 interesting objects (it does nothing with how many likes it has)
     top3_intr = TransientCandidate.objects.filter(ranking=Ranking.objects.filter(isInteresting = True))[:3]
     return top3_intr
 
@@ -38,3 +39,11 @@ def get_userprofile(user):
         except:
             userprof = None
     return userprof
+
+@register.assignment_tag
+def get_votes_for_object(object_id):
+    tc = TransientCandidate.objects.get(pk = object_id)
+    num_real = Ranking.objects.filter(trans_candidate=tc).filter(rank='R').count()
+    num_bogus = Ranking.objects.filter(trans_candidate=tc).filter(rank='B').count()
+    num_unclassf = Ranking.objects.filter(trans_candidate=tc).filter(rank='X').count()
+    return {'real':num_real, 'bogus':num_bogus, 'unknown':num_unclassf}
