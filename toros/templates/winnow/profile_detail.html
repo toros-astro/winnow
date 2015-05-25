@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load winnow_tags %}
+
+{% block title %}Winnow - Profile Page{% endblock %}
+
+{% block content %}
+<section id="content">
+	{% if the_userprofile %}
+		{% if the_userprofile.picture %}
+			<img src="{{ the_userprofile.picture.normal.url }}" align=left />
+		{% else %}
+			<img src="/media/profile_images/default.normal.png" align=left />
+		{% endif %}
+		Username: {{ the_userprofile.user.username }} <br>
+		{% if the_userprofile.fullname %}Full Name: {{ the_userprofile.fullname }} <br>{% endif %}
+		{% if the_userprofile.affiliation %}Affiliation: {{ the_userprofile.affiliation }} <br>{% endif %}
+		{% if the_userprofile.website %}Personal Website: <a href="{{ the_userprofile.website }}"> {{ the_userprofile.website }} </a><br>{% endif %}
+		{% if the_userprofile.user.username == user.username %}
+			<a href="#">Edit profile</a><br>
+		{% endif %}
+		<br clear=all>
+		{% get_profile_stats the_userprofile as prof_stats %}
+		<p>{{ the_userprofile.user.username }} has ranked {{ prof_stats.num_rankings }} transients.</p>
+		<h3>My Interesting objects:</h3><br>
+		<ul>
+		{% for obj in prof_stats.int_objects %}
+		 <li><a href="{% url 'object_detail' obj.pk %}">{{ obj }}</a></li>
+		{% endfor %}
+	    </ul>
+				
+		<h3>My latest comments:</h3>
+		{% for comment in prof_stats.latestComments|slice:":3" %}
+		<i>On {{ comment.submit_date }}, {{ comment.user }} wrote:</i>
+		<blockquote><p>{{ comment.comment }}</p></blockquote>
+		<hr width="90%" align="left">
+		{% endfor %}
+		<a href="">See all comments from this user.</p>
+			
+	{% else %}
+		<br>
+		<h3>Sorry, no profile found.</h3>
+	{% endif %}
+</section>
+{% endblock %}

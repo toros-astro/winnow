@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from winnow.forms import RankingForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+
 
 # For the comments
 from django_comments.models import Comment
@@ -204,3 +206,12 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/training/')
+    
+
+def show_profile(request, a_username):
+    try:
+        the_user = User.objects.get(username=a_username)
+        the_userprofile = UserProfile.objects.get(user=the_user)
+    except:
+        the_userprofile = None
+    return render(request, 'winnow/profile_detail.html', {'the_userprofile': the_userprofile})

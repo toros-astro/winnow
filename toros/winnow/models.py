@@ -21,7 +21,8 @@ class UserProfile(models.Model):
                             'normal': (200, 200),})
     fullname = models.CharField(max_length=200, blank=True)
     def save(self, *args, **kwargs):
-        self.fullname = " ".join([self.user.first_name, self.user.last_name])
+        if self.user.first_name != "" or self.user.last_name != "":
+            self.fullname = " ".join([self.user.first_name, self.user.last_name])
         super(UserProfile, self).save(*args, **kwargs)
     def __str__(self):
         return self.user.username

@@ -47,3 +47,10 @@ def get_votes_for_object(object_id):
     num_bogus = Ranking.objects.filter(trans_candidate=tc).filter(rank='B').count()
     num_unclassf = Ranking.objects.filter(trans_candidate=tc).filter(rank='X').count()
     return {'real':num_real, 'bogus':num_bogus, 'unknown':num_unclassf}
+    
+@register.assignment_tag
+def get_profile_stats(auserprofile):
+    num_rankings = Ranking.objects.filter(ranker=auserprofile).count()
+    int_objects = TransientCandidate.objects.filter(ranking=Ranking.objects.filter(ranker=auserprofile).filter(isInteresting=True))
+    latestComments = Comment.objects.filter(user=auserprofile.user)
+    return {'num_rankings': num_rankings, 'int_objects': int_objects, 'latestComments': latestComments}
