@@ -13,12 +13,12 @@
 	<div>
 		{% if user.is_active %}
 			{% get_userprofile user as userprofile %}
-			{% if userprofile.picture %}
-			    <a href="{{ userprofile.picture.normal.url }}"><img src="{{ userprofile.picture.thumbnail.url }}"/></a><br>
-			{% else %}
-			    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
+			<a href="{% url 'profile_detail' user.username %}">
+			{% if userprofile.picture %} <img src="{{ userprofile.picture.thumbnail.url }}"/>
+			{% else %} <img src="/media/profile_images/default.thumbnail.png"/>
 			{% endif %}
-			<a href="">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
+			</a><br>
+			<a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
 		{% else %}
 			<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Register</a>
 		{% endif %}
@@ -72,26 +72,24 @@
 					{% get_last3comments as last3comm %}
                 	<ul>
 					{% if last3comm %}
+						<li>
 						{% for comment in last3comm %}
 						{% get_userprofile comment.user_name as userprofile %}
-						{% if userprofile.picture %}
-					    	<a href="{{ userprofile.picture.normal.url }}">
-								<img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle />
-							</a>
-						{% else %}
-					    	<a href="/media/profile_images/default.normal.png">
-								<img src="/media/profile_images/default.thumbnail.png" align=absmiddle />
-							</a>
+					    <a href="{% url 'profile_detail' comment.user_name %}">
+						{% if userprofile.picture %} <img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle />
+						{% else %} <img src="/media/profile_images/default.thumbnail.png" align=absmiddle />
 						{% endif %}
-                    	On {{comment.submit_date}} {{comment.user_name}} 
+						</a>
+                    	On {{comment.submit_date}} <a href="{% url 'profile_detail' comment.user_name %}">{{comment.user_name}}</a>
 						commented on <a href="{% url 'object_detail' comment.content_object.id %}">object {{ comment.content_object.id }}:</a>
 						<br clear=all>
                     	"{{ comment.comment }}"
 						<br>
 						<hr>
+					    </li>
 						{% endfor %}
 					{% else %}
-						<p>No comments to show.</p>
+						<li>No comments to show.</li>
 					{% endif %}
                  	</ul>
 				</li>
