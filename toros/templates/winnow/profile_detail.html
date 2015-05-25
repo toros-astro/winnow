@@ -31,7 +31,7 @@
 	    </ul>
 				
 		<h3>My latest comments:</h3>
-		{% for comment in prof_stats.latest3Comments %}
+		{% for comment in prof_stats.latestComments|slice:":3" %}
 		<i>On {{ comment.submit_date }}, {{ comment.user }} wrote:</i>
 		<blockquote><p>{{ comment.comment }}</p></blockquote>
 		<hr width="90%" align="left">

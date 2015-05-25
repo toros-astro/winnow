@@ -22,21 +22,25 @@ var unknown_votes = {{ votes.unknown }}
 		<br>
 		
 		<h2>Ranking</h2>
-		
-		
-		It has been marked as interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:<br>
-		{% for name in interesting_user_list %}
-			{{ name }}, 
-		{% endfor %}
-		<p></p>
-		
 		<div id=barplot>
 		</div>
-		
 		<script src="{% static "js/barplot.js" %}"></script>
 		
+		<h2>Likes</h2>
+		{% if interesting_count != 0 %}
+		It has been marked interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:<br>
+		<ul style="list-style: none; padding: 0; margin: 0;">
+		{% for name in interesting_user_list %}
+			<li><a href="{% url 'profile_detail' name %}">{{ name }}</a></li>
+		{% endfor %}
+	    </ul>
+		<br>
+		{% endif %}
+			
 		{% get_comment_count for winnow.transientcandidate tc_id as comment_count %}
 		<h2>This object has {{ comment_count }} comment{%if comment_count != "1" %}s{% endif %}</h2>
+		{% render_comment_list for winnow.transientcandidate tc_id %}
+		<br>
 		
 		<form id="page_form" method="post" action="{% url 'object_detail' tc_id %}">
 		{% csrf_token %}
@@ -46,8 +50,6 @@ var unknown_votes = {{ votes.unknown }}
 		<br>
 		<input type="submit" name="submit" value="Comment" />
 		</form>
-		<br>
-		{% render_comment_list for winnow.transientcandidate tc_id %}
 		
 	</section>
 {% endblock %}
