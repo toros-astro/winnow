@@ -9,28 +9,29 @@
 	<title>{% block title %}CSTAR Training Center{% endblock %}</title>
 	{% block header_extra %}
 	{% endblock %}
-
-	<div>
-		{% if user.is_active %}
-			{% get_userprofile user as userprofile %}
-			<a href="{% url 'profile_detail' user.username %}">
-			{% if userprofile.picture %} <img src="{{ userprofile.picture.thumbnail.url }}"/>
-			{% else %} <img src="/media/profile_images/default.thumbnail.png"/>
-			{% endif %}
-			</a><br>
-			<a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
-		{% else %}
-			<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Register</a>
-		{% endif %}
-	</div>
 </head>
 
 <body>		
 	<div id="container">
 		<header>
+			
+			<div>
+				{% if user.is_active %}
+					{% get_userprofile user as userprofile %}
+					<a href="{% url 'profile_detail' user.username %}">
+					{% if userprofile.picture %} <img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle/>
+					{% else %} <img src="/media/profile_images/default.thumbnail.png" align=absmiddle />
+					{% endif %}
+					</a><br>
+					<a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
+				{% else %}
+					<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Register</a>
+				{% endif %}
+			</div>
+			
 			<div class="width">
 				<h1><a href="{% url 'index' %}">TOROS<span>training</span></a></h1>
-				<h2>Training like a champ</h2>
+				<h2>Training website</h2>
 			</div>
 		</header>
 				
@@ -72,8 +73,8 @@
 					{% get_last3comments as last3comm %}
                 	<ul>
 					{% if last3comm %}
-						<li>
 						{% for comment in last3comm %}
+						<li>
 						{% get_userprofile comment.user_name as userprofile %}
 					    <a href="{% url 'profile_detail' comment.user_name %}">
 						{% if userprofile.picture %} <img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle />
