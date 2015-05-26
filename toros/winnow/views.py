@@ -89,7 +89,7 @@ def thumb(request, trans_candidate_id):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     fig = plt.figure(figsize=(5,5))
-    plt.imshow(thumb_arr, interpolation='none')
+    plt.imshow(thumb_arr, interpolation='none', cmap='gray')
     plt.xticks([]); plt.yticks([]) #Remove tick marks
     plt.tight_layout()
     from matplotlib.backends.backend_agg import FigureCanvasAgg
