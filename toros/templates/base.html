@@ -15,9 +15,9 @@
 
 <body>		
 	<div id="container">
-		<header>
+		<header style="background-color:#ddd;">
 			
-			<div>
+			<div style="float:left; margin: 0 0 0 1em;">
 				{% if user.is_active %}
 					{% get_userprofile user as userprofile %}
 					<a href="{% url 'profile_detail' user.username %}">
@@ -27,7 +27,7 @@
 					</a><br>
 					<a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
 				{% else %}
-					<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Register</a>
+					<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Sign up</a>
 				{% endif %}
 			</div>
 			
