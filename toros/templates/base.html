@@ -60,10 +60,14 @@
                 	<ul>
 						{% if top3int|length > 0 %}
 						{% for astro_object in top3int %}
-                    	<li>
+                    	
+							<a class="sidebarInteresting" href="{% url 'object_detail' astro_object.id %}">
+							<li>
 							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40" align=bottom>
-							<a href="{% url 'object_detail' astro_object.id %}">{{ astro_object }}</a>
-						</li>
+							{{ astro_object }}
+							</li>
+							</a>
+						
 						{% endfor %}
 						{% else %}
 						<li>No objects found for this list.</li>
