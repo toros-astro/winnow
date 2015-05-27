@@ -4,14 +4,14 @@
 {% load comments %}
 {% load winnow_tags %}
 
-{% block title %}Training Page{% endblock %}
+{% block title %}Winnow - Training Page{% endblock %}
 
 {% block content %}
 	<section id="content">
 	{% if user.is_authenticated %}
 		{% if tc_id != -1 %}
+			<h1>Rank this transient</h1>
 			<img src="{% url 'thumb' tc_id %}">
-			<h1>Select your choice</h1>
 	
 			<form id="page_form" method="post" action="{% url 'rank' %}">
 			<input type="hidden" value="{{ tc_id }}" name="tc_id">
@@ -40,12 +40,7 @@
 			
 			<input type="submit" name="submit" value="Rank Transient" />
 			</form>
-			
-			{% get_comment_count for winnow.transientcandidate tc_id as comment_count %}
-			<p>{{ comment_count }} comments have been posted.</p>
-			{% render_comment_list for winnow.transientcandidate tc_id %}
-			
-			
+
 		{% else %}
 			<p>Congratulations! You classified all transients available at the moment.</p>
 		{% endif %}

@@ -54,3 +54,4 @@ def get_profile_stats(auserprofile):
     int_objects = TransientCandidate.objects.filter(ranking=Ranking.objects.filter(ranker=auserprofile).filter(isInteresting=True))
     latestComments = Comment.objects.filter(user=auserprofile.user)
     return {'num_rankings': num_rankings, 'int_objects': int_objects, 'latestComments': latestComments}
+

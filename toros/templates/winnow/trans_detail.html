@@ -4,7 +4,7 @@
 {% load comments %}
 {% load winnow_tags %}
 
-{% block title %}Detail View{% endblock %}
+{% block title %}Winnow - Object {{ tc_id }} Detail View{% endblock %}
 {% block header_extra %}
 <script src="{% static "js/d3.v3.min.js" %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static "css/barplot.css" %}">
@@ -42,6 +42,7 @@ var unknown_votes = {{ votes.unknown }}
 		{% render_comment_list for winnow.transientcandidate tc_id %}
 		<br>
 		
+		{% if user.is_authenticated %}
 		<form id="page_form" method="post" action="{% url 'object_detail' tc_id %}">
 		{% csrf_token %}
 		<input type="hidden" value="{{ tc_id }}" name="tc_id">
@@ -50,6 +51,7 @@ var unknown_votes = {{ votes.unknown }}
 		<br>
 		<input type="submit" name="submit" value="Comment" />
 		</form>
+		{% endif %}
 		
 	</section>
 {% endblock %}
