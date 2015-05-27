@@ -16,7 +16,11 @@ body {
 
 }
 
-.sidebarInteresting:hover {
+a.sidebarInteresting {
+	display: block;
+}
+
+a.sidebarInteresting:hover {
 	background-color: lightsteelblue;
 }
 
