@@ -15,6 +15,9 @@ var xAxis = d3.svg.axis()
     .orient("bottom");
 
 var yAxis = d3.svg.axis()
+    .tickFormat(d3.format("d"))
+    .ticks(d3.max([real_votes, bogus_votes, unknown_votes]))
+    .tickSize(10)
     .scale(y)
     .orient("left");
 
