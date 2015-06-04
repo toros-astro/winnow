@@ -19,7 +19,7 @@ def createUser(lastUserID):
     return myUser
     
 def populate(xypos, radecpos):
-    for transID in range(0,5):
+    for transID in range(len(xypos)):
         transient = add_transient(xypos[transID], radecpos[transID])    
         for lastID in range(0,3):
             myUser = createUser(lastID)
@@ -46,41 +46,51 @@ def add_transient(xy, radec):
     t.filename = "testFile.fits"
     t.save()
     return t
-    
-    
-def findTransients():
-    from toros.settings import ASTRO_IMAGE_DIR
-    from astropy.io import fits
 
-    subt_hdulist = fits.open(os.path.join(ASTRO_IMAGE_DIR, "testFile.fits"))
-    data = np.ma.array(subt_hdulist[0].data, mask = subt_hdulist[0].data == -99999)
-    
-    from astropy.stats import median_absolute_deviation as mad
-    image = data.filled(fill_value=0.)
-    bkg_sigma = mad(image)
-    import photutils
-    sources = photutils.daofind(image, fwhm=4., threshold=3.*bkg_sigma)
-    sources.sort('flux')
-    
-    from photutils import aperture_photometry, CircularAperture
-    positions = (sources['xcentroid'], sources['ycentroid'])    
-    apertures = CircularAperture(positions, r=4.)    
-    phot_table = aperture_photometry(image, apertures)
-    
-    xypos = np.array([[x,y] for x,y in zip(sources[-100:]['xcentroid'], sources[-100:]['ycentroid'])])
-    from astropy import wcs
-    w = wcs.WCS(subt_hdulist[0].header)
-    radecpos = w.wcs_pix2world(xypos, 1)
-    return xypos, radecpos
-    
-
+def downloadAndSaveTestFile():
+    import urllib2
+    url = "https://mega.co.nz/#!GNZWDToZ!nubGyQf6OrOEQFs9Gn48-3WDw7Z1pXP1mE6evo2vc5s"
+    hdr = {'User-Agent':'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',}
+    req = urllib2.Request(url, None, hdr)
+    test_file = urllib2.urlopen(req)
+    test_out = open("astro_images/testFile.fits", 'wb')
+    test_out.write(test_file.read())
+    test_out.close()
 
 # Start execution here!
 if __name__ == '__main__':
-    print "Starting winnow population script..."
-    xypos, radecpos = findTransients()
+    print("Starting winnow population script...")
+    xypos = np.array([[363, 72],
+                      [871, 610],
+                      [473, 940],
+                      [331, 832],
+                      [955, 829],
+                      [578, 709],
+                      [820, 765],
+                      [970, 819],
+                      [1016, 782],
+                      [73, 799]])
+    radecpos = np.array([[74.03852734,  -87.89001901],
+                         [ 198.75514552,  -88.48581972],
+                         [ 283.0185146,   -88.1738623 ],
+                         [ 308.17223923,  -88.40106574],
+                         [ 220.51342198,  -87.73948239],
+                         [ 261.10420734,  -89.17853841],
+                         [ 224.57000915,  -88.37388738],
+                         [ 218.66990854,  -87.70653163],
+                         [ 212.78004925,  -87.620442  ],
+                         [ 333.98498108,  -87.66825998]])
     populate(xypos, radecpos)
+    
+    print("Downloadind and saving test file...")
+    try:
+        downloadAndSaveTestFile()
+        print("File saved to astro_images/")
+    except:
+        print("Problem downloading and saving test file.")
+        
     # Print out what we have added.
+    print("This has been added to the database:")
     for t in TransientCandidate.objects.all():
         for r in Ranking.objects.filter(trans_candidate=t):
             print "Transient {0} - Ranking {1} by User: {2}".format(str(t), str(r),str(r.ranker))

@@ -16,8 +16,7 @@
 <body>		
 	<div id="container">
 		<header style="background-color:#ddd;">
-			
-			<div style="float:left; margin: 0 0 0 1em;">
+			<div style="float:right; margin: 0 0 0 1em;">
 				{% if user.is_active %}
 					{% get_userprofile user as userprofile %}
 					<a href="{% url 'profile_detail' user.username %}">
@@ -59,11 +58,13 @@
 					{% get_top3interesting as top3int %}
                 	<ul>
 						{% if top3int|length > 0 %}
-						{% for astro_object in top3int %}
-                    	<li>
+						{% for astro_object in top3int %}                    	
+							<a class="sidebarInteresting" href="{% url 'object_detail' astro_object.id %}">
+							<li>
 							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40" align=bottom>
-							<a href="{% url 'object_detail' astro_object.id %}">{{ astro_object }}</a>
-						</li>
+							{{ astro_object }}
+							</li>
+							</a>
 						{% endfor %}
 						{% else %}
 						<li>No objects found for this list.</li>
