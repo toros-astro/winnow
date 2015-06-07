@@ -81,8 +81,8 @@
                 	<ul>
 						{% if top3int|length > 0 %}
 						{% for astro_object in top3int %}                    	
-							<a class="sidebarInteresting" href="{% url 'object_detail' astro_object.id %}">
-							<li>
+							<a href="{% url 'object_detail' astro_object.id %}">
+							<li class="sidebarInteresting">
 							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40" align=bottom>
 							{{ astro_object }}
 							</li>
@@ -99,7 +99,7 @@
                 	<ul>
 					{% if last3comm %}
 						{% for comment in last3comm %}
-						<li>
+						<li class="sidebarInteresting">
 						{% get_userprofile comment.user_name as userprofile %}
 					    <a href="{% url 'profile_detail' comment.user_name %}">
 						{% if userprofile.picture %} 
@@ -124,10 +124,10 @@
 				<li>
 					<h4>Most voted objects</h4>
                 	<ul>
-                    	<li>Interesting object 1</li>
-                    	<li>Interesting object 2</li>
-                    	<li>Interesting object 3</li>
-                	</ul>
+                        {% for i in "123" %}
+                            <li class="sidebarInteresting">Interesting object {{i}}</li>
+                        {% endfor %}
+                    </ul>
 				</li>
 				</ul>
 			</aside>
