@@ -41,6 +41,7 @@
 					    <hr style="color:#fff;">
 					    <label for="password" style="float:left; display:block; width:80px;">Password:</label>
 					    <input name="password" id="password" value="" type="password" style="float:left; display:block; width:100px;" />
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
 					</div><!-- enterauthdata -->
 				    </form>
 				    <div style="clear:both; display:block; padding-left:5px;">

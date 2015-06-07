@@ -192,7 +192,12 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/training/')
+
+                #This will return users to whatever page they were when loggin in
+                if request.POST['next']:
+                    return HttpResponseRedirect(request.POST['next'])
+                else:
+                    return HttpResponseRedirect('/training/')
             else:
                 return HttpResponse("Your account is disabled.")
         else:
