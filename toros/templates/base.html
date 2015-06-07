@@ -15,20 +15,42 @@
 
 <body>		
 	<div id="container">
-		<header style="background-color:#ddd;">
-			<div style="float:right; margin: 0 0 0 1em;">
+		<header>
+			<div id="authbox">
 				{% if user.is_active %}
 					{% get_userprofile user as userprofile %}
 					<a href="{% url 'profile_detail' user.username %}">
-					{% if userprofile.picture %} <img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle/>
-					{% else %} <img src="/media/profile_images/default.thumbnail.png" align=absmiddle />
-					{% endif %}
-					</a><br>
-					<a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
+						{% if userprofile.picture %} 
+							<div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); margin:0px auto;"></div>
+						{% else %} 
+							<div class="profilethumb" style="background-image:url(/media/profile_images/default.thumbnail.png); margin:0px auto;"></div>
+						{% endif %}
+					</a>
+					<div style="clear:both; display:block; float:left; padding:5px;">
+						<a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
+					</div>
 				{% else %}
-					<a href="{% url 'login' %}">Log In</a> | <a href="{% url 'register' %}">Sign up</a>
+					<form method="post" action="{% url 'login' %}">
+					{% csrf_token %}
+					<div style="margin:0.2em; float:right;">
+						<input name="submit" class="formbutton" value="Log in" type="submit" />
+					</div>
+					<div id="enterauthdata">
+					    <label for="name" style="float:left; display:block; width:80px;">Username:</label>
+					    <input name="username" id="name" value="" type="text" style="float:left; display:block; width:100px;" />
+					    <hr style="color:#fff;">
+					    <label for="password" style="float:left; display:block; width:80px;">Password:</label>
+					    <input name="password" id="password" value="" type="password" style="float:left; display:block; width:100px;" />
+					</div><!-- enterauthdata -->
+				    </form>
+				    <div style="clear:both; display:block; padding-left:5px;">
+				    	<hr>
+						Or <a href="{% url 'register' %}" style="font-weight:bold; color:#76a800;">Sign up!</a>
+					</div>
+
+
 				{% endif %}
-			</div>
+			</div><!-- authbox -->
 			
 			<div class="width">
 				<h1><a href="{% url 'index' %}">TOROS<span>training</span></a></h1>
@@ -80,8 +102,10 @@
 						<li>
 						{% get_userprofile comment.user_name as userprofile %}
 					    <a href="{% url 'profile_detail' comment.user_name %}">
-						{% if userprofile.picture %} <img src="{{ userprofile.picture.thumbnail.url }}" align=absmiddle />
-						{% else %} <img src="/media/profile_images/default.thumbnail.png" align=absmiddle />
+						{% if userprofile.picture %} 
+							<div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); float:left;"></div>
+						{% else %} 
+							<div class="profilethumb" style="background-image:url(/media/profile_images/default.thumbnail.png); float:left;"></div>
 						{% endif %}
 						</a>
                     	On {{comment.submit_date}} <a href="{% url 'profile_detail' comment.user_name %}">{{comment.user_name}}</a>

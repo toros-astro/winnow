@@ -214,7 +214,25 @@ fieldset p label {
 
 }
 
+#authbox {
+	float:right;
+	margin-right: 0.5em;
+}
 
+#enterauthdata {
+	float:left; 
+	padding:5px; 
+	/*border: 1px outset #aaa;*/
+}
+
+.profilethumb {
+    border:2px #fff solid;
+	border-radius:25px;
+	margin:0px auto;
+	background-repeat: no-repeat;
+	background-size:100% 100%;
+	width:50px; height:50px;
+}
 
 form input, form select, form textarea {
 
@@ -405,7 +423,7 @@ header {
 
 	padding: 20px 2px;
 
-	background: #fff;
+	background: #ddd;
 
 	margin: 0 auto;
 	text-align:left;
