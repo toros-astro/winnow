@@ -68,7 +68,7 @@
 				{% if userprofile.picture %}
 					<div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); float:left; margin:0.3em"></div>
 				{% else %}
-				    <a href="/media/profile_images/default.normal.png"><img src="/media/profile_images/default.thumbnail.png"/></a><br>
+					<div class="profilethumb" style="background-image:url(/media/profile_images/default.normal.png); float:left; margin:0.3em"></div>
 				{% endif %}
 				<textarea name="comment" rows="5" cols="50" wrap="soft" maxlength="3000" style="float:left; display:inline-block; height:50px; margin:0.3em;"></textarea>
 			</div><!-- add_comment -->
