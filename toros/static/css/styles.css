@@ -286,13 +286,19 @@ form.searchform input {
 
 
 form.searchform p {
-
 	margin: 5px 0;
-
 }
 
+form.ul {
+    list-style-type: none;
+}
 
-
+.plot {
+    width:27%;
+    float:left;
+    display:block;
+    padding:1em;
+}
 
 
 span.required {
@@ -300,8 +306,6 @@ span.required {
 	color: #ff0000;
 
 }
-
-
 
 h1 {
 
