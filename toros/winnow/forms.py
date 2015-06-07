@@ -17,6 +17,15 @@ class RankingForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
     repeat_password = forms.CharField(widget=forms.PasswordInput())
+    def clean_username(self):
+        the_username = self.cleaned_data['username']
+        print("Username chosen is: " + the_username)
+        try:
+            User.objects.get(username=the_username)
+        except User.DoesNotExist:
+            return the_username
+        self._errors['username'] = ["Username already taken"]
+        return the_username
     def clean(self):
         form_data = self.cleaned_data
         if form_data['password'] != form_data['repeat_password']:
