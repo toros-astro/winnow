@@ -8,19 +8,23 @@
 {% block content %}
 <section id="content">
 	{% if the_userprofile %}
-		{% if the_userprofile.picture %}
-			<img src="{{ the_userprofile.picture.normal.url }}" align=left />
-		{% else %}
-			<img src="/media/profile_images/default.normal.png" align=left />
-		{% endif %}
-		Username: {{ the_userprofile.user.username }} <br>
-		{% if the_userprofile.fullname %}Full Name: {{ the_userprofile.fullname }} <br>{% endif %}
-		{% if the_userprofile.affiliation %}Affiliation: {{ the_userprofile.affiliation }} <br>{% endif %}
-		{% if the_userprofile.website %}Personal Website: <a href="{{ the_userprofile.website }}"> {{ the_userprofile.website }} </a><br>{% endif %}
-		{% if the_userprofile.user.username == user.username %}
-			<a href="#">Edit profile</a><br>
-		{% endif %}
-		<br clear=all>
+		<div id="profilepic_big" style="float:left; padding:1em; margin-top:1em;">
+			{% if the_userprofile.picture %}
+				<img src="{{ the_userprofile.picture.normal.url }}" align=left />
+			{% else %}
+				<img src="/media/profile_images/default.normal.png" align=left />
+			{% endif %}
+		</div><!-- profilepic_big -->
+		<div id="profileInfo" style="float:left; padding:1em; margin-top:1em;">
+			<h5 style="display:inline;">Username:</h5> {{ the_userprofile.user.username }} <br>
+			{% if the_userprofile.fullname %}<h5 style="display:inline;">Full Name:</h5> {{ the_userprofile.fullname }} <br>{% endif %}
+			{% if the_userprofile.affiliation %}<h5 style="display:inline;">Affiliation:</h5> {{ the_userprofile.affiliation }} <br>{% endif %}
+			{% if the_userprofile.website %}<h5 style="display:inline;">Personal Website:</h5> <a href="{{ the_userprofile.website }}"> {{ the_userprofile.website }} </a><br>{% endif %}
+			{% if the_userprofile.user.username == user.username %}
+				<a href="#">Edit profile</a><br>
+			{% endif %}
+		</div><!-- profileinfo -->
+		<div style="clear:both;"></div>
 		{% get_profile_stats the_userprofile as prof_stats %}
 		<p>{{ the_userprofile.user.username }} has ranked {{ prof_stats.num_rankings }} transients.</p>
 		<h3>My Interesting objects:</h3><br>
