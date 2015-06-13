@@ -30,13 +30,17 @@
 		<h3>My Interesting objects:</h3><br>
 		<ul>
 		{% for obj in prof_stats.int_objects %}
-		 <li><a href="{% url 'object_detail' obj.pk %}">{{ obj }}</a></li>
+		 <li><a href="{% url 'object_detail' obj.slug %}">{{ obj }}</a></li>
 		{% endfor %}
 	    </ul>
 				
 		<h3>My latest comments:</h3>
 		{% for comment in prof_stats.latestComments|slice:":3" %}
-		<i>On {{ comment.submit_date }}, {{ comment.user }} wrote:</i>
+		<i>On {{ comment.submit_date }}, {{ comment.user }} wrote about object
+			<a href="{% url 'object_detail' comment.content_object.slug %}">
+				{{comment.content_object.slug}}
+			</a>:
+		</i>
 		<blockquote><p>{{ comment.comment }}</p></blockquote>
 		<hr width="90%" align="left">
 		{% endfor %}

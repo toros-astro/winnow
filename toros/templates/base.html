@@ -82,7 +82,7 @@
                 	<ul>
 						{% if top3int|length > 0 %}
 						{% for astro_object in top3int %}                    	
-							<a href="{% url 'object_detail' astro_object.id %}">
+							<a href="{% url 'object_detail' astro_object.slug %}">
 							<li class="sidebarInteresting">
 							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40" align=bottom>
 							{{ astro_object }}
@@ -90,7 +90,7 @@
 							</a>
 						{% endfor %}
 						{% else %}
-						<li>No objects found for this list.</li>
+						<li class="sidebarInteresting">No objects found for this list.</li>
 						{% endif %}
                 	</ul>
 				</li>
@@ -110,7 +110,7 @@
 						{% endif %}
 						</a>
                     	On {{comment.submit_date}} <a href="{% url 'profile_detail' comment.user_name %}">{{comment.user_name}}</a>
-						commented on <a href="{% url 'object_detail' comment.content_object.id %}">object {{ comment.content_object.id }}:</a>
+						commented on <a href="{% url 'object_detail' comment.content_object.slug %}">object {{ comment.content_object.slug }}:</a>
 						<br clear=all>
                     	"{{ comment.comment }}"
 						<br>
@@ -118,7 +118,7 @@
 					    </li>
 						{% endfor %}
 					{% else %}
-						<li>No comments to show.</li>
+						<li class="sidebarInteresting">No comments to show.</li>
 					{% endif %}
                  	</ul>
 				</li>

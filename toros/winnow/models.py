@@ -57,7 +57,7 @@ class TransientCandidate(models.Model):
         self.slug = slugify(self.dataset_id + "_%05d" % (self.object_id))
         super(TransientCandidate, self).save(*args, **kwargs)
     def __str__(self):
-        return "Object %s at (%g, %g) from file: %s" % (self.object_id, self.ra, self.dec, self.filename)
+        return "Object %s at (%g, %g) from file: %s" % (self.slug, self.ra, self.dec, self.filename)
 
     
 class Session(models.Model):

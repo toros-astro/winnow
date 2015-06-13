@@ -99,9 +99,10 @@ def thumb(request, trans_candidate_id):
     plt.close()
     return response
     
-def object_detail(request, trans_candidate_id):
+def object_detail(request, object_slug):
     
-    trans_obj = TransientCandidate.objects.get(pk = trans_candidate_id)
+    trans_obj = TransientCandidate.objects.get(slug = object_slug)
+    trans_candidate_id = trans_obj.pk
     ranked_interesting = Ranking.objects.filter(trans_candidate = trans_obj).filter(isInteresting = True)
     int_users_list = UserProfile.objects.filter(ranking = ranked_interesting)
     int_counts = len(int_users_list)
