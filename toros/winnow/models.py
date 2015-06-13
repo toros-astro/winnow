@@ -3,22 +3,35 @@ from django.contrib.auth.models import User
 import os
 from stdimage.models import StdImageField
 
-class UserProfile(models.Model):
-    
-    def __get_file_path(instance, filename):
+#def __get_file_path(instance, filename):
+#    ext = filename.split('.')[-1]
+#    filename = "%s_profilepic.%s" % (instance.user.username, ext)
+#    return os.path.join('profile_images', filename)
+
+from django.utils.deconstruct import deconstructible
+
+@deconstructible
+class GetFilePath(object):
+    def __call__(self, instance, filename):
         ext = filename.split('.')[-1]
-        filename = "%s_profilepic.%s" % (instance.user.username, ext)
-        print("Should be saved with name %s" % (filename))
-        return os.path.join('profile_images', filename)
-    
+        new_filename = "%s_profilepic.%s" % (instance.user.username, ext)
+        return os.path.join('profile_images', new_filename)
+
+get_file_path = GetFilePath()
+
+class UserProfile(models.Model):
+    #def __get_file_path(instance, filename):
+    #    ext = filename.split('.')[-1]
+    #    filename = "%s_profilepic.%s" % (instance.user.username, ext)
+    #    return os.path.join('profile_images', filename)
+
     user = models.OneToOneField(User)
     affiliation = models.CharField(max_length=200, blank=True)
-    # The additional attributes we wish to include.
     website = models.URLField(blank=True)
     #picture = models.ImageField(upload_to=__get_file_path, blank=True)
-    picture = StdImageField(upload_to=__get_file_path, blank=True, variations={
-                            'thumbnail': (50, 50, True),
-                            'normal': (200, 200),})
+    picture = StdImageField(upload_to=get_file_path, blank=True, 
+                            variations={'thumbnail': (50, 50, True),
+                                        'normal': (200, 200),})
     fullname = models.CharField(max_length=200, blank=True)
     def save(self, *args, **kwargs):
         if self.user.first_name != "" or self.user.last_name != "":
@@ -36,8 +49,15 @@ class TransientCandidate(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     filename = models.CharField(max_length=100)
+    dataset_id = models.CharField(max_length=100)
+    object_id = models.IntegerField()
+    slug = models.SlugField(max_length=110)
+    def save(self, *args, **kwargs):
+        from django.utils.text import slugify
+        self.slug = slugify(self.dataset_id + "_%05d" % (self.object_id))
+        super(TransientCandidate, self).save(*args, **kwargs)
     def __str__(self):
-        return "Object at (%g, %g) from file: %s" % (self.ra, self.dec, self.filename)
+        return "Object %s at (%g, %g) from file: %s" % (self.object_id, self.ra, self.dec, self.filename)
 
     
 class Session(models.Model):

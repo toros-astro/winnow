@@ -17,7 +17,7 @@ def createUser(lastUserID):
     myUser = UserProfile.objects.get_or_create(user=aUser)[0]
     myUser.save()
     return myUser
-    
+
 def populate(xypos, radecpos):
     for transID in range(len(xypos)):
         transient = add_transient(xypos[transID], radecpos[transID])    
@@ -37,13 +37,20 @@ def add_ranking(t, user):
 
 def add_transient(xy, radec):
     t = TransientCandidate()
-    t.ra       = radec[0]
-    t.dec      = radec[1]
-    t.x_pix    = xy[0]
-    t.y_pix    = xy[1]
-    t.width    = 10
-    t.height   = 10
-    t.filename = "testFile.fits"
+    t.ra         = radec[0]
+    t.dec        = radec[1]
+    t.x_pix      = xy[0]
+    t.y_pix      = xy[1]
+    t.width      = 10
+    t.height     = 10
+    t.filename   = "testFile.fits"
+    t.dataset_id = "DBG_DJANGO"
+    try:
+      lastTC = TransientCandidate.objects.filter(dataset_id="DBG_DJANGO").reverse()[0]
+      last_id = lastTC.object_id
+    except IndexError:
+      last_id = 0
+    t.object_id = last_id + 1
     t.save()
     return t
 
