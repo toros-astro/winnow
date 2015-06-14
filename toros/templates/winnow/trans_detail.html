@@ -18,13 +18,13 @@ var unknown_votes = {{ votes.unknown }}
 
 {% block content %}
 	<section id="content">
-		<img src="../../thumb/{{ tc_id }}">
+		<img src="{{  }}">
 		<br>
 		
 		<h2>Ranking</h2>
 		<div id=barplot>
 		</div>
-		<script src="{% static "js/barplot.js" %}"></script>
+		<script src="{% static 'js/barplot.js' %}"></script>
 		
 		<h2>Likes</h2>
 		{% if interesting_count != 0 %}

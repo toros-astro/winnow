@@ -10,6 +10,8 @@ from stdimage.models import StdImageField
 
 from django.utils.deconstruct import deconstructible
 
+# See this SO http://stackoverflow.com/questions/25767787/django-cannot-create-migrations-for-imagefield-with-dynamic-upload-to-value
+#and this bug report https://code.djangoproject.com/ticket/22999
 @deconstructible
 class GetFilePath(object):
     def __call__(self, instance, filename):
@@ -17,7 +19,7 @@ class GetFilePath(object):
         new_filename = "%s_profilepic.%s" % (instance.user.username, ext)
         return os.path.join('profile_images', new_filename)
 
-get_file_path = GetFilePath()
+get_file_path_for_user = GetFilePath()
 
 class UserProfile(models.Model):
     #def __get_file_path(instance, filename):
@@ -29,7 +31,7 @@ class UserProfile(models.Model):
     affiliation = models.CharField(max_length=200, blank=True)
     website = models.URLField(blank=True)
     #picture = models.ImageField(upload_to=__get_file_path, blank=True)
-    picture = StdImageField(upload_to=get_file_path, blank=True, 
+    picture = StdImageField(upload_to=get_file_path_for_user, blank=True, null=True, 
                             variations={'thumbnail': (50, 50, True),
                                         'normal': (200, 200),})
     fullname = models.CharField(max_length=200, blank=True)
@@ -40,7 +42,18 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
         
-    
+@deconstructible
+class GetFilePathForObject(object):
+    def __init__(self, prefix):
+        self.prefix = prefix
+    def __call__(self, instance, filename):
+        from django.utils.text import slugify
+        temp_slug = slugify(instance.dataset_id + "_%05d" % (instance.object_id))
+        ext = filename.split('.')[-1]
+        new_filename = "%s_%s.%s" % (temp_slug, self.prefix, ext)
+        return os.path.join('object_images', new_filename)
+
+
 class TransientCandidate(models.Model):
     ra = models.FloatField()
     dec = models.FloatField()
@@ -52,6 +65,15 @@ class TransientCandidate(models.Model):
     dataset_id = models.CharField(max_length=100)
     object_id = models.IntegerField()
     slug = models.SlugField(max_length=110)
+    refImg = StdImageField(upload_to=GetFilePathForObject("ref"),
+                            variations={'thumbnail': (50, 50, True),
+                                        'normal': (400, 400),})
+    origImg = StdImageField(upload_to=GetFilePathForObject("orig"),
+                            variations={'thumbnail': (50, 50, True),
+                                        'normal': (400, 400),})
+    subtImg = StdImageField(upload_to=GetFilePathForObject("subt"),
+                            variations={'thumbnail': (50, 50, True),
+                                        'normal': (400, 400),})
     def save(self, *args, **kwargs):
         from django.utils.text import slugify
         self.slug = slugify(self.dataset_id + "_%05d" % (self.object_id))
