@@ -84,7 +84,7 @@
 						{% for astro_object in top3int %}                    	
 							<a href="{% url 'object_detail' astro_object.slug %}">
 							<li class="sidebarInteresting">
-							<img src="/training/thumb/{{ astro_object.id }}" width="40" height="40" align=bottom>
+							<img src="{{ astro_object.subtImg.thumbnail.url }}" width="40" height="40" align=bottom>
 							{{ astro_object }}
 							</li>
 							</a>

@@ -9,19 +9,19 @@
 {% block content %}
 	<section id="content">
 	{% if user.is_authenticated %}
-		{% if tc_id != -1 %}
+		{% if object %}
 			<h1 style="margin-top:1em;">Rank this transient</h1>
 			<div id="all_plots" style="width:90%; margin:1em auto; background-color:#eee; border:2px outset #aaa; display:inline-block; border-radius:10px">
 				<div id="orig" class="plot">
-					<img src="{% url 'thumb' tc_id %}" width=100%/>
+					<img src="{{ object.origImg.normal.url }}" width=100%/>
 					<h5 style="text-align:center;">Original Image</h5>
 				</div><!--orig-->
 				<div id="ref" class="plot">
-					<img src="{% url 'thumb' tc_id %}" width=100%/>
+					<img src="{{ object.refImg.normal.url }}" width=100%/>
 					<h5 style="text-align:center;">Reference Image</h5>
 				</div><!--ref-->
 				<div id="subtraction" class="plot">
-					<img src="{% url 'thumb' tc_id %}" width=100%/>
+					<img src="{{ object.subtImg.normal.url }}" width=100%/>
 					<h5 style="text-align:center;">Subtraction Image</h5>
 				</div><!--subtraction-->
 			</div><!-- all_plots -->
@@ -41,7 +41,7 @@
 					}
 				</style>
 
-				<input type="hidden" value="{{ tc_id }}" name="tc_id">
+				<input type="hidden" value="{{ object.pk }}" name="tc_id">
 
 				{% csrf_token %}
 				{% for hidden in form.hidden_fields %}

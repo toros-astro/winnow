@@ -45,6 +45,7 @@ def rank(request):
         else:
             print form.errors
             tc_id = int(request.POST.get('tc_id'))
+            tc = TransientCandidate.objects.get(pk=tc_id)
     else:
         try:
             #Fetch any tc not ranked yet
@@ -66,38 +67,40 @@ def rank(request):
     
     return render(request, 'winnow/rank.html', {'form':        form, 
                                                 'page_rank':   'selected', 
-                                                'tc_id' :      tc_id})
+                                                'tc_id' :      tc_id,
+                                                'object' :     tc})
 
 
 def about(request):
     return render(request, 'winnow/about.html', {'page_about': 'selected'})
-    
-def thumb(request, trans_candidate_id):
-    
-    tc = TransientCandidate.objects.get(pk=trans_candidate_id)
-    
-    from astropy.io import fits
-    from toros.settings import ASTRO_IMAGE_DIR
-    from os import path
-    image_data = fits.getdata(path.join(ASTRO_IMAGE_DIR, tc.filename))
-    thumb_arr = image_data[tc.y_pix - tc.height: tc.y_pix + tc.height, tc.x_pix - tc.width: tc.x_pix + tc.width]
-
-    #import numpy as np
-    #thumb_arr = np.random.random((10,10))
-    
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    fig = plt.figure(figsize=(5,5))
-    plt.imshow(thumb_arr, interpolation='none', cmap='gray')
-    plt.xticks([]); plt.yticks([]) #Remove tick marks
-    plt.tight_layout()
-    from matplotlib.backends.backend_agg import FigureCanvasAgg
-    canvas = FigureCanvasAgg(fig)
-    response = HttpResponse(content_type='image/png')
-    canvas.print_png(response)
-    plt.close()
-    return response
+  
+# Completely deprecated, I leave it here just in case  
+#def thumb(request, trans_candidate_id):
+#    
+#    tc = TransientCandidate.objects.get(pk=trans_candidate_id)
+#    
+#    from astropy.io import fits
+#    from toros.settings import ASTRO_IMAGE_DIR
+#    from os import path
+#    image_data = fits.getdata(path.join(ASTRO_IMAGE_DIR, tc.filename))
+#    thumb_arr = image_data[tc.y_pix - tc.height: tc.y_pix + tc.height, tc.x_pix - tc.width: tc.x_pix + tc.width]
+#
+#    #import numpy as np
+#    #thumb_arr = np.random.random((10,10))
+#    
+#    import matplotlib
+#    matplotlib.use("Agg")
+#    import matplotlib.pyplot as plt
+#    fig = plt.figure(figsize=(5,5))
+#    plt.imshow(thumb_arr, interpolation='none', cmap='gray')
+#    plt.xticks([]); plt.yticks([]) #Remove tick marks
+#    plt.tight_layout()
+#    from matplotlib.backends.backend_agg import FigureCanvasAgg
+#    canvas = FigureCanvasAgg(fig)
+#    response = HttpResponse(content_type='image/png')
+#    canvas.print_png(response)
+#    plt.close()
+#    return response
     
 def object_detail(request, object_slug):
     
