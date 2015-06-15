@@ -124,7 +124,6 @@ def object_detail(request, object_slug):
                 newComment.save()
                     
     return render(request, 'winnow/trans_detail.html', {'object' : trans_obj,
-                                                        'tc_id' : trans_candidate_id,
                                                         'interesting_count': str(int_counts), 
                                                         'interesting_user_list': int_users_list})
 
