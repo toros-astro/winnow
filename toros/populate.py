@@ -46,12 +46,19 @@ def add_transient(xy, radec):
     t.filename   = "testFile.fits"
     t.dataset_id = "DBG_DJANGO"
     try:
-      lastTC = TransientCandidate.objects.filter(dataset_id="DBG_DJANGO").reverse()[0]
+      lastTC = TransientCandidate.objects.filter(dataset_id="DBG_DJANGO").order_by('-object_id')[0]
       last_id = lastTC.object_id
     except IndexError:
       last_id = 0
     t.object_id = last_id + 1
     t.save()
+    t.refImg  = 'object_images/%s_ref.png' % (t.slug)
+    t.subtImg = 'object_images/%s_subt.png' % (t.slug)
+    t.origImg = 'object_images/%s_orig.png' % (t.slug)
+    t.save()
+    
+    #Make all plots for this object
+    thumb(xy[0], xy[1], t.filename, t.slug)
     return t
 
 def downloadAndSaveTestFile():
@@ -63,6 +70,44 @@ def downloadAndSaveTestFile():
     test_out = open("astro_images/testFile.fits", 'wb')
     test_out.write(test_file.read())
     test_out.close()
+
+def thumb(x, y, filename, slug):
+    semi_h = 20
+    semi_w = 20
+    
+    from astropy.io import fits
+    from toros.settings import ASTRO_IMAGE_DIR
+    from os import path
+
+    image_data = fits.getdata(path.join(ASTRO_IMAGE_DIR, filename))
+    thumb_arr = image_data[y - semi_h: y + semi_h, x - semi_w: x + semi_w]
+
+    import matplotlib.pyplot as plt
+    fig = plt.figure(figsize=(5,5))
+    plt.imshow(thumb_arr, interpolation='none', cmap='gray')
+    plt.xticks([]); plt.yticks([]) #Remove tick marks
+    plt.tight_layout()
+
+    img_dir = "media/object_images"
+    if not os.path.exists(img_dir):
+        os.mkdir(img_dir)
+
+    plt.savefig("%s/%s_subt.png" % (img_dir, slug))
+    plt.savefig("%s/%s_orig.png" % (img_dir, slug))
+    plt.savefig("%s/%s_ref.png" % (img_dir, slug))
+
+    h_in, w_in = fig.get_size_inches()
+    h_px, w_px = 400, 400
+    plt.savefig("%s/%s_subt.normal.png" % (img_dir, slug), dpi=(h_px/h_in))
+    plt.savefig("%s/%s_orig.normal.png" % (img_dir, slug), dpi=(h_px/h_in))
+    plt.savefig("%s/%s_ref.normal.png" % (img_dir, slug), dpi=(h_px/h_in))
+    h_px, w_px = 50, 50
+    plt.savefig("%s/%s_subt.thumbnail.png" % (img_dir, slug), dpi=(h_px/h_in))
+    plt.savefig("%s/%s_orig.thumbnail.png" % (img_dir, slug), dpi=(h_px/h_in))
+    plt.savefig("%s/%s_ref.thumbnail.png" % (img_dir, slug), dpi=(h_px/h_in))
+
+    plt.close()
+    return
 
 # Start execution here!
 if __name__ == '__main__':
@@ -87,14 +132,15 @@ if __name__ == '__main__':
                          [ 218.66990854,  -87.70653163],
                          [ 212.78004925,  -87.620442  ],
                          [ 333.98498108,  -87.66825998]])
-    populate(xypos, radecpos)
     
     print("Downloadind and saving test file...")
-    try:
-        downloadAndSaveTestFile()
-        print("File saved to astro_images/")
-    except:
-        print("Problem downloading and saving test file.")
+    #try:
+    #    downloadAndSaveTestFile()
+    #    print("File saved to astro_images/")
+    #except:
+    #    print("Problem downloading and saving test file.")
+
+    populate(xypos, radecpos)
         
     # Print out what we have added.
     print("This has been added to the database:")
