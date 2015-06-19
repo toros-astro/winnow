@@ -4,9 +4,9 @@ from winnow.models import TransientCandidate, UserProfile, Ranking
 class TransientCandidateAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Sky Position", {'fields': ['ra', 'dec']}),
-        ("Image Position", {'fields': ['x_pix', 'y_pix']}),
-        ("Second Moments", {'fields': ['sigma_x', 'sigma_y']}),
-        (None, {'fields': ['neg_pix_fraction']})
+        ("Image Position", {'fields': ['x_pix', 'y_pix', 'width', 'height']}),
+        ("File Info", {'fields': ['filename', 'dataset_id', 'object_id', 'slug']}),
+        ("Image Files", {'fields': ['refImg', 'origImg', 'subtImg']}),
     ]            
             
 class RankingAdmin(admin.ModelAdmin):
