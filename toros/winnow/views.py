@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from winnow.forms import RankingForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile
@@ -41,7 +42,7 @@ def rank(request):
                     newComment.content_object = tc
                     newComment.save()
                 
-            return HttpResponseRedirect('/training/rank/')
+            return HttpResponseRedirect(reverse('rank'))
         else:
             print form.errors
             tc_id = int(request.POST.get('tc_id'))
@@ -172,7 +173,7 @@ def register(request):
             if newuser:
                 if newuser.is_active:
                     login(request, newuser)
-                    return HttpResponseRedirect('/training/')
+                    return HttpResponseRedirect(reverse('index'))
                 else:
                     return HttpResponse("Sorry, your account has been disabled.")
 
@@ -201,7 +202,7 @@ def user_login(request):
                 if request.POST['next']:
                     return HttpResponseRedirect(request.POST['next'])
                 else:
-                    return HttpResponseRedirect('/training/')
+                    return HttpResponseRedirect(reverse('index'))
             else:
                 return HttpResponse("Your account is disabled.")
         else:
@@ -214,7 +215,7 @@ def user_login(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect('/training/')
+    return HttpResponseRedirect(reverse('index'))
     
 
 def show_profile(request, a_username):

@@ -81,7 +81,37 @@ class TransientCandidate(models.Model):
     def __str__(self):
         return "Object %s at (%g, %g) from file: %s" % (self.slug, self.ra, self.dec, self.filename)
 
-    
+
+class SEPInfo(models.Model):
+    trans_candidate = models.ForeignKey(TransientCandidate)
+    thresh = models.FloatField()
+    npix   = models.IntegerField()
+    tnpix  = models.IntegerField()
+    xmin   = models.IntegerField()
+    xmax   = models.IntegerField()
+    ymin   = models.IntegerField()
+    ymax   = models.IntegerField()
+    x      = models.FloatField()
+    y      = models.FloatField()
+    x2     = models.FloatField()
+    y2     = models.FloatField()
+    xy     = models.FloatField()
+    a      = models.FloatField()
+    b      = models.FloatField()
+    theta  = models.FloatField()
+    cxx    = models.FloatField()
+    cyy    = models.FloatField()
+    cxy    = models.FloatField()
+    cflux  = models.FloatField()
+    flux   = models.FloatField()
+    cpeak  = models.FloatField()
+    peak   = models.FloatField()
+    xcpeak = models.IntegerField()
+    ycpeak = models.IntegerField()
+    xpeak  = models.IntegerField()
+    ypeak  = models.IntegerField()
+    flag   = models.IntegerField()
+
 class Session(models.Model):
     ranker = models.ForeignKey(UserProfile)
     start_datetime = models.DateTimeField()
