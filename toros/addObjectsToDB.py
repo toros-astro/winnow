@@ -131,7 +131,7 @@ if __name__ == '__main__':
 
     object_list = np.load(numpyfile)
     fitsfilename = os.path.basename(numpyfile)[8:-4]
-    for obj_id, obj in enumerate(object_list[:50]):
+    for obj_id, obj in enumerate(object_list):
         #Save metadata to info file
 
         #Get x,y,ra,dec
