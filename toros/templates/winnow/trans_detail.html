@@ -43,7 +43,7 @@ var unknown_votes = {{ votes.unknown }}
 		<br>
 		
 		{% if user.is_authenticated %}
-		<form id="page_form" method="post" action="{% url 'object_detail' object.pk %}">
+		<form id="page_form" method="post" action="{% url 'object_detail' object.slug %}">
 		{% csrf_token %}
 		<input type="hidden" value="{{ object.pk }}" name="tc_id">
 		<p>Enter your comment below</p>
