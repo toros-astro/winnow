@@ -18,6 +18,7 @@
 		
         <p><label for="password">Password:</label>
         <input name="password" id="password" value="" type="password" /></p>
+        <input type="hidden" name="next" value="{% url 'index' %}" />
 
 
         <p><input name="submit" style="margin-left: 150px;" class="formbutton" value="Log in" type="submit" /></p>
