@@ -18,15 +18,29 @@ var unknown_votes = {{ votes.unknown }}
 
 {% block content %}
 	<section id="content">
-		<img src="{{ object.subtImg.normal.url }}">
-		<br>
-		
-		<h2>Ranking</h2>
-		<div id=barplot>
-		</div>
-		<script src="{% static 'js/barplot.js' %}"></script>
-		
-		<h2>Likes</h2>
+
+    <div id="all_plots" style="width:90%; margin:1em auto; background-color:#eee; border:2px outset #aaa; display:inline-block; border-radius:10px">
+    	<div id="orig" class="plot">
+    		<img src="{{ object.origImg.normal.url }}" width=100%/>
+    		<h5 style="text-align:center;">Original Image</h5>
+    	</div><!--orig-->
+    	<div id="ref" class="plot">
+    		<img src="{{ object.refImg.normal.url }}" width=100%/>
+    		<h5 style="text-align:center;">Reference Image</h5>
+    	</div><!--ref-->
+    	<div id="subtraction" class="plot">
+    		<img src="{{ object.subtImg.normal.url }}" width=100%/>
+    		<h5 style="text-align:center;">Subtraction Image</h5>
+    	</div><!--subtraction-->
+    </div><!-- all_plots -->
+
+	
+	<h2>Ranking</h2>
+	<div id=barplot>
+	</div>
+	<script src="{% static 'js/barplot.js' %}"></script>
+	
+	<h2>Likes</h2>
 		{% if interesting_count != 0 %}
 		It has been marked interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:<br>
 		<ul style="list-style: none; padding: 0; margin: 0;">
