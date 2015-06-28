@@ -37,6 +37,7 @@ else:
     USE_I18N = True
     USE_L10N = True
     USE_TZ = True
+    LOGIN_URL = '/login'
 
 
 # Application definition
@@ -93,8 +94,6 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
 ASTRO_IMAGE_DIR = os.path.join(BASE_DIR, 'astro_images')
-
-LOGIN_URL = '/login/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
