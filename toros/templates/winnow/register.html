@@ -14,7 +14,7 @@
     {% else %}
      <fieldset>
      	<legend>Required fields are marked in red</legend>
-    	<form id="user_form" method="post" action="/training/register/" enctype="multipart/form-data">
+    	<form id="user_form" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
 		{% csrf_token %}
 		{% for field in user_form %}
     		<p>{% if field.field.required %}

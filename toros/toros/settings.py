@@ -91,7 +91,7 @@ TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
 ASTRO_IMAGE_DIR = os.path.join(BASE_DIR, 'astro_images')
 
-LOGIN_URL = '/training/login/'
+LOGIN_URL = '/login/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
