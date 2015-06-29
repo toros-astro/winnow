@@ -9,78 +9,95 @@
 {% block content %}
 	<section id="content">
 	{% if user.is_authenticated %}
-		{% if object %}
-			<h1 style="margin-top:1em;">Rank this transient</h1>
-			<div id="all_plots" style="width:90%; margin:1em auto; background-color:#eee; border:2px outset #aaa; display:inline-block; border-radius:10px">
-				<div id="orig" class="plot">
-					<img src="{{ object.origImg.normal.url }}" width=100%/>
-					<h5 style="text-align:center;">Original Image</h5>
-				</div><!--orig-->
-				<div id="ref" class="plot">
-					<img src="{{ object.refImg.normal.url }}" width=100%/>
-					<h5 style="text-align:center;">Reference Image</h5>
-				</div><!--ref-->
-				<div id="subtraction" class="plot">
-					<img src="{{ object.subtImg.normal.url }}" width=100%/>
-					<h5 style="text-align:center;">Subtraction Image</h5>
-				</div><!--subtraction-->
-			</div><!-- all_plots -->
-	
-			<div style="clear:both;"></div>
+	{% if object %}
+	<h1 style="margin-top:1em;">Rank this transient</h1>
+	<div id="all_plots" style="width:90%; margin:1em auto; background-color:#eee; border:2px outset #aaa; display:inline-block; border-radius:10px">
+		<div id="orig" class="plot">
+			<img src="{{ object.origImg.normal.url }}" width=100%/>
+			<h5 style="text-align:center;">Original Image</h5>
+		</div><!--orig-->
+		<div id="ref" class="plot">
+			<img src="{{ object.refImg.normal.url }}" width=100%/>
+			<h5 style="text-align:center;">Reference Image</h5>
+		</div><!--ref-->
+		<div id="subtraction" class="plot">
+			<img src="{{ object.subtImg.normal.url }}" width=100%/>
+			<h5 style="text-align:center;">Subtraction Image</h5>
+		</div><!--subtraction-->
+	</div><!-- all_plots -->
 
-			<form id="page_form" method="post" action="{% url 'rank' %}">
-			<div id="form_widgets" style="padding:1em;">
-				<style type="text/css">
-					#id_rank {
-						list-style-type: none;
-						display:inline;
-					}
-					#id_rank li {
-						display:inline;
-						margin:0px 1em;
-					}
-				</style>
+	<div style="clear:both;"></div>
 
-				<input type="hidden" value="{{ object.pk }}" name="tc_id">
+	{% get_sep_info object.slug as sep %}
+    <h5>SEP info</h5>
+    <div id="SEPInfoBox" style="width:50%; padding:0.5em; margin:1em; border:1px solid #000; border-radius:5px; background-color:#ddd;">
+    {% if sep %}
+        id: {{ object.slug }}</br>
+        mag: xxxx</br>
+        mag-err: xxxx</br>
+        a: {{ sep.a }}</br>
+        b: {{ sep.b }}</br>
+        flux: {{ sep.flux }}</br>
+        fwhm: xxxx</br>
+        flag: {{ sep.flag }}</br>
+    {% else %}
+        This object does not have meta information.
+    {% endif %}
+    </div>
 
-				{% csrf_token %}
-				{% for hidden in form.hidden_fields %}
-					{{ hidden }}
-				{% endfor %}
+	<form id="page_form" method="post" action="{% url 'rank' %}">
+	<div id="form_widgets" style="padding:1em;">
+		<style type="text/css">
+			#id_rank {
+				list-style-type: none;
+				display:inline;
+			}
+			#id_rank li {
+				display:inline;
+				margin:0px 1em;
+			}
+		</style>
 
-				{% for field in form.visible_fields %}
-					<div style="border-bottom:1px #ddd solid; padding:1em;">
-					{{ field.errors }}
-					{% if field.name == "isInteresting" %}
-						<h5 style="display:inline;">{{ field.help_text }}:</h5>
-					{% else %}
-						<h5>{{ field.help_text }}:</h5>
-					{% endif %}
-					{{ field }}
-					</div>
-				{% endfor %}
+		<input type="hidden" value="{{ object.pk }}" name="tc_id">
 
-			</div><!-- form_widgets -->
+		{% csrf_token %}
+		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
 
-			<div id="add_comment" style="padding:1em;">
-				You can add a comment below<br>
-				{% get_userprofile user as userprofile %}
-				{% if userprofile.picture %}
-					<div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); float:left; margin:0.3em"></div>
-				{% else %}
-					<div class="profilethumb" style="background-image:url(/media/profile_images/default.normal.png); float:left; margin:0.3em"></div>
-				{% endif %}
-				<textarea name="comment" rows="5" cols="50" wrap="soft" maxlength="3000" style="float:left; display:inline-block; height:50px; margin:0.3em;"></textarea>
-			</div><!-- add_comment -->
-			<div style="clear:both;"></div>
-			<br>
-			<input type="submit" class="formbutton" name="submit" value="Rank Transient" />
-			
-			</form>
+		{% for field in form.visible_fields %}
+			<div style="border-bottom:1px #ddd solid; padding:1em;">
+			{{ field.errors }}
+			{% if field.name == "isInteresting" %}
+				<h5 style="display:inline;">{{ field.help_text }}:</h5>
+			{% else %}
+				<h5>{{ field.help_text }}:</h5>
+			{% endif %}
+			{{ field }}
+			</div>
+		{% endfor %}
 
+	</div><!-- form_widgets -->
+
+	<div id="add_comment" style="padding:1em;">
+		You can add a comment below<br>
+		{% get_userprofile user as userprofile %}
+		{% if userprofile.picture %}
+			<div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); float:left; margin:0.3em"></div>
 		{% else %}
-			<p>Congratulations! You classified all transients available at the moment.</p>
+			<div class="profilethumb" style="background-image:url(/media/profile_images/default.normal.png); float:left; margin:0.3em"></div>
 		{% endif %}
+		<textarea name="comment" rows="5" cols="50" wrap="soft" maxlength="3000" style="float:left; display:inline-block; height:50px; margin:0.3em;"></textarea>
+	</div><!-- add_comment -->
+	<div style="clear:both;"></div>
+	<br>
+	<input type="submit" class="formbutton" name="submit" value="Rank Transient" />
+	
+	</form>
+
+	{% else %}
+		<p>Congratulations! You classified all transients available at the moment.</p>
+	{% endif %}
 				
 	{% else %}
 		<p>You need to be logged in to classify objects.</p>

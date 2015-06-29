@@ -1,5 +1,5 @@
 from django import template
-from winnow.models import Ranking, TransientCandidate, UserProfile
+from winnow.models import Ranking, TransientCandidate, UserProfile, SEPInfo
 from django.contrib.auth.models import User
 from django_comments import Comment
 
@@ -54,3 +54,17 @@ def get_profile_stats(auserprofile):
     int_objects = TransientCandidate.objects.filter(ranking=Ranking.objects.filter(ranker=auserprofile).filter(isInteresting=True))
     latestComments = Comment.objects.filter(user=auserprofile.user)
     return {'num_rankings': num_rankings, 'int_objects': int_objects, 'latestComments': latestComments}
+
+@register.assignment_tag
+def get_sep_info(object_slug):
+    print object_slug
+    try:
+        the_object = TransientCandidate.objects.get(slug = object_slug)
+        print the_object
+        sep = SEPInfo.objects.get(trans_candidate = the_object)
+        print sep
+    except:
+        print("Failed")
+        sep = None
+    print sep
+    return sep
