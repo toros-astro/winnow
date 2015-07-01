@@ -2,6 +2,7 @@ from django import template
 from winnow.models import Ranking, TransientCandidate, UserProfile, SEPInfo
 from django.contrib.auth.models import User
 from django_comments import Comment
+import numpy as np
 
 register = template.Library()
 
@@ -57,14 +58,22 @@ def get_profile_stats(auserprofile):
 
 @register.assignment_tag
 def get_sep_info(object_slug):
-    print object_slug
     try:
         the_object = TransientCandidate.objects.get(slug = object_slug)
-        print the_object
         sep = SEPInfo.objects.get(trans_candidate = the_object)
-        print sep
+        fwhm_x = 2*np.sqrt(2.*np.log(2.)*sep.x2)
+        fwhm_y = 2*np.sqrt(2.*np.log(2.)*sep.y2)
+        sep_extra = {'fwhm_x': fwhm_x, 'fwhm_y': fwhm_y}
     except:
-        print("Failed")
         sep = None
-    print sep
-    return sep
+        sep_extra = None
+    return {'sep': sep, 'sep_extra': sep_extra}
+
+
+
+
+
+
+
+
+
