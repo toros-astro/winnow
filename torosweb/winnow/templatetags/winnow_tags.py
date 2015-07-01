@@ -64,6 +64,22 @@ def get_sep_info(object_slug):
         fwhm_x = 2*np.sqrt(2.*np.log(2.)*sep.x2)
         fwhm_y = 2*np.sqrt(2.*np.log(2.)*sep.y2)
         sep_extra = {'fwhm_x': fwhm_x, 'fwhm_y': fwhm_y}
+        flags = []
+        if (sep.flag & 1) != 0:
+            flags.append('Object is result of deblending')
+        if (sep.flag & 2) != 0:
+            flags.append('Object is truncated at image boundary')
+        if (sep.flag & 8) != 0:
+            flags.append('x, y fully correlated in object')
+        if (sep.flag & 16) != 0:
+            flags.append('Aperture truncated at image boundary')
+        if (sep.flag & 32) != 0:
+            flags.append('Aperture contains one or more masked pixels')
+        if (sep.flag & 64) != 0:
+            flags.append('Aperture contains only masked pixels')
+        if (sep.flag & 128) != 0:
+            flags.append('Aperture sum is negative in kron_radius')
+        sep_extra['flags'] = flags
     except:
         sep = None
         sep_extra = None

@@ -28,17 +28,28 @@
 
 	<div style="clear:both;"></div>
 
-    {% get_sep_info object.slug as sep_dict %}
-    <h5>SEP info</h5>
+   {% get_sep_info object.slug as sep_dict %}
+    <h5>Meta data</h5>
     <div id="SEPInfoBox" style="width:50%; padding:0.5em; border:1px solid #000; border-radius:5px; background-color:#ddd;">
     {% if sep_dict.sep %}
         <b>id:</b> {{ object.slug }}</br>
+        <b>file:</b> {{ object.filename }}</br>
+        <b>mag (candidate):</b> {{ object.mag_orig }}</br>
         <b>a:</b> {{ sep_dict.sep.a }}</br>
         <b>b:</b> {{ sep_dict.sep.b }}</br>
         <b>excess flux:</b> {{ sep_dict.sep.flux }} counts</br>
         <b>fwhm (x):</b> {{ sep_dict.sep_extra.fwhm_x }} px</br>
         <b>fwhm (y):</b> {{ sep_dict.sep_extra.fwhm_y }} px</br>
-        <b>flag:</b> {{ sep_dict.sep.flag }}</br>
+        <b>flags:</b>
+        {% if sep_dict.sep_extra.flags %}
+        <ul>
+        {% for aflag in sep_dict.sep_extra.flags %}
+            <li>{{ aflag }}</li>
+        {% endfor %}
+        </ul>
+        {% else %}
+            None
+        {% endif %}
     {% else %}
         This object does not have meta information.
     {% endif %}
