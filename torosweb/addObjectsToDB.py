@@ -33,7 +33,7 @@ def version():
 
 def add_transient(xy, radec, fits_filename, dataset, hw_box):
     import os
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'toros.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'torosweb.settings')
     import django
     django.setup()
     from winnow.models import TransientCandidate
@@ -63,7 +63,7 @@ def add_transient(xy, radec, fits_filename, dataset, hw_box):
 
 def addSEPInfo(obj, tc):
     import os
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'toros.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'torosweb.settings')
     import django
     django.setup()
     from winnow.models import SEPInfo

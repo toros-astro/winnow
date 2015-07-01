@@ -74,6 +74,10 @@ class TransientCandidate(models.Model):
     subtImg = StdImageField(upload_to=GetFilePathForObject("subt"),
                             variations={'thumbnail': (50, 50, True),
                                         'normal': (400, 400),})
+    mag_orig = models.FloatField(default=0., null=True)
+    mag_ref = models.FloatField(default=0., null=True)
+    mag_subt = models.FloatField(default=0., null=True)
+
     def save(self, *args, **kwargs):
         from django.utils.text import slugify
         self.slug = slugify(self.dataset_id + "_%05d" % (self.object_id))
