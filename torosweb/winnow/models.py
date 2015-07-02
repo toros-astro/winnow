@@ -35,6 +35,8 @@ class UserProfile(models.Model):
                             variations={'thumbnail': (50, 50, True),
                                         'normal': (200, 200),})
     fullname = models.CharField(max_length=200, blank=True)
+    weight = models.FloatField(default=1.0)
+    isDeleted = models.IntegerField(default=0)
     def save(self, *args, **kwargs):
         if self.user.first_name != "" or self.user.last_name != "":
             self.fullname = " ".join([self.user.first_name, self.user.last_name])
@@ -77,6 +79,7 @@ class TransientCandidate(models.Model):
     mag_orig = models.FloatField(default=0., null=True)
     mag_ref = models.FloatField(default=0., null=True)
     mag_subt = models.FloatField(default=0., null=True)
+    isDeleted = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         from django.utils.text import slugify
@@ -115,6 +118,8 @@ class SEPInfo(models.Model):
     xpeak  = models.IntegerField()
     ypeak  = models.IntegerField()
     flag   = models.IntegerField()
+    isDeleted = models.IntegerField(default=0)
+
 
 class Session(models.Model):
     ranker = models.ForeignKey(UserProfile)
@@ -127,13 +132,14 @@ class Ranking(models.Model):
     trans_candidate = models.ForeignKey(TransientCandidate)
     #trans_candidate = models.IntegerField()
     #session = models.ForeignKey(Session, default=0, blank=True)
-    RANKING_OPTIONS = (('B', 'Bogus'),
-                       ('R', 'Real'),
-                       ('X', 'Unclassified'))
-    rank = models.CharField(max_length=1, choices=RANKING_OPTIONS)
+    RANKING_OPTIONS = ((-1, 'Bogus'),
+                       (1, 'Real'),
+                       (0, 'Unclassified'))
+    rank = models.IntegerField(default=0, choices=RANKING_OPTIONS)
     isInteresting = models.BooleanField(default=False)
     #image_file = models.CharField(max_length=50, blank=True)
     #thumbnail_side = models.IntegerField(default=10, blank=True)
+    isDeleted = models.IntegerField(default=0)
     def __str__(self):
         return "Ranking %d" % (self.id)
     
