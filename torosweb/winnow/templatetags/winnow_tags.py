@@ -44,9 +44,9 @@ def get_userprofile(user):
 @register.assignment_tag
 def get_votes_for_object(object_id):
     tc = TransientCandidate.objects.get(pk = object_id)
-    num_real = Ranking.objects.filter(trans_candidate=tc).filter(rank='R').count()
-    num_bogus = Ranking.objects.filter(trans_candidate=tc).filter(rank='B').count()
-    num_unclassf = Ranking.objects.filter(trans_candidate=tc).filter(rank='X').count()
+    num_real = Ranking.objects.filter(trans_candidate=tc).filter(rank=1).count()
+    num_bogus = Ranking.objects.filter(trans_candidate=tc).filter(rank=-1).count()
+    num_unclassf = Ranking.objects.filter(trans_candidate=tc).filter(rank=0).count()
     return {'real':num_real, 'bogus':num_bogus, 'unknown':num_unclassf}
     
 @register.assignment_tag
