@@ -3,9 +3,9 @@ from winnow.models import Ranking, UserProfile
 from django.contrib.auth.models import User
 
 class RankingForm(forms.ModelForm):
-    RANKING_OPTIONS = (('B', 'Bogus'),
-                       ('R', 'Real'),
-                       ('X', 'Unclassified'))
+    RANKING_OPTIONS = ((-1, 'Bogus'),
+                       (1, 'Real'),
+                       (0, 'Unclassified'))
     rank = forms.ChoiceField(choices=RANKING_OPTIONS, widget=forms.RadioSelect, help_text="Options")
     isInteresting = forms.BooleanField(help_text = 'Mark as interesting', initial=False, required=False)
     #trans_candidate = forms.ForeignKey(widget=forms.HiddenInput())
