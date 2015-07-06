@@ -80,6 +80,16 @@ def get_sep_info(object_slug):
         if (sep.flag & 128) != 0:
             flags.append('Aperture sum is negative in kron_radius')
         sep_extra['flags'] = flags
+        ra = the_object.ra
+        dec = the_object.dec
+        ra_deg = int(ra)
+        ra_min = int((ra - ra_deg)*60.)
+        dec_deg = int(dec)
+        dec_min = abs(int((dec - dec_deg)*60.))
+        if dec > 0: sgn = "+"
+        else: sgn = ""
+        sep_extra['simbad_url'] = "http://simbad.u-strasbg.fr/simbad/sim-coo?output.format=HTML&Coord=%d %02d %s%02d %02d&Radius=10&Radius.unit=arcmin" % \
+           (ra_deg, ra_min, sgn, dec_deg, dec_min)
     except:
         sep = None
         sep_extra = None

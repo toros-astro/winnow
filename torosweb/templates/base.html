@@ -63,7 +63,7 @@
 			<div class="width">
 				<ul>
 					<li class="start {{ page_index }}"><a href="{% url 'index' %}">Home</a></li>
-					<li class="{{ page_rank }}"><a href="{% url 'rank' %}">Train</a></li>
+					<li class="{{ page_rank }}"><a href="{% url 'rank' %}">Classify</a></li>
 					<li class="{{ page_interesting }}"><a href="">Interesting</a></li>
 					<li class="end {{ page_about }}"><a href="{% url 'about' %}">About</a></li>
 				</ul>
@@ -80,7 +80,7 @@
 					<h4>Latest interesting objects</h4>
 					{% get_top3interesting as top3int %}
                 	<ul>
-						{% if top3int|length > 0 %}
+						{% if top3int %}
 						{% for astro_object in top3int %}                    	
 							<a href="{% url 'object_detail' astro_object.slug %}">
 							<li class="sidebarInteresting">
