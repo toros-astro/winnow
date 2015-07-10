@@ -12,7 +12,7 @@ class RankingForm(forms.ModelForm):
     
     class Meta:
         model = Ranking
-        fields = ('rank', 'isInteresting') #, 'trans_candidate')
+        fields = ('rank', 'isInteresting')
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
