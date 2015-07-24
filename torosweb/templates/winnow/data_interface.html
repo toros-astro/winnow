@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load winnow_tags %}
+
+{% block title %}Winnow - Home{% endblock %}
+
+{% block content %}
+
+<section id="content">
+
+    <h1>Request a Database Dump</h1>
+    <br>
+    <form id="dump_db" method="post" action="{% url 'data' %}">
+        {% csrf_token %}
+        <input type="hidden" value="It works!" name="message">
+        <fieldset>
+            <legend>Select Data Set</legend>
+            <p>
+            <label>Data Set</label>
+            <select name="dataset">
+            {%  get_datasets as ds %}
+            {% for ads in ds.datasets %}
+               <option value = "{{ads}}">{{ads}}</option>
+            {% endfor %}
+            </select>
+          </p>
+       </fieldset>
+        Click here to get all your data: <input type="submit" class="button" name="submit" value="Request DB Dump" />
+    </form>
+
+</section>
+{% endblock %}
