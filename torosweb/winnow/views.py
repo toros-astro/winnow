@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import user_passes_test
 
 
 # For the comments
@@ -227,38 +228,43 @@ def show_profile(request, a_username):
     return render(request, 'winnow/profile_detail.html', {'the_userprofile': the_userprofile})
 
 
+#@user_passes_test(lambda u: u.is_superuser)
+@login_required
 def data(request):
     if request.method == 'POST':
-        dataset = request.POST['dataset']
-        alltc = TransientCandidate.objects.filter(dataset_id=dataset)
-        html_string = "#unique_id, object id, dataset id, file name, x_pix, y_pix, " \
-                      "RA, Dec, height, width, original magnitude, reference magnitude, "\
-                      "subtraction magnitude, ranking\n"
-        for atc in alltc:
-            html_string += "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " % \
-                           (atc.slug, atc.object_id, atc.dataset_id, atc.filename, atc.x_pix, atc.y_pix, \
-                            atc.ra, atc.dec, atc.height, atc.width, atc.mag_orig, atc.mag_ref, atc.mag_subt)
-            allrk = Ranking.objects.filter(trans_candidate=atc)
-            rank_list = [int(ark.rank) for ark in allrk]
-            rank_add = 0
-            for ark in rank_list: rank_add += ark
-            html_string += "%d\n" % (rank_add)
-        
-        from django.core.files.storage import default_storage
-        from django.core.files.base import ContentFile
-        from django.core.servers.basehttp import FileWrapper
-        from django.conf import settings
-        import os
+        if request.user.is_superuser:
+            dataset = request.POST['dataset']
+            alltc = TransientCandidate.objects.filter(dataset_id=dataset)
+            html_string = "#unique_id, object id, dataset id, file name, x_pix, y_pix, " \
+                          "RA, Dec, height, width, original magnitude, reference magnitude, "\
+                          "subtraction magnitude, ranking\n"
+            for atc in alltc:
+                html_string += "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " % \
+                               (atc.slug, atc.object_id, atc.dataset_id, atc.filename, atc.x_pix, atc.y_pix, \
+                                atc.ra, atc.dec, atc.height, atc.width, atc.mag_orig, atc.mag_ref, atc.mag_subt)
+                allrk = Ranking.objects.filter(trans_candidate=atc)
+                rank_list = [int(ark.rank) for ark in allrk]
+                rank_add = 0
+                for ark in rank_list: rank_add += ark
+                html_string += "%d\n" % (rank_add)
+            
+            from django.core.files.storage import default_storage
+            from django.core.files.base import ContentFile
+            from django.core.servers.basehttp import FileWrapper
+            from django.conf import settings
+            import os
 
-        pfilename = os.path.join(settings.MEDIA_ROOT, 'db_dumps/%s_dump.txt' % (dataset))
-        if os.path.exists(pfilename): os.remove(pfilename)
-        path = default_storage.save('db_dumps/%s_dump.txt' % (dataset), ContentFile(html_string))
-        
-        filename = os.path.join(settings.MEDIA_ROOT, path) 
-        wrapper = FileWrapper(file(filename))
-        response = HttpResponse(wrapper, content_type='text/plain')
-        response['Content-Length'] = os.path.getsize(filename)
-        return response
+            pfilename = os.path.join(settings.MEDIA_ROOT, 'db_dumps/%s_dump.txt' % (dataset))
+            if os.path.exists(pfilename): os.remove(pfilename)
+            path = default_storage.save('db_dumps/%s_dump.txt' % (dataset), ContentFile(html_string))
+            
+            filename = os.path.join(settings.MEDIA_ROOT, path) 
+            wrapper = FileWrapper(file(filename))
+            response = HttpResponse(wrapper, content_type='text/plain')
+            response['Content-Length'] = os.path.getsize(filename)
+            return response
+        else:
+            return HttpResponse("Only super users are allowed for this operation.")
 
     else:
         return render(request, 'winnow/data_interface.html', {'page_data': 'selected',})
