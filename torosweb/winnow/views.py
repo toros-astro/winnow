@@ -231,8 +231,9 @@ def data(request):
     if request.method == 'POST':
         dataset = request.POST['dataset']
         alltc = TransientCandidate.objects.filter(dataset_id=dataset)
-        html_string = "#unique_id, object id, dataset id, file name, x_pix, y_pix, \
-                            RA, Dec, height, width, original magnitude, reference magnitude, subtraction magnitude, ranking</br>"
+        html_string = "#unique_id, object id, dataset id, file name, x_pix, y_pix, " \
+                      "RA, Dec, height, width, original magnitude, reference magnitude, "\
+                      "subtraction magnitude, ranking\n"
         for atc in alltc:
             html_string += "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " % \
                            (atc.slug, atc.object_id, atc.dataset_id, atc.filename, atc.x_pix, atc.y_pix, \
@@ -241,14 +242,24 @@ def data(request):
             rank_list = [int(ark.rank) for ark in allrk]
             rank_add = 0
             for ark in rank_list: rank_add += ark
-            html_string += "%d</br>" % (rank_add)
+            html_string += "%d\n" % (rank_add)
         
-        #from django.core.files.storage import default_storage
-        #from django.core.files.base import ContentFile
-        #from django.core.files.storage import FileSystemStorage
-        #path = default_storage.save('db_dumps/%s_dump.txt' % (dataset), ContentFile(html_string))
+        from django.core.files.storage import default_storage
+        from django.core.files.base import ContentFile
+        from django.core.servers.basehttp import FileWrapper
+        from django.conf import settings
+        import os
 
-        return HttpResponse(html_string)
+        pfilename = os.path.join(settings.MEDIA_ROOT, 'db_dumps/%s_dump.txt' % (dataset))
+        if os.path.exists(pfilename): os.remove(pfilename)
+        path = default_storage.save('db_dumps/%s_dump.txt' % (dataset), ContentFile(html_string))
+        
+        filename = os.path.join(settings.MEDIA_ROOT, path) 
+        wrapper = FileWrapper(file(filename))
+        response = HttpResponse(wrapper, content_type='text/plain')
+        response['Content-Length'] = os.path.getsize(filename)
+        return response
+
     else:
         return render(request, 'winnow/data_interface.html', {'page_data': 'selected',})
 
