@@ -228,7 +228,6 @@ def show_profile(request, a_username):
     return render(request, 'winnow/profile_detail.html', {'the_userprofile': the_userprofile})
 
 
-#@user_passes_test(lambda u: u.is_superuser)
 @login_required
 def data(request):
     if request.method == 'POST':
