@@ -231,11 +231,24 @@ def data(request):
     if request.method == 'POST':
         dataset = request.POST['dataset']
         alltc = TransientCandidate.objects.filter(dataset_id=dataset)
-        html_string = "All candidates:\n"
+        html_string = "#unique_id, object id, dataset id, file name, x_pix, y_pix, \
+                            RA, Dec, height, width, original magnitude, reference magnitude, subtraction magnitude, ranking</br>"
         for atc in alltc:
-            html_string += "%.5f, %.5f, \n" % (atc.ra, atc.dec)
+            html_string += "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " % \
+                           (atc.slug, atc.object_id, atc.dataset_id, atc.filename, atc.x_pix, atc.y_pix, \
+                            atc.ra, atc.dec, atc.height, atc.width, atc.mag_orig, atc.mag_ref, atc.mag_subt)
+            allrk = Ranking.objects.filter(trans_candidate=atc)
+            rank_list = [int(ark.rank) for ark in allrk]
+            rank_add = 0
+            for ark in rank_list: rank_add += ark
+            html_string += "%d</br>" % (rank_add)
+        
+        #from django.core.files.storage import default_storage
+        #from django.core.files.base import ContentFile
+        #from django.core.files.storage import FileSystemStorage
+        #path = default_storage.save('db_dumps/%s_dump.txt' % (dataset), ContentFile(html_string))
+
         return HttpResponse(html_string)
-        #return HttpResponse("Processing dataset: %s" % (request.POST['dataset']))
     else:
         return render(request, 'winnow/data_interface.html', {'page_data': 'selected',})
 
