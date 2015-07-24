@@ -225,3 +225,21 @@ def show_profile(request, a_username):
     except:
         the_userprofile = None
     return render(request, 'winnow/profile_detail.html', {'the_userprofile': the_userprofile})
+
+
+def data(request):
+    if request.method == 'POST':
+        dataset = request.POST['dataset']
+        alltc = TransientCandidate.objects.filter(dataset_id=dataset)
+        html_string = "All candidates:\n"
+        for atc in alltc:
+            html_string += "%.5f, %.5f, \n" % (atc.ra, atc.dec)
+        return HttpResponse(html_string)
+        #return HttpResponse("Processing dataset: %s" % (request.POST['dataset']))
+    else:
+        return render(request, 'winnow/data_interface.html', {'page_data': 'selected',})
+
+    
+
+
+

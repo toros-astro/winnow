@@ -95,6 +95,10 @@ def get_sep_info(object_slug):
         sep_extra = None
     return {'sep': sep, 'sep_extra': sep_extra}
 
+@register.assignment_tag
+def get_datasets():
+    datasets_tuple = TransientCandidate.objects.values_list('dataset_id')
+    return {'datasets': list(set([ads[0] for ads in datasets_tuple]))}
 
 
 
