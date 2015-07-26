@@ -237,8 +237,10 @@ def data(request):
 
             from django.conf import settings
             import os
+            import datetime as d
             dumpfilename = os.path.join(settings.MEDIA_ROOT, 'db_dumps/%s_dump.txt' % (dataset))
             dumpfile = open(dumpfilename, 'w')
+            dumpfile.write("#" + str(d.datetime.now()) + "\n")
             dumpfile.write("#unique_id, object id, dataset id, file name, x_pix, y_pix, " \
                           "RA, Dec, height, width, original magnitude, reference magnitude, "\
                           "subtraction magnitude, ranking\n")
