@@ -7,4 +7,4 @@ Image Differencing will leave behind many fake objects due to bad subtraction th
 
 Copyright Martin Beroiz, 2015
 
-email: <martinberoiz@phys.utb.edu>
+email: <martinberoiz@gmail.com>
