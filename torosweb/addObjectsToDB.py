@@ -31,7 +31,7 @@ def version():
     print "Martin Beroiz - 2015\nmartinberoiz@phys.utb.edu\nUniversity of Texas at San Antonio"
 
 
-def add_transient(xy, radec, fits_filename, dataset, hw_box):
+def add_transient(obj):
     import os
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'torosweb.settings')
     import django
@@ -39,14 +39,14 @@ def add_transient(xy, radec, fits_filename, dataset, hw_box):
     from winnow.models import TransientCandidate
 
     t = TransientCandidate()
-    t.ra         = radec[0]
-    t.dec        = radec[1]
-    t.x_pix      = xy[0]
-    t.y_pix      = xy[1]
-    t.height     = hw_box['height']
-    t.width      = hw_box['width']
-    t.filename   = fits_filename
-    t.dataset_id = dataset
+    t.ra         = obj['ra']
+    t.dec        = obj['dec']
+    t.x_pix      = obj['x']
+    t.y_pix      = obj['y']
+    t.height     = obj['ymax'] - obj['ymin']
+    t.width      = obj['xmax'] - obj['xmin']
+    t.filename   = obj['filename']
+    t.dataset_id = obj['dataset']
     try:
       lastTC = TransientCandidate.objects.filter(dataset_id=dataset).order_by('-object_id')[0]
       last_id = lastTC.object_id
@@ -130,25 +130,14 @@ if __name__ == '__main__':
             img_path = arg
 
     object_list = np.load(numpyfile)
-    fitsfilename = os.path.basename(numpyfile)[8:-4]
-    for obj_id, obj in enumerate(object_list):
+
+    for obj in object_list[:20]:
         #Save metadata to info file
-
-        #Get x,y,ra,dec
-        xy = [obj['x'], obj['y']]
-        radec = [obj['ra'], obj['dec']]
-
-        for afile in os.listdir(img_path):
-            if afile.endswith('.png'):
-                imgfname = afile
-                break;
-        fname_chop = imgfname.split('.')[0].split('_')
-        #old_obj_id = int(fname_chop[-2])
-        dataset = "_".join(fname_chop[:-2])
+        dataset = obj['dataset']
+        obj_id  = obj['object_id']
 
         #Insert models in the database
-        hw_box = {'height': obj['ymax'] - obj['ymin'], 'width': obj['xmax'] - obj['xmin']}
-        newTC = add_transient(xy, radec, fitsfilename, dataset, hw_box)
+        newTC = add_transient(obj)
         addSEPInfo(obj, newTC)
 
         #Do the copy to final destination

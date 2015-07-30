@@ -51,12 +51,12 @@ def rank(request):
     else:
         try:
             #Fetch any tc not ranked yet
-            tc = TransientCandidate.objects.exclude(ranking=Ranking.objects.all())[0]
+            tc = TransientCandidate.objects.filter(dataset_id="cstar_june-01").exclude(ranking=Ranking.objects.all())[0]
         except IndexError:
             #Fetch any tc not ranked by the current user
             try:
                 currentUser = UserProfile.objects.get(user=request.user)
-                tc = TransientCandidate.objects.exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
+                tc = TransientCandidate.objects.filter(dataset_id="cstar_june-01").exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
             except IndexError:
                 tc = None
         
@@ -237,10 +237,10 @@ def data(request):
 
             from django.conf import settings
             import os
-            import datetime as d
+            from django.utils import timezone
             dumpfilename = os.path.join(settings.MEDIA_ROOT, 'db_dumps/%s_dump.txt' % (dataset))
             dumpfile = open(dumpfilename, 'w')
-            dumpfile.write("#" + str(d.datetime.now()) + "\n")
+            dumpfile.write("#" + str(timezone.now()) + "\n")
             dumpfile.write("#unique_id, object id, dataset id, file name, x_pix, y_pix, " \
                           "RA, Dec, height, width, original magnitude, reference magnitude, "\
                           "subtraction magnitude, ranking\n")
@@ -268,7 +268,6 @@ def data(request):
     else:
         return render(request, 'winnow/data_interface.html', {'page_data': 'selected',})
 
-    
 
 
 
