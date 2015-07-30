@@ -131,7 +131,7 @@ if __name__ == '__main__':
 
     object_list = np.load(numpyfile)
 
-    for obj in object_list[:20]:
+    for obj in object_list:
         #Save metadata to info file
         dataset = obj['dataset']
         obj_id  = obj['object_id']
