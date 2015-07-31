@@ -8,26 +8,15 @@
 
 		<section id="content">
 
-	    <article>
-				
-			
-			<h2>Welcome to the training workshop for TOROS </h2>
-			<div class="article-info">Posted on <time datetime="2015-03-23">23 March</time> by <a href=# rel="author">Martin Beroiz</a></div>
+		<h2>Welcome to the training workshop for TOROS </h2>
+		<p>The Transient Optical Robotic Observatory of the South (TOROS) needs your amazing pattern-recognition ability to differentiate between unreal and real image detection.</p>
+		<p>Image differencing leaves behind many unreal (bogus) objects due to bad subtraction. Such images will be classified as bogus by a Machine Learning (ML) algorithm. This ML algorithm has to be “trained” with labeled data. This is where you come in. Your classification of, real or bogus images, will generate this training data set.</p>
+		<p>As a volunteer on this website, you can become a citizen scientist and citizen researcher, participating in real science and other research. If you think you have made a mistake, do not worry. This project is set up to have more than one volunteer analyzing each piece of data, thereby eliminating the vast majority of human error. Mistakes are a part of the process, and can even help us evaluate the difficulty of the data. As long as everyone does their best, they are helping!</p>
+		<p>A short training tutorial is available. Please register and create an account to contribute and collaborate with TOROS.</p>
 
-            <p>TOROS will need an intelligent agent to differentiate bogus detection from the real ones.</p>
-            <p>For that, we need to train the agent by teaching him to learn to classify.
-				Your help is needed for this task. Please register an account and log in to start training Jarvis.</p>
-				
-			<p>This django web app is designed to "winnow the wheat from the chaff" in the Image Difference analysis of astronomical images.</p>
-
-			<p>Image Differencing will leave behind many fake objects due to bad subtraction that will be classified as bogus by a Machine Learning algorithm. This ML algorithm has to be 'trained' with labeled data and this website provides a web interface to generate this training set via human input classification.</p>
-			
-		<a href="{% url 'rank' %}" class="button">Start Training</a>
 		<a href="{% url 'register' %}" class="button">Register</a>
 		<a href="{% url 'login' %}" class="button">Log In</a>
-
-
+		<a href="{% url 'rank' %}" class="button">Start Tutorial</a>
 		
-		</article>
 	</section>
 {% endblock %}
