@@ -8,6 +8,7 @@
 	<meta name="description" content="An astronomy citizen science project for transient classification"/>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="{% static "css/styles.css" %}" />
+	<link rel="stylesheet" type="text/css" href="{% static "css/aboutmenu.css" %}" />
 	<title>{% block title %}Winnow Project{% endblock %}</title>
 	{% block header_extra %}
 	{% endblock %}
@@ -60,12 +61,14 @@
 		</header>
 				
 		<nav>
+			<!-- <div class="width"> -->
 			<div class="width">
 				<ul>
+					<!-- The main horizontal menu bar common to all pages -->
 					<li class="start {{ page_index }}"><a href="{% url 'index' %}">Home</a></li>
 					<li class="{{ page_rank }}"><a href="{% url 'rank' %}">Classify</a></li>
 					<li class="{{ page_data }}"><a href="{% url 'data' %}">Data</a></li>
-					<li class="end {{ page_about }}"><a href="{% url 'about' %}">About</a></li>
+					<li class="end {{ page_about }}"><a href="{% url 'about' %}">About Us</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -160,6 +163,7 @@
 		
 		</footer>
 
-	</div>		
+	</div>
+
 </body>
 </html>
