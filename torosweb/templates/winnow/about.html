@@ -7,9 +7,49 @@
 {% block content %}
 
 <section id="content">
-	<h2>About</h2>
-	<p>An astronomical observatory is needed to carry optical observations of potential gravitational source events. For that reason, scientists from the UTRGV , the Universidad Nacional de Cordoba (UNC), and Texas A&M University have partnered to develop an astronomical observatory in the arid highlands of the Southern Hemisphere named Transient Optical Observatory of the South (TOROS).</p>
-    <p>TOROS is located at Cordon Macón in the province of Salta, Argentina. Cordon Macón has ideal conditions of humidity and air turbulence which create almost perfect astronomical seeing. Astronomical seeing is a technical term that describes how much of the Earth’s atmosphere perturbs the images of stars as seen through a telescope at a given night at a given location. This Southern Hemisphere astronomical observatory provides an opportunity to observe a region of the sky not visible from the Northern Hemisphere.
-	</p>
+
+<div id="aboutUsTitle">About Us</div>
+
+<div class="tab-panels">
+	<!-- The submenu tabs -->
+	<ul class="tabs">
+		<li rel="panelAbout" class="active">About</li>
+		<li rel="panelPublications">Publications</li>
+		<li rel="panelOurTeam">Our Team</li>
+		<li rel="panelEducation">Education</li>
+		<li rel="panelContactUs">Contact Us</li>
+	</ul>
+
+	<!-- Below is one content 'panel' for each menu tab -->
+	<div id="panelAbout" class="panel active">
+		<h2>About</h2>
+		<p>An astronomical observatory is needed to carry optical observations of potential gravitational source events. For that reason, scientists from the UTRGV , the Universidad Nacional de Cordoba (UNC), and Texas A&M University have partnered to develop an astronomical observatory in the arid highlands of the Southern Hemisphere named Transient Optical Observatory of the South (TOROS).</p>
+	    <p>TOROS is located at Cordon Macón in the province of Salta, Argentina. Cordon Macón has ideal conditions of humidity and air turbulence which create almost perfect astronomical seeing. Astronomical seeing is a technical term that describes how much of the Earth’s atmosphere perturbs the images of stars as seen through a telescope at a given night at a given location. This Southern Hemisphere astronomical observatory provides an opportunity to observe a region of the sky not visible from the Northern Hemisphere.
+		</p>
+	</div>
+
+	<div id="panelPublications" class="panel">
+		<img src="http://i.imgur.com/sW9rzLO.gif"/>
+	</div>
+
+	<div id="panelOurTeam" class="panel">
+		our team rocks!
+	</div>
+
+	<div id="panelEducation" class="panel">
+		ejukations is good!
+	</div>
+
+	<div id="panelContactUs" class="panel">
+		Fax us your stuff
+	</div>
+
+</div>
+
+<!-- Run the javascript last -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="{% static "js/aboutmenu.js" %}"></script>
+
 </section>
+
 {% endblock %}
