@@ -51,12 +51,12 @@ def rank(request):
     else:
         try:
             #Fetch any tc not ranked yet
-            tc = TransientCandidate.objects.filter(dataset_id="cstar_june-01").exclude(ranking=Ranking.objects.all())[0]
+            tc = TransientCandidate.objects.filter(dataset_id="cstar_june01").exclude(ranking=Ranking.objects.all())[0]
         except IndexError:
             #Fetch any tc not ranked by the current user
             try:
                 currentUser = UserProfile.objects.get(user=request.user)
-                tc = TransientCandidate.objects.filter(dataset_id="cstar_june-01").exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
+                tc = TransientCandidate.objects.filter(dataset_id="cstar_june01").exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
             except IndexError:
                 tc = None
         
