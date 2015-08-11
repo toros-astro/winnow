@@ -1,4 +1,4 @@
-#TOROS Winnower web page
+# TOROS Winnower web page
 
 This django web app is designed to "winnow the wheat from the chaff" in the Image Difference analysis of astronomical images. 
 
@@ -6,7 +6,7 @@ Image Differencing will leave behind many fake objects due to bad subtraction th
 
 ---
 
-# Download and Installation
+# Download, Install and Setup
 Follow the following steps to download, install, and run this Django project.
 
 ### Clone the repository
@@ -33,10 +33,8 @@ http://127.0.0.1:8000/
 ---
 
 # LIVE Site
-A live version of this site can be accessed by visiting
-```
-http://toros-dev.no-ip.org/training
-```
+A live version of this site can be accessed by visiting: http://toros-dev.no-ip.org/training
+
 
 ---
 
