@@ -34,6 +34,11 @@ body {
 }
 
 
+/* For the AladinLite plot preview in the Rank page. */
+#aladin-lite-div {
+	width:	200px;
+	height: 200px;
+}
 
 /** element defaults **/
 

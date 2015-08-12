@@ -90,6 +90,7 @@ def get_sep_info(object_slug):
         else: sgn = ""
         sep_extra['simbad_url'] = "http://simbad.u-strasbg.fr/simbad/sim-coo?output.format=HTML&Coord=%d %02d %s%02d %02d&Radius=10&Radius.unit=arcmin" % \
            (ra_deg, ra_min, sgn, dec_deg, dec_min)
+        sep_extra['aladinCoords'] = "%d %02d %s%02d %02d" % (ra_deg, ra_min, sgn, dec_deg, dec_min)
     except:
         sep = None
         sep_extra = None
