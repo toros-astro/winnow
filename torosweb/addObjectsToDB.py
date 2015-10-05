@@ -108,7 +108,7 @@ if __name__ == '__main__':
     import getopt
     import numpy as np
     import os
-        
+      
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hvp:f:", ["help", "version", "path="])
     except getopt.GetoptError:
@@ -131,7 +131,9 @@ if __name__ == '__main__':
 
     object_list = np.load(numpyfile)
 
-    for obj in object_list:
+    ntotal_objs = len(object_list)
+    for noboj, obj in enumerate(object_list):
+        print("Making object %d of %d" % (nobj + 1, ntotal_objs))
         #Save metadata to info file
         dataset = obj['dataset']
         obj_id  = obj['object_id']
