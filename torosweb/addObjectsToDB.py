@@ -47,12 +47,7 @@ def add_transient(obj):
     t.width      = obj['xmax'] - obj['xmin']
     t.filename   = obj['filename']
     t.dataset_id = obj['dataset']
-    try:
-      lastTC = TransientCandidate.objects.filter(dataset_id=dataset).order_by('-object_id')[0]
-      last_id = lastTC.object_id
-    except IndexError:
-      last_id = 0
-    t.object_id = last_id + 1
+    t.object_id = obj['object_id']
     t.save()
     t.refImg  = 'object_images/%s_ref.png' % (t.slug)
     t.subtImg = 'object_images/%s_subt.png' % (t.slug)
@@ -132,7 +127,7 @@ if __name__ == '__main__':
     object_list = np.load(numpyfile)
 
     ntotal_objs = len(object_list)
-    for noboj, obj in enumerate(object_list):
+    for nobj, obj in enumerate(object_list):
         print("Making object %d of %d" % (nobj + 1, ntotal_objs))
         #Save metadata to info file
         dataset = obj['dataset']
