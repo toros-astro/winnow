@@ -35,7 +35,7 @@
 .tab-panels ul li.active {
 	font-weight: bold;
 	color: white;
-    border-bottom: thick solid red;
+    border-bottom: thick solid black;
 }
 
 /* A tab that is hovered over */
