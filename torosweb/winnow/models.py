@@ -56,6 +56,13 @@ class GetFilePathForObject(object):
         return os.path.join('object_images', new_filename)
 
 
+class Dataset(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    isCurrent = models.BooleanField(default=True)
+    notes = models.TextField()
+    def __str__(self):
+        return self.name
+
 class TransientCandidate(models.Model):
     ra = models.FloatField()
     dec = models.FloatField()
@@ -65,6 +72,7 @@ class TransientCandidate(models.Model):
     height = models.IntegerField()
     filename = models.CharField(max_length=100)
     dataset_id = models.CharField(max_length=100)
+    dataset = models.ForeignKey(Dataset)
     object_id = models.IntegerField()
     slug = models.SlugField(max_length=110)
     refImg = StdImageField(upload_to=GetFilePathForObject("ref"),
