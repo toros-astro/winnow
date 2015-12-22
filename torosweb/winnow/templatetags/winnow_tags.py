@@ -1,5 +1,5 @@
 from django import template
-from winnow.models import Ranking, TransientCandidate, UserProfile, SEPInfo
+from winnow.models import Ranking, TransientCandidate, UserProfile, SEPInfo, Dataset
 from django.contrib.auth.models import User
 from django_comments import Comment
 import numpy as np
@@ -98,8 +98,8 @@ def get_sep_info(object_slug):
 
 @register.assignment_tag
 def get_datasets():
-    datasets_tuple = TransientCandidate.objects.values_list('dataset_id')
-    return {'datasets': list(set([ads[0] for ads in datasets_tuple]))}
+    datasets = [ds.name for ds in Dataset.objects.all()]
+    return {'datasets': datasets}
 
 
 
