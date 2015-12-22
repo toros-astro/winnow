@@ -94,7 +94,7 @@ class TransientCandidate(models.Model):
         self.slug = slugify(self.dataset.name + "_%05d" % (self.object_id))
         super(TransientCandidate, self).save(*args, **kwargs)
     def __str__(self):
-        return "Object %s" % (self.slug)
+        return "Object %s at (%g, %g) from file: %s" % (self.slug, self.ra, self.dec, self.filename)
 
 
 class SEPInfo(models.Model):
