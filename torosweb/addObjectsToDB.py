@@ -21,8 +21,6 @@ This should be used after running makepngs4db.py
    University of Texas at San Antonio
 """
 
-
-
 __version__ = '0.1'
 
 
@@ -36,7 +34,15 @@ def add_transient(obj):
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'torosweb.settings')
     import django
     django.setup()
-    from winnow.models import TransientCandidate
+    from winnow.models import TransientCandidate, Dataset
+
+    try:
+        ds = Dataset.objects.get(name=obj['dataset'])
+    except:
+        ds = Dataset()
+        ds.name = obj['dataset']
+        ds.isCurrent = True
+        ds.save()
 
     t = TransientCandidate()
     t.ra         = obj['ra']
@@ -46,7 +52,7 @@ def add_transient(obj):
     t.height     = obj['ymax'] - obj['ymin']
     t.width      = obj['xmax'] - obj['xmin']
     t.filename   = obj['filename']
-    t.dataset_id = obj['dataset']
+    t.dataset = ds
     t.object_id = obj['object_id']
     t.save()
     t.refImg  = 'object_images/%s_ref.png' % (t.slug)
