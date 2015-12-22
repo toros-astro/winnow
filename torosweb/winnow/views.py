@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from winnow.forms import RankingForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
-from winnow.models import TransientCandidate, Ranking, UserProfile
+from winnow.models import TransientCandidate, Ranking, UserProfile, Dataset
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import user_passes_test
@@ -51,12 +51,14 @@ def rank(request):
     else:
         try:
             #Fetch any tc not ranked yet
-            tc = TransientCandidate.objects.filter(dataset_id="cstar_june02_predictedreals").exclude(ranking=Ranking.objects.all())[0]
+            ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
+            tc = TransientCandidate.objects.filter(dataset=ds).exclude(ranking=Ranking.objects.all())[0]
         except IndexError:
             #Fetch any tc not ranked by the current user
             try:
                 currentUser = UserProfile.objects.get(user=request.user)
-                tc = TransientCandidate.objects.filter(dataset_id="cstar_june02_predictedreals").exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
+                ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
+                tc = TransientCandidate.objects.filter(dataset=ds).exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
             except IndexError:
                 tc = None
         
