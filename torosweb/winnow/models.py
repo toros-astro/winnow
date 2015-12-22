@@ -43,7 +43,7 @@ class UserProfile(models.Model):
         super(UserProfile, self).save(*args, **kwargs)
     def __str__(self):
         return self.user.username
-        
+
 @deconstructible
 class GetFilePathForObject(object):
     def __init__(self, prefix):
@@ -63,6 +63,7 @@ class Dataset(models.Model):
     def __str__(self):
         return self.name
 
+
 class TransientCandidate(models.Model):
     ra = models.FloatField()
     dec = models.FloatField()
@@ -71,7 +72,6 @@ class TransientCandidate(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     filename = models.CharField(max_length=100)
-    dataset_id = models.CharField(max_length=100)
     dataset = models.ForeignKey(Dataset)
     object_id = models.IntegerField()
     slug = models.SlugField(max_length=110)
@@ -91,10 +91,10 @@ class TransientCandidate(models.Model):
 
     def save(self, *args, **kwargs):
         from django.utils.text import slugify
-        self.slug = slugify(self.dataset_id + "_%05d" % (self.object_id))
+        self.slug = slugify(self.dataset.name + "_%05d" % (self.object_id))
         super(TransientCandidate, self).save(*args, **kwargs)
     def __str__(self):
-        return "Object %s at (%g, %g) from file: %s" % (self.slug, self.ra, self.dec, self.filename)
+        return "Object %s" % (self.slug)
 
 
 class SEPInfo(models.Model):
