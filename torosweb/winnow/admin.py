@@ -12,10 +12,7 @@ class TransientCandidateAdmin(admin.ModelAdmin):
 class RankingAdmin(admin.ModelAdmin):
     list_display = ('ranker', 'rank', 'isInteresting')
 
-class DatasetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'isCurrent', 'notes')
-
 admin.site.register(UserProfile)
+admin.site.register(Dataset)
 admin.site.register(TransientCandidate, TransientCandidateAdmin)
 admin.site.register(Ranking, RankingAdmin)
-admin.site.register(Dataset, DatasetAdmin)
