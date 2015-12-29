@@ -6,7 +6,7 @@ django.setup()
 
 import numpy as np
 
-from winnow.models import TransientCandidate, Ranking, UserProfile, Dataset
+from winnow.models import TransientCandidate, Ranking, UserProfile, Dataset, SEPInfo
 
 def createUser(lastUserID):
     from django.contrib.auth.models import User
@@ -43,7 +43,7 @@ def add_transient(xy, radec):
     t.y_pix      = xy[1]
     t.width      = 10
     t.height     = 10
-    t.filename   = "debug_bogus_file.fits"
+    t.filename   = "testFile.fits"
     t.dataset = ds
     try:
       lastTC = TransientCandidate.objects.filter(dataset=ds).order_by('-object_id')[0]
@@ -56,8 +56,41 @@ def add_transient(xy, radec):
     t.subtImg = 'object_images/no_image.png'
     t.origImg = 'object_images/no_image.png'
     t.save()
-    
+    addSEPInfo(t)
     return t
+
+def addSEPInfo(tc):
+    sep = SEPInfo()
+    sep.trans_candidate = tc
+    sep.thresh = 1.0
+    sep.npix   = 1
+    sep.tnpix  = 1
+    sep.xmin   = 1
+    sep.xmax   = 1
+    sep.ymin   = 1
+    sep.ymax   = 1
+    sep.x      = 1.0
+    sep.y      = 1.0
+    sep.x2     = 1.0
+    sep.y2     = 1.0
+    sep.xy     = 1.0
+    sep.a      = 1.0
+    sep.b      = 1.0
+    sep.theta  = 1.0
+    sep.cxx    = 1.0
+    sep.cyy    = 1.0
+    sep.cxy    = 1.0
+    sep.cflux  = 1.0
+    sep.flux   = 1.0
+    sep.cpeak  = 1.0
+    sep.peak   = 1.0
+    sep.xcpeak = 1
+    sep.ycpeak = 1
+    sep.xpeak  = 1
+    sep.ypeak  = 1
+    sep.flag   = 1
+    sep.isDeleted = 0
+    sep.save()
 
 # Start execution here!
 if __name__ == '__main__':
@@ -83,6 +116,13 @@ if __name__ == '__main__':
                          [ 212.78004925,  -87.620442  ],
                          [ 333.98498108,  -87.66825998]])
     
+    print("Downloadind and saving test file...")
+    #try:
+    #    downloadAndSaveTestFile()
+    #    print("File saved to astro_images/")
+    #except:
+    #    print("Problem downloading and saving test file.")
+
     populate(xypos, radecpos)
         
     # Print out what we have added.
