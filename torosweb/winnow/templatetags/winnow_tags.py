@@ -98,7 +98,21 @@ def get_sep_info(object_slug):
 
 @register.assignment_tag
 def get_datasets():
-    datasets = [ds.name for ds in Dataset.objects.all()]
+    def realranks(atc):
+        return Ranking.objects.filter(trans_candidate = atc).filter(rank= 1).count()
+    def bogusranks(atc):
+        return Ranking.objects.filter(trans_candidate = atc).filter(rank= -1).count()
+    datasets = []
+    for adataset in Dataset.objects.all():
+        dataset_info = {}
+        dataset_info['name'] = adataset.name
+        mytc = TransientCandidate.objects.filter(dataset=adataset)
+        dataset_info['total'] = mytc.count()
+        allranks = [realranks(atc) - bogusranks(atc) for atc in mytc]
+        dataset_info['reals'] = sum([arank > 0 for arank in allranks])
+        dataset_info['bogus'] = sum([arank < 0 for arank in allranks])
+        dataset_info['unclassified'] = sum([arank == 0 for arank in allranks])
+        datasets.append(dataset_info)
     return {'datasets': datasets}
 
 

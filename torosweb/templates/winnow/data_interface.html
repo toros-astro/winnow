@@ -8,6 +8,7 @@
 
 <section id="content">
 
+<div id="block" style="width:90%; margin:1em auto; border:2px; display:inline-block">
     <h1>Request a Database Dump</h1>
     <br>
     <form id="dump_db" method="post" action="{% url 'data' %}">
@@ -20,13 +21,36 @@
             <select name="dataset">
             {%  get_datasets as ds %}
             {% for ads in ds.datasets %}
-               <option value = "{{ads}}">{{ads}}</option>
+               <option value = "{{ads.name}}">{{ads.name}}</option>
             {% endfor %}
             </select>
           </p>
        </fieldset>
         Click here to get all your data: <input type="submit" class="button" name="submit" value="Request DB Dump" />
     </form>
+</div>
+
+<div id="block" style="width:90%; margin:1em auto; border:2px; display:inline-block">
+    <h3>Statistics</h3>
+    <table cellspacing="0">
+        <tr>
+            <th>Dataset Name</th>
+            <th>Reals</th>
+            <th>Bogus</th>
+            <th>Not Classified</th>
+            <th>Total</th>
+        </tr>
+        {% for ads in ds.datasets %}
+        <tr>
+            <td>{{ads.name}}</td>
+            <td>{{ads.reals}}</td>
+            <td>{{ads.bogus}}</td>
+            <td>{{ads.unclassified}}</td>
+            <td>{{ads.total}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
 </section>
 {% endblock %}
