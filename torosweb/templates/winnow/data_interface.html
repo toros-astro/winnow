@@ -9,15 +9,14 @@
 <section id="content">
 
 <div id="block" style="width:90%; margin:1em auto; border:2px; display:inline-block">
-    <h1>Request a Database Dump</h1>
+    <h1>Data Set Information</h1>
     <br>
     <form id="dump_db" method="post" action="{% url 'data' %}">
         {% csrf_token %}
-        <input type="hidden" value="It works!" name="message">
         <fieldset>
-            <legend>Select Data Set</legend>
+            <legend>Request a DB Dump</legend>
             <p>
-            <label>Data Set</label>
+            <label>Select Data Set</label>
             <select name="dataset">
             {%  get_datasets as ds %}
             {% for ads in ds.datasets %}
