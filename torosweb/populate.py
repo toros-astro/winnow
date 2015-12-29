@@ -43,7 +43,7 @@ def add_transient(xy, radec):
     t.y_pix      = xy[1]
     t.width      = 10
     t.height     = 10
-    t.filename   = "testFile.fits"
+    t.filename   = "debug_bogus_file.fits"
     t.dataset = ds
     try:
       lastTC = TransientCandidate.objects.filter(dataset=ds).order_by('-object_id')[0]
@@ -116,13 +116,6 @@ if __name__ == '__main__':
                          [ 212.78004925,  -87.620442  ],
                          [ 333.98498108,  -87.66825998]])
     
-    print("Downloadind and saving test file...")
-    #try:
-    #    downloadAndSaveTestFile()
-    #    print("File saved to astro_images/")
-    #except:
-    #    print("Problem downloading and saving test file.")
-
     populate(xypos, radecpos)
         
     # Print out what we have added.
