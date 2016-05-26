@@ -33,7 +33,7 @@ http://127.0.0.1:8000/
 ---
 
 # LIVE Site
-A live version of this site can be accessed by visiting: http://toros-dev.no-ip.org/training
+A live version of this site can be accessed by visiting: http://toros-dev.no-ip.org
 
 
 ---
