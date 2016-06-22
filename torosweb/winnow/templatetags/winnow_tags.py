@@ -3,7 +3,7 @@ from winnow.models import Ranking, TransientCandidate, UserProfile, SEPInfo
 from winnow.models import Dataset
 from django.contrib.auth.models import User
 from django_comments import Comment
-import numpy as np
+import math
 
 register = template.Library()
 
@@ -79,8 +79,8 @@ def get_sep_info(object_slug):
     try:
         the_object = TransientCandidate.objects.get(slug=object_slug)
         sep = SEPInfo.objects.get(trans_candidate=the_object)
-        fwhm_x = 2 * np.sqrt(2. * np.log(2.) * sep.x2)
-        fwhm_y = 2 * np.sqrt(2. * np.log(2.) * sep.y2)
+        fwhm_x = 2 * math.sqrt(2. * math.log(2.) * sep.x2)
+        fwhm_y = 2 * math.sqrt(2. * math.log(2.) * sep.y2)
         sep_extra = {'fwhm_x': fwhm_x, 'fwhm_y': fwhm_y}
         flags = []
         if (sep.flag & 1) != 0:
