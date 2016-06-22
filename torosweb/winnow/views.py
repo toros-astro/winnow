@@ -72,16 +72,15 @@ def rank(request):
 
         form = RankingForm()
 
-    return render(request, 'winnow/rank.html', {'form':        form, 
-                                                'page_rank':   'selected', 
-                                                'tc_id' :      tc_id,
-                                                'object' :     tc})
+    return render(request, 'winnow/rank.html',
+                  {'form': form, 'page_rank': 'selected',
+                   'tc_id': tc_id, 'object': tc})
 
 
 def about(request):
     return render(request, 'winnow/about.html', {'page_about': 'selected'})
-  
-# Completely deprecated, I leave it here just in case  
+
+# Completely deprecated, I leave it here just in case
 #def thumb(request, trans_candidate_id):
 #    
 #    tc = TransientCandidate.objects.get(pk=trans_candidate_id)
