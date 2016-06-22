@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from winnow.forms import RankingForm, UserForm, UserProfileForm
@@ -6,15 +6,16 @@ from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile, Dataset
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import user_passes_test
 
 
 # For the comments
 from django_comments.models import Comment
 from django.contrib.sites.shortcuts import get_current_site
 
+
 def index(request):
     return render(request, 'winnow/index.html', {'page_index': 'selected'})
+
 
 @login_required
 def rank(request):
@@ -28,21 +29,22 @@ def rank(request):
                 tc = TransientCandidate.objects.get(pk=tc_id)
                 r.trans_candidate = tc
                 r.save()
-                
-                #Now save the comment if there is one.
+
+                # Now save the comment if there is one.
                 comment_text = request.POST.get('comment')
                 if len(comment_text) > 0:
-                    #save the comment
+                    # save the comment
                     newComment = Comment()
                     newComment.user = request.user
                     newComment.user_name = request.user.username
                     newComment.user_email = request.user.email
-                    newComment.user_url = UserProfile.objects.get(user=request.user).website
+                    newComment.user_url = UserProfile.objects.\
+                        get(user=request.user).website
                     newComment.comment = comment_text
                     newComment.site = get_current_site(request)
                     newComment.content_object = tc
                     newComment.save()
-                
+
             return HttpResponseRedirect(reverse('rank'))
         else:
             print form.errors
@@ -50,25 +52,26 @@ def rank(request):
             tc = TransientCandidate.objects.get(pk=tc_id)
     else:
         try:
-            #Fetch any tc not ranked yet
+            # Fetch any tc not ranked yet
             ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
-            tc = TransientCandidate.objects.filter(dataset=ds).exclude(ranking=Ranking.objects.all())[0]
+            tc = TransientCandidate.objects.filter(dataset=ds).\
+                exclude(ranking=Ranking.objects.all())[0]
         except IndexError:
-            #Fetch any tc not ranked by the current user
+            # Fetch any tc not ranked by the current user
             try:
                 currentUser = UserProfile.objects.get(user=request.user)
                 ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
                 tc = TransientCandidate.objects.filter(dataset=ds).exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
             except IndexError:
                 tc = None
-        
+
         if tc is None:
             tc_id = -1
         else:
             tc_id = tc.id
-        
+
         form = RankingForm()
-    
+
     return render(request, 'winnow/rank.html', {'form':        form, 
                                                 'page_rank':   'selected', 
                                                 'tc_id' :      tc_id,
@@ -105,21 +108,22 @@ def about(request):
 #    canvas.print_png(response)
 #    plt.close()
 #    return response
-    
+
+
 def object_detail(request, object_slug):
-    
-    trans_obj = TransientCandidate.objects.get(slug = object_slug)
+
+    trans_obj = TransientCandidate.objects.get(slug=object_slug)
     trans_candidate_id = trans_obj.pk
-    ranked_interesting = Ranking.objects.filter(trans_candidate = trans_obj).filter(isInteresting = True)
-    int_users_list = UserProfile.objects.filter(ranking = ranked_interesting)
+    ranked_interesting = Ranking.objects.filter(trans_candidate=trans_obj).filter(isInteresting = True)
+    int_users_list = UserProfile.objects.filter(ranking=ranked_interesting)
     int_counts = len(int_users_list)
-    
+
     if request.method == "POST":
-        if request.user.is_authenticated():  
-            #Save the comment if there is one.
+        if request.user.is_authenticated():
+            # Save the comment if there is one.
             comment_text = request.POST.get('comment')
             if len(comment_text) > 0:
-                #save the comment
+                # save the comment
                 newComment = Comment()
                 newComment.user = request.user
                 newComment.user_name = request.user.username
@@ -129,10 +133,11 @@ def object_detail(request, object_slug):
                 newComment.site = get_current_site(request)
                 newComment.content_object = trans_obj
                 newComment.save()
-                    
-    return render(request, 'winnow/trans_detail.html', {'object' : trans_obj,
-                                                        'interesting_count': str(int_counts), 
-                                                        'interesting_user_list': int_users_list})
+
+    return render(request, 'winnow/trans_detail.html',
+                  {'object': trans_obj, 'interesting_count': str(int_counts),
+                   'interesting_user_list': int_users_list})
+
 
 def register(request):
     registered = False
@@ -168,8 +173,8 @@ def register(request):
 
             # Update our variable to tell the template registration was successful.
             registered = True
-            
-            #Now the user has been created, log them in            
+
+            # Now the user has been created, log them in
             newusername = request.POST.get('username')
             newpassword = request.POST.get('password')
             newuser = authenticate(username=newusername, password=newpassword)
@@ -188,7 +193,10 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
 
-    return render(request, 'winnow/register.html', {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+    return render(request, 'winnow/register.html',
+                  {'user_form': user_form, 'profile_form': profile_form,
+                   'registered': registered})
+
 
 def user_login(request):
 
@@ -201,7 +209,7 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
 
-                #This will return users to whatever page they were when loggin in
+                # This returns users to whatever page they were when logged in
                 if request.POST['next']:
                     return HttpResponseRedirect(request.POST['next'])
                 else:
@@ -214,12 +222,13 @@ def user_login(request):
 
     else:
         return render(request, 'winnow/login.html', {})
-        
+
+
 @login_required
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
-    
+
 
 def show_profile(request, a_username):
     try:
@@ -227,49 +236,52 @@ def show_profile(request, a_username):
         the_userprofile = UserProfile.objects.get(user=the_user)
     except:
         the_userprofile = None
-    return render(request, 'winnow/profile_detail.html', {'the_userprofile': the_userprofile})
+    return render(request, 'winnow/profile_detail.html',
+                  {'the_userprofile': the_userprofile})
 
 
 @login_required
 def data(request):
+    from django.db.models import Sum
     if request.method == 'POST':
         if request.user.is_superuser:
             dataset = request.POST['dataset']
-            alltc = TransientCandidate.objects.filter(dataset=Dataset.objects.get(name=dataset))
+            alltc = TransientCandidate.objects.filter(dataset__name=dataset)
 
             from django.conf import settings
             import os
             from django.utils import timezone
-            dumpfilename = os.path.join(settings.MEDIA_ROOT, 'db_dumps/%s_dump.txt' % (dataset))
+            dumpfilename = os.path.join(settings.MEDIA_ROOT,
+                                        'db_dumps/%s_dump.txt' % (dataset))
             dumpfile = open(dumpfilename, 'w')
             dumpfile.write("#" + str(timezone.now()) + "\n")
-            dumpfile.write("#unique_id, object id, dataset id, file name, x_pix, y_pix, " \
-                          "RA, Dec, height, width, original magnitude, reference magnitude, "\
-                          "subtraction magnitude, ranking\n")
+            dumpfile.write(
+                "#unique_id, object id, dataset id, file name, x_pix, y_pix, "
+                "RA, Dec, height, width, original magnitude, "
+                "reference magnitude, subtraction magnitude, ranking\n")
 
             for atc in alltc:
                 aline = "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " % \
-                               (atc.slug, atc.object_id, dataset, atc.filename, atc.x_pix, atc.y_pix, \
-                                atc.ra, atc.dec, atc.height, atc.width, atc.mag_orig, atc.mag_ref, atc.mag_subt)
-                allrk = Ranking.objects.filter(trans_candidate=atc)
-                rank_list = [int(ark.rank) for ark in allrk]
-                rank_add = 0
-                for ark in rank_list: rank_add += ark
-                aline += "%d\n" % (rank_add)
+                    (atc.slug, atc.object_id, dataset, atc.filename, atc.x_pix,
+                     atc.y_pix, atc.ra, atc.dec, atc.height, atc.width,
+                     atc.mag_orig, atc.mag_ref, atc.mag_subt)
+
+                rbclass = atc.ranking_set.all().\
+                    aggregate(Sum('rank'))['rank__sum']
+                rbclass = rbclass if rbclass is not None else 0
+                aline += "%d\n" % (rbclass)
                 dumpfile.write(aline)
             dumpfile.close()
-            
+
             from django.core.servers.basehttp import FileWrapper
             wrapper = FileWrapper(file(dumpfilename))
             response = HttpResponse(wrapper, content_type='text/plain')
             response['Content-Length'] = os.path.getsize(dumpfilename)
             return response
         else:
-            return HttpResponse("Only super users are allowed for this operation.")
+            return HttpResponse(
+                "Only super users are allowed for this operation.")
 
     else:
-        return render(request, 'winnow/data_interface.html', {'page_data': 'selected',})
-
-
-
-
+        return render(request, 'winnow/data_interface.html',
+                      {'page_data': 'selected'})
