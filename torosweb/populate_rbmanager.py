@@ -5,8 +5,8 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from rbmanager.models import Experiment, Dataset
-from winnow.models import UserProfile
+from rbmanager.models import Experiment
+from winnow.models import UserProfile, Dataset
 
 
 def create_user(last_user_id):

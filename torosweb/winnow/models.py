@@ -1,17 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
 import os
 from stdimage.models import StdImageField
 
-#def __get_file_path(instance, filename):
+# def __get_file_path(instance, filename):
 #    ext = filename.split('.')[-1]
 #    filename = "%s_profilepic.%s" % (instance.user.username, ext)
 #    return os.path.join('profile_images', filename)
 
 from django.utils.deconstruct import deconstructible
 
+
 # See this SO http://stackoverflow.com/questions/25767787/django-cannot-create-migrations-for-imagefield-with-dynamic-upload-to-value
-#and this bug report https://code.djangoproject.com/ticket/22999
+# and this bug report https://code.djangoproject.com/ticket/22999
 @deconstructible
 class GetFilePath(object):
     def __call__(self, instance, filename):
@@ -21,8 +24,9 @@ class GetFilePath(object):
 
 get_file_path_for_user = GetFilePath()
 
+
 class UserProfile(models.Model):
-    #def __get_file_path(instance, filename):
+    # def __get_file_path(instance, filename):
     #    ext = filename.split('.')[-1]
     #    filename = "%s_profilepic.%s" % (instance.user.username, ext)
     #    return os.path.join('profile_images', filename)
@@ -30,27 +34,34 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     affiliation = models.CharField(max_length=200, blank=True)
     website = models.URLField(blank=True)
-    #picture = models.ImageField(upload_to=__get_file_path, blank=True)
-    picture = StdImageField(upload_to=get_file_path_for_user, blank=True, null=True, 
+    # picture = models.ImageField(upload_to=__get_file_path, blank=True)
+    picture = StdImageField(upload_to=get_file_path_for_user,
+                            blank=True, null=True,
                             variations={'thumbnail': (50, 50, True),
-                                        'normal': (200, 200),})
+                                        'normal': (200, 200), })
     fullname = models.CharField(max_length=200, blank=True)
     weight = models.FloatField(default=1.0)
     isDeleted = models.IntegerField(default=0)
+
     def save(self, *args, **kwargs):
         if self.user.first_name != "" or self.user.last_name != "":
-            self.fullname = " ".join([self.user.first_name, self.user.last_name])
+            self.fullname = " ".join(
+                [self.user.first_name, self.user.last_name])
         super(UserProfile, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.user.username
+
 
 @deconstructible
 class GetFilePathForObject(object):
     def __init__(self, prefix):
         self.prefix = prefix
+
     def __call__(self, instance, filename):
         from django.utils.text import slugify
-        temp_slug = slugify(instance.dataset_id + "_%05d" % (instance.object_id))
+        temp_slug = slugify(
+            instance.dataset_id + "_%05d" % (instance.object_id))
         ext = filename.split('.')[-1]
         new_filename = "%s_%s.%s" % (temp_slug, self.prefix, ext)
         return os.path.join('object_images', new_filename)
@@ -59,7 +70,17 @@ class GetFilePathForObject(object):
 class Dataset(models.Model):
     name = models.CharField(max_length=100, unique=True)
     isCurrent = models.BooleanField(default=True)
-    notes = models.TextField()
+    start_datetime = models.DateTimeField(null=True, blank=True)
+    end_datetime = models.DateTimeField(null=True, blank=True)
+    cadence_sec = models.FloatField(null=True, blank=True)
+    subset_of = models.ForeignKey('self', null=True, blank=True)
+    number_of_files = models.IntegerField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+
+    def clean(self):
+        if self.subset_of == self:
+            raise ValidationError("A dataset can't be subset of itself.")
+
     def __str__(self):
         return self.name
 
@@ -76,14 +97,14 @@ class TransientCandidate(models.Model):
     object_id = models.IntegerField()
     slug = models.SlugField(max_length=110)
     refImg = StdImageField(upload_to=GetFilePathForObject("ref"),
-                            variations={'thumbnail': (50, 50, True),
-                                        'normal': (400, 400),})
+                           variations={'thumbnail': (50, 50, True),
+                                       'normal': (400, 400), })
     origImg = StdImageField(upload_to=GetFilePathForObject("orig"),
                             variations={'thumbnail': (50, 50, True),
-                                        'normal': (400, 400),})
+                                        'normal': (400, 400), })
     subtImg = StdImageField(upload_to=GetFilePathForObject("subt"),
                             variations={'thumbnail': (50, 50, True),
-                                        'normal': (400, 400),})
+                                        'normal': (400, 400), })
     mag_orig = models.FloatField(default=0., null=True)
     mag_ref = models.FloatField(default=0., null=True)
     mag_subt = models.FloatField(default=0., null=True)
@@ -93,8 +114,10 @@ class TransientCandidate(models.Model):
         from django.utils.text import slugify
         self.slug = slugify(self.dataset.name + "_%05d" % (self.object_id))
         super(TransientCandidate, self).save(*args, **kwargs)
+
     def __str__(self):
-        return "Object %s at (%g, %g) from file: %s" % (self.slug, self.ra, self.dec, self.filename)
+        return "Object %s at (%g, %g) from file: %s" % \
+            (self.slug, self.ra, self.dec, self.filename)
 
 
 class SEPInfo(models.Model):
@@ -134,20 +157,20 @@ class Session(models.Model):
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
 
-  
+
 class Ranking(models.Model):
     ranker = models.ForeignKey(UserProfile)
     trans_candidate = models.ForeignKey(TransientCandidate)
-    #trans_candidate = models.IntegerField()
-    #session = models.ForeignKey(Session, default=0, blank=True)
+    # trans_candidate = models.IntegerField()
+    # session = models.ForeignKey(Session, default=0, blank=True)
     RANKING_OPTIONS = ((-1, 'Bogus'),
                        (1, 'Real'),
                        (0, 'Unclassified'))
     rank = models.IntegerField(default=0, choices=RANKING_OPTIONS)
     isInteresting = models.BooleanField(default=False)
-    #image_file = models.CharField(max_length=50, blank=True)
-    #thumbnail_side = models.IntegerField(default=10, blank=True)
+    # image_file = models.CharField(max_length=50, blank=True)
+    # thumbnail_side = models.IntegerField(default=10, blank=True)
     isDeleted = models.IntegerField(default=0)
+
     def __str__(self):
         return "Ranking %d" % (self.id)
-    

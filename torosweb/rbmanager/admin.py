@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Experiment, Dataset
+from .models import Experiment
 
 
 admin.site.register(Experiment)
-admin.site.register(Dataset)

@@ -1,12 +1,11 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 
-from winnow.models import UserProfile
+from winnow.models import UserProfile, Dataset
 
 
 class Experiment(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    dataset = models.ForeignKey('Dataset')
+    dataset = models.ForeignKey(Dataset)
     date = models.DateField('date of experiment')
     SOFTWARE = (
         ('0', 'Weka'),
@@ -51,21 +50,21 @@ class Experiment(models.Model):
         return "#{}: {} in {}".format(self.id, self.alg_name, p_name)
 
 
-class Dataset(models.Model):
-    name = models.CharField(max_length=50)
-    start_datetime = models.DateTimeField(null=True, blank=True)
-    end_datetime = models.DateTimeField(null=True, blank=True)
-    cadence_sec = models.FloatField(null=True, blank=True)
-    subset_of = models.ForeignKey('self', null=True, blank=True)
-    number_of_files = models.IntegerField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-
-    def clean(self):
-        if self.subset_of == self:
-            raise ValidationError("A dataset can't be subset of itself.")
-
-    def __str__(self):
-        return self.name
+# class Dataset(models.Model):
+#     name = models.CharField(max_length=50)
+#     start_datetime = models.DateTimeField(null=True, blank=True)
+#     end_datetime = models.DateTimeField(null=True, blank=True)
+#     cadence_sec = models.FloatField(null=True, blank=True)
+#     subset_of = models.ForeignKey('self', null=True, blank=True)
+#     number_of_files = models.IntegerField(null=True, blank=True)
+#     description = models.TextField(null=True, blank=True)
+#
+#     def clean(self):
+#         if self.subset_of == self:
+#             raise ValidationError("A dataset can't be subset of itself.")
+#
+#     def __str__(self):
+#         return self.name
 
 
 # class RBUserProfile(models.Model):
