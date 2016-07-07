@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <style>
+    .profilethumb {
+    border:2px #fff solid;
+    border-radius:25px;
+    margin:0px auto;
+    background-repeat: no-repeat;
+    background-size:100% 100%;
+    width:50px; height:50px;
+}
+
+#authbox {
+    float:right;
+    margin-right: 0.5em;
+}
+
+    </style>
+
     {% block header_extra %}
     {% endblock %}
 </head>
@@ -32,7 +50,19 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
                 <div id="authbox">
-                    <form method="post" role="form" action="#">
+                    {% if user.is_active %}
+                    <a href="{% url 'profile_detail' user.username %}">
+                        {% if user.userprofile.picture %}
+                            <div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); margin:0px auto;"></div>
+                        {% else %} 
+                            <div class="profilethumb" style="background-image:url(/media/profile_images/default.thumbnail.png); margin:0px auto;"></div>
+                        {% endif %}
+                    </a>
+                    <div style="clear:both; display:block; float:left; padding:5px;">
+                        <a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
+                    </div>
+                    {% else %}
+                    <form method="post" role="form" action="{% url 'login' %}">
                         {% csrf_token %}
                         <div style="margin:0.2em; float:right;">
                             <input name="submit" value="Log in" type="submit" />
@@ -42,13 +72,14 @@
                             <input name="username" id="name" value="" type="text" style="float:left; display:block; width:100px;"  placeholder="Username"/>
                             <label class="sr-only" for="password" style="float:left; display:block; width:80px;">Password:</label>
                             <input name="password" id="password" value="" type="password" style="float:left; display:block; width:100px;" placeholder="Password" />
-                            <input type="hidden" name="next" value="#" />
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
                         </div><!-- enterauthdata -->
                     </form>
                     <div style="clear:both; display:block; padding-left:5px;">
-                        Or <a href="#">Sign up!</a>
+                        Or <a href="{% url 'register' %}" style="font-weight:bold;">Sign up!</a>
                     </div>
-                </div>
+                    {% endif %}
+                </div><!-- authbox -->
             </li>
           </ul class="nav navbar-nav navbar-right">
         </div class="collapse navbar-collapse" id="myNavbar">
