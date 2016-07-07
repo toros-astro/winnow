@@ -1,20 +1,25 @@
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'torosweb.settings')
 
 import django
 django.setup()
 
 from django.contrib.auth.models import User
 from rbmanager.models import Experiment, Dataset
+from winnow.models import UserProfile
 
 
 def create_user(last_user_id):
-    auser = User.objects.get_or_create(username="populate%02d" %
-                                       (last_user_id + 1))[0]
-    auser.first_name = "Populate"
-    auser.last_name = "Anon%02d" % (last_user_id + 1)
-    auser.save()
-    return auser
+    auser, created = User.objects.get_or_create(
+        username="populate%02d" % (last_user_id + 1))
+    if created:
+        auser.first_name = "Populate"
+        auser.last_name = "Anon%02d" % (last_user_id + 1)
+        auser.save()
+    myuser, created = UserProfile.objects.get_or_create(user=auser)
+    if created:
+        myuser.save()
+    return myuser
 
 
 def populate(num_users, num_exp_per_user):
@@ -62,5 +67,6 @@ if __name__ == '__main__':
     # Print out what we have added.
     print("This has been added to the database:")
     for u in User.objects.all():
-        for e in Experiment.objects.filter(user=u):
+        for e in Experiment.objects.\
+                filter(user=UserProfile.objects.get(user=u)):
             print "Experiment {0} done by user: {1}".format(e, u)

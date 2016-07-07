@@ -1,10 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+
+from winnow.models import UserProfile
 
 
 class Experiment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     dataset = models.ForeignKey('Dataset')
     date = models.DateField('date of experiment')
     SOFTWARE = (

@@ -24,9 +24,9 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 if not DEBUG:
-    from local_settings import * 
+    from local_settings import *  # noqa
 else:
-    #This secret key should be used only for debug mode, use a different one for production
+    # This secret key should be used only for debug mode, use a different one for production
     SECRET_KEY = '4i&$vzscu&53t4dui3o*x_1an&+k(&wgq6+&b&hwd%^&hze+_^'
     ALLOWED_HOSTS = []
     SITE_ID = 1
@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'django_comments',
     'stdimage',
     'winnow',
+    'rbmanager',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,7 +81,7 @@ WSGI_APPLICATION = 'torosweb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.with_rbmanager.sqlite3'),
     }
 }
 
@@ -92,8 +93,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
-
-ASTRO_IMAGE_DIR = os.path.join(BASE_DIR, 'astro_images')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
