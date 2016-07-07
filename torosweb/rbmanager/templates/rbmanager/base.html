@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}ML Experiment Manager{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    {% block header_extra %}
+    {% endblock %}
+</head>
+
+
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">RealBogus</a>
+        </div class="navbar-header">
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Graphs</a></li>
+            <li><a href="#">Compare</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+                <div id="authbox">
+                    <form method="post" role="form" action="#">
+                        {% csrf_token %}
+                        <div style="margin:0.2em; float:right;">
+                            <input name="submit" value="Log in" type="submit" />
+                        </div>
+                        <div id="enterauthdata">
+                            <label class="sr-only" for="name" style="float:left; display:block; width:80px;">Username:</label>
+                            <input name="username" id="name" value="" type="text" style="float:left; display:block; width:100px;"  placeholder="Username"/>
+                            <label class="sr-only" for="password" style="float:left; display:block; width:80px;">Password:</label>
+                            <input name="password" id="password" value="" type="password" style="float:left; display:block; width:100px;" placeholder="Password" />
+                            <input type="hidden" name="next" value="#" />
+                        </div><!-- enterauthdata -->
+                    </form>
+                    <div style="clear:both; display:block; padding-left:5px;">
+                        Or <a href="#">Sign up!</a>
+                    </div>
+                </div>
+            </li>
+          </ul class="nav navbar-nav navbar-right">
+        </div class="collapse navbar-collapse" id="myNavbar">
+    </div lass="container-fluid">
+</nav class="navbar navbar-inverse">
+
+    {% block bodycontent %}
+    {% endblock %}
+
+</body>
+</html>

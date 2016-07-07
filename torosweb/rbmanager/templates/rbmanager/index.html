@@ -1,0 +1,144 @@
+{% extends 'rbmanager/base.html' %}
+
+{% block header_extra %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+{% endblock %}
+
+{% block bodycontent %}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Real-Bogus Classifier</h1>
+    </div class="page-header">
+
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="{% url 'rbmanager:index' %}">Data</a></li>
+      <li><a href="#">Upload</a></li>
+  </ul>
+
+  <h1>Browse old experiments or input a new one</h1>
+
+    {% if notification.value %}
+        <div class="alert alert-{{ notification.type }}">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ notification.message }}
+        </div>
+    {% endif %}
+
+  <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h6 class="panel-title">        
+        <a data-toggle="collapse" href="#enterexp">
+        <span class="caret"></span>
+        Enter your new experiment here 
+        </a>
+        </h6>
+
+      </div>
+      <div class="panel-collapse collapse" id="enterexp">
+      <div class="panel-body">
+
+            <form role="form" method="post" action="{% url 'rbmanager:index' %}">
+            {% csrf_token %}
+            {% for field in exp_form %}
+            <div class="form-group">
+            {% if field.field.required %}
+                <span class="required">
+                {{ field.label_tag }}
+                </span>
+            {% else %}
+                {{ field.label_tag }}
+            {% endif %}
+            {{ field }}
+            {% for error in field.errors %}
+                <i>({{ error }})</i>
+            {% endfor %}
+            </div class="form-group">
+            {% endfor %}
+            <input name="submit" class="btn btn-default" value="Submit" type="submit" />
+            </form>
+
+        </div class="panel-body">
+      </div>
+  </div class="panel panel-primary">
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Latest Experiments</div>
+  <div class="panel-body">
+    {% if experiment_list %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Algorithm Name</th>
+                <th>Date</th>
+                <th>Platform</th>
+                <th>Confusion Matrix</th>
+              </tr>
+            </thead>
+        <tbody>
+            {% for exp in experiment_list %}
+          <tr>
+            <td>{{ exp.pk }}</td>
+            <td>{{ exp.user }}</td>
+            <td>{{ exp.alg_name }} </td>
+            <td>{{ exp.date }} </td>
+            {% if exp.platform == "3" %}
+            <td>{{ exp.other_platform_name }} </td>
+            {% else %}
+            <td>{{ exp.get_platform_display }} </td>
+            {% endif %}
+            <td>
+                <div align=center>
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th style="text-align: center;">r</th>
+                        <th style="text-align: center;">b</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <th>classified as r</th>
+                        <td style="padding: 2px; border-right: 1px solid;">{{ exp.conf_mat_rr }}</td>
+                        <td style="padding: 2px;">{{ exp.conf_mat_br }}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: right">b</th>
+                        <td style="padding: 2px; border-right: 1px solid;">{{ exp.conf_mat_rb }}</td>
+                        <td style="padding: 2px;">{{ exp.conf_mat_bb }}</td>
+                    </tr>
+                </table>
+                </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+    </div class="table-responsive">
+    {% else %}
+    <p>No experiments to show</p>
+    {% endif %}
+  </div class="panel-body">
+</div class="panel panel-primary">
+
+</div class="container-fluid">
+
+
+<script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "2000:2100",
+      setDate: +0
+    });
+  });
+  </script>
+
+{% endblock %}
