@@ -282,5 +282,6 @@ def data(request):
                 "Only super users are allowed for this operation.")
 
     else:
+        datasets = Dataset.objects.all()
         return render(request, 'winnow/data_interface.html',
-                      {'page_data': 'selected'})
+                      {'page_data': 'selected', 'datasets': datasets})

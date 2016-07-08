@@ -1,6 +1,5 @@
 from django import template
 from winnow.models import Ranking, TransientCandidate, UserProfile, SEPInfo
-from winnow.models import Dataset
 from django.contrib.auth.models import User
 from django_comments import Comment
 import math
@@ -117,25 +116,3 @@ def get_sep_info(object_slug):
             (ra_deg, ra_min, sgn, dec_deg, dec_min)
 
     return {'sep': sep, 'sep_extra': sep_extra}
-
-
-@register.assignment_tag
-def get_datasets():
-    from django.db.models import Sum
-    datasets = []
-    for adataset in Dataset.objects.all():
-        dataset_info = {}
-        dataset_info['name'] = adataset.name
-
-        tc_query = TransientCandidate.objects.filter(dataset=adataset)
-        dataset_info['total'] = tc_query.count()
-        dataset_info['reals'] = tc_query.annotate(
-            brclass=Sum('ranking__rank')).\
-            filter(brclass__gt=0).count()
-        dataset_info['bogus'] = tc_query.annotate(
-            brclass=Sum('ranking__rank')).\
-            filter(brclass__lt=0).count()
-        dataset_info['unclassified'] = dataset_info['total'] -\
-            (dataset_info['reals'] + dataset_info['bogus'])
-        datasets.append(dataset_info)
-    return {'datasets': datasets}

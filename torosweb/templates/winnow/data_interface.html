@@ -18,8 +18,7 @@
             <p>
             <label>Select Data Set</label>
             <select name="dataset">
-            {%  get_datasets as ds %}
-            {% for ads in ds.datasets %}
+            {% for ads in datasets %}
                <option value = "{{ads.name}}">{{ads.name}}</option>
             {% endfor %}
             </select>
@@ -37,15 +36,17 @@
             <th>Reals</th>
             <th>Bogus</th>
             <th>Unclassified</th>
+            <th>Not Ranked</th>
             <th>Total</th>
         </tr>
-        {% for ads in ds.datasets %}
+        {% for ads in datasets %}
         <tr>
-            <td>{{ads.name}}</td>
-            <td>{{ads.reals}}</td>
-            <td>{{ads.bogus}}</td>
-            <td>{{ads.unclassified}}</td>
-            <td>{{ads.total}}</td>
+            <td>{{ ads.name }}</td>
+            <td>{{ ads.number_of_reals }}</td>
+            <td>{{ ads.number_of_bogus }}</td>
+            <td>{{ ads.number_of_unclassified }}</td>
+            <td>{{ ads.number_not_ranked }}</td>
+            <td>{{ ads.number_of_objects }}</td>
         </tr>
         {% endfor %}
     </table>

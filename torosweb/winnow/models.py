@@ -68,6 +68,7 @@ class GetFilePathForObject(object):
 
 
 class Dataset(models.Model):
+
     name = models.CharField(max_length=100, unique=True)
     isCurrent = models.BooleanField(default=True)
     start_datetime = models.DateTimeField(null=True, blank=True)
@@ -76,6 +77,46 @@ class Dataset(models.Model):
     subset_of = models.ForeignKey('self', null=True, blank=True)
     number_of_files = models.IntegerField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+
+    def number_of_reals(self):
+        from django.db.models import Sum
+        tc_query = TransientCandidate.objects.filter(dataset=self)
+        num_reals = tc_query.annotate(brclass=Sum('ranking__rank')).\
+            filter(brclass__gt=0).count()
+        return num_reals
+
+    def number_of_bogus(self):
+        from django.db.models import Sum
+        tc_query = TransientCandidate.objects.filter(dataset=self)
+        num_bogus = tc_query.annotate(brclass=Sum('ranking__rank')).\
+            filter(brclass__lt=0).count()
+        return num_bogus
+
+    def number_of_unclassified(self):
+        from django.db.models import Sum
+        tc_query = TransientCandidate.objects.filter(dataset=self)
+        num_unclassified = tc_query.annotate(brclass=Sum('ranking__rank')).\
+            filter(brclass__exact=0).count()
+        return num_unclassified
+
+    def number_not_ranked(self):
+        not_ranked = TransientCandidate.objects.filter(dataset=self).\
+            exclude(ranking=Ranking.objects.all()).count()
+        return not_ranked
+
+    def number_of_objects(self):
+        return TransientCandidate.objects.filter(dataset=self).count()
+
+    def number_of_rbx(self):
+        from django.db.models import Sum
+        tc_query = TransientCandidate.objects.filter(dataset=self)
+        num_reals = tc_query.annotate(brclass=Sum('ranking__rank')).\
+            filter(brclass__gt=0).count()
+        num_bogus = tc_query.annotate(brclass=Sum('ranking__rank')).\
+            filter(brclass__lt=0).count()
+        total = tc_query.count()
+        num_no_label = total - (num_reals + num_bogus)
+        return num_reals, num_bogus, num_no_label
 
     def clean(self):
         if self.subset_of == self:
