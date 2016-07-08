@@ -35,14 +35,9 @@
 
 	<div style="clear:both;"></div>
 
-    {% get_sep_info object.slug as sep_dict %}
     <h5>Meta data</h5>
     <div id="SEPInfoBox" style="width:50%; padding:0.5em; border:1px solid #000; border-radius:5px; background-color:#ddd;">
-        <b>id:</b> {{ object.slug }}</br>
-        <b>file:</b> {{ object.filename }}</br>
-        <b>RA:</b> {{ object.ra|floatformat:6}} deg.</br>
-        <b>Dec:</b> {{ object.dec|floatformat:6 }} deg.</br>
-        <b>mag (candidate):</b> {{ object.mag_orig|floatformat:2 }}</br>
+    {% get_sep_info object.slug as sep_dict %}
     {% if sep_dict.sep %}
         <!-- insert this snippet where you want Aladin Lite viewer to appear and after the loading of jQuery -->
                 <div id="aladin-lite-div"></div>
@@ -52,6 +47,14 @@
                                                         showZoomControl: false, showFullscreenControl: false, showLayersControl: false,
                                                         showGotoControl: false, showReticle: false, showFrame: false, fullscreen: false});
         </script>
+    {% endif %}
+        <b>id:</b> {{ object.slug }}</br>
+        <b>file:</b> {{ object.filename }}</br>
+        <b>RA:</b> {{ object.ra|floatformat:6}} deg.</br>
+        <b>Dec:</b> {{ object.dec|floatformat:6 }} deg.</br>
+        <b>mag (candidate):</b> {{ object.mag_orig|floatformat:2 }}</br>
+
+    {% if sep_dict.sep %}
         <b>a:</b> {{ sep_dict.sep.a|floatformat:2 }}</br>
         <b>b:</b> {{ sep_dict.sep.b|floatformat:2 }}</br>
         <b>fwhm (x):</b> {{ sep_dict.sep_extra.fwhm_x|floatformat:2 }} px</br>
@@ -67,7 +70,7 @@
         Query this object on <a href="{{ sep_dict.sep_extra.simbad_url }}" target="_blank">Simbad</a>
         </br>
     {% else %}
-        <p>This object does not have meta information.</p>
+        <p>This object does not have extra meta information.</p>
     {% endif %}
     </div>
 
