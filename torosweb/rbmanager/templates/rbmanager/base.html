@@ -49,8 +49,8 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
-                <div id="authbox">
                     {% if user.is_active %}
+                <div id="authbox">
                     <a href="{% url 'profile_detail' user.username %}">
                         {% if user.userprofile.picture %}
                             <div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); margin:0px auto;"></div>
@@ -61,33 +61,20 @@
                     <div style="clear:both; display:block; float:left; padding:5px;">
                         <a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
                     </div>
-                    {% else %}
-                    <form method="post" role="form" action="{% url 'login' %}">
-                        {% csrf_token %}
-                        <div style="margin:0.2em; float:right;">
-                            <input name="submit" value="Log in" type="submit" />
-                        </div>
-                        <div id="enterauthdata">
-                            <label class="sr-only" for="name" style="float:left; display:block; width:80px;">Username:</label>
-                            <input name="username" id="name" value="" type="text" style="float:left; display:block; width:100px;"  placeholder="Username"/>
-                            <label class="sr-only" for="password" style="float:left; display:block; width:80px;">Password:</label>
-                            <input name="password" id="password" value="" type="password" style="float:left; display:block; width:100px;" placeholder="Password" />
-                            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-                        </div><!-- enterauthdata -->
-                    </form>
-                    <div style="clear:both; display:block; padding-left:5px;">
-                        Or <a href="{% url 'register' %}" style="font-weight:bold;">Sign up!</a>
-                    </div>
-                    {% endif %}
                 </div><!-- authbox -->
+                    {% else %}
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginmodal">Login</button>
+                          <a href="{% url 'register' %}" type="button" class="btn btn-success btn-sm">Sign Up!</a>
+                        </div>
+                        {% include "rbmanager/login_form.html" %}
+                   {% endif %}
             </li>
           </ul class="nav navbar-nav navbar-right">
         </div class="collapse navbar-collapse" id="myNavbar">
     </div lass="container-fluid">
 </nav class="navbar navbar-inverse">
-
     {% block bodycontent %}
     {% endblock %}
-
 </body>
 </html>
