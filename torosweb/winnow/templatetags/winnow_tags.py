@@ -76,9 +76,13 @@ def get_profile_stats(auserprofile):
 
 @register.assignment_tag
 def get_sep_info(object_slug):
+    the_object = TransientCandidate.objects.get(slug=object_slug)
     try:
-        the_object = TransientCandidate.objects.get(slug=object_slug)
         sep = SEPInfo.objects.get(trans_candidate=the_object)
+    except:
+        sep = None
+        sep_extra = None
+    else:
         fwhm_x = 2 * math.sqrt(2. * math.log(2.) * sep.x2)
         fwhm_y = 2 * math.sqrt(2. * math.log(2.) * sep.y2)
         sep_extra = {'fwhm_x': fwhm_x, 'fwhm_y': fwhm_y}
@@ -105,15 +109,13 @@ def get_sep_info(object_slug):
         dec_deg = int(dec)
         dec_min = abs(int((dec - dec_deg) * 60.))
         sgn = "+" if dec > 0 else ""
-        sep_extra['simbad_url'] = "http://simbad.u-strasbg.fr/simbad/"
-        "sim-coo?output.format=HTML&Coord=%d %02d %s%02d %02d"
-        "&Radius=10&Radius.unit=arcmin" % \
+        sep_extra['simbad_url'] = "http://simbad.u-strasbg.fr/simbad/" \
+            "sim-coo?output.format=HTML&Coord=%d %02d %s%02d %02d" \
+            "&Radius=10&Radius.unit=arcmin" % \
             (ra_deg, ra_min, sgn, dec_deg, dec_min)
         sep_extra['aladinCoords'] = "%d %02d %s%02d %02d" % \
             (ra_deg, ra_min, sgn, dec_deg, dec_min)
-    except:
-        sep = None
-        sep_extra = None
+
     return {'sep': sep, 'sep_extra': sep_extra}
 
 
