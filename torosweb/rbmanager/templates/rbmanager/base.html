@@ -8,27 +8,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-    <style>
-    .profilethumb {
-    border:2px #fff solid;
-    border-radius:25px;
-    margin:0px auto;
-    background-repeat: no-repeat;
-    background-size:100% 100%;
-    width:50px; height:50px;
-}
-
-#authbox {
-    float:right;
-    margin-right: 0.5em;
-}
-
-    </style>
-
     {% block header_extra %}
     {% endblock %}
 </head>
-
 
 <body>
 <nav class="navbar navbar-inverse">
@@ -49,26 +31,20 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
-                    {% if user.is_active %}
-                <div id="authbox">
-                    <a href="{% url 'profile_detail' user.username %}">
-                        {% if user.userprofile.picture %}
-                            <div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); margin:0px auto;"></div>
-                        {% else %} 
-                            <div class="profilethumb" style="background-image:url(/media/profile_images/default.thumbnail.png); margin:0px auto;"></div>
-                        {% endif %}
-                    </a>
-                    <div style="clear:both; display:block; float:left; padding:5px;">
-                        <a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
-                    </div>
-                </div><!-- authbox -->
-                    {% else %}
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginmodal">Login</button>
-                          <a href="{% url 'register' %}" type="button" class="btn btn-success btn-sm">Sign Up!</a>
-                        </div>
-                        {% include "rbmanager/login_form.html" %}
-                   {% endif %}
+                {% if user.is_active %}
+                <div class="btn-group">
+                  <a href="{% url 'profile_detail' user.username %}" type="button" class="btn btn-primary btn-sm">
+                    {{ user.username }}
+                  </a>
+                  <a href="{% url 'logout' %}" type="button" class="btn btn-danger btn-sm">Log out</a>
+                </div>
+                {% else %}
+                <div class="btn-group">
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginmodal">Login</button>
+                  <a href="{% url 'register' %}" type="button" class="btn btn-success btn-sm">Sign Up!</a>
+                </div>
+                {% include "rbmanager/login_form.html" %}
+                {% endif %}
             </li>
           </ul class="nav navbar-nav navbar-right">
         </div class="collapse navbar-collapse" id="myNavbar">
