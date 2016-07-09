@@ -25,11 +25,15 @@ def index(request):
                     user_prof.save()
                     notification_passed['message'] += \
                         " A new profile has been created for the user."
-                finally:
-                    new_exp.user = user_prof
-                    new_exp.save()
-                    notification = notification_passed
-                    exp_form = ExperimentForm()
+                new_exp.user = user_prof
+
+                print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG ")
+                print(exp_form['features'])
+                print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG ")
+
+                new_exp.save()
+                notification = notification_passed
+                exp_form = ExperimentForm()
             else:  # if user is not authenticated
                 notification_failed['message'] = "You need to be logged in " \
                     "to upload an experiment."
