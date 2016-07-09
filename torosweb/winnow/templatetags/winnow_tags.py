@@ -1,8 +1,7 @@
 from django import template
-from winnow.models import Ranking, TransientCandidate, UserProfile, SEPInfo
+from winnow.models import Ranking, TransientCandidate, UserProfile
 from django.contrib.auth.models import User
 from django_comments import Comment
-import math
 
 register = template.Library()
 
@@ -48,26 +47,3 @@ def get_userprofile(user):
         except:
             userprof = None
     return userprof
-
-
-@register.assignment_tag
-def get_votes_for_object(object_id):
-    tc = TransientCandidate.objects.get(pk=object_id)
-    num_real = Ranking.objects.filter(trans_candidate=tc).\
-        filter(rank=1).count()
-    num_bogus = Ranking.objects.filter(trans_candidate=tc).\
-        filter(rank=-1).count()
-    num_unclassf = Ranking.objects.filter(trans_candidate=tc).\
-        filter(rank=0).count()
-    return {'real': num_real, 'bogus': num_bogus, 'unknown': num_unclassf}
-
-
-@register.assignment_tag
-def get_profile_stats(auserprofile):
-    num_rankings = Ranking.objects.filter(ranker=auserprofile).count()
-    int_objects = TransientCandidate.objects.\
-        filter(ranking=Ranking.objects.
-               filter(ranker=auserprofile).filter(isInteresting=True))
-    latestcomments = Comment.objects.filter(user=auserprofile.user)
-    return {'num_rankings': num_rankings, 'int_objects': int_objects,
-            'latestComments': latestcomments}

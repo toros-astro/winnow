@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from stdimage.models import StdImageField
+from django_comments import Comment
 
 import os
 import math
@@ -44,6 +45,20 @@ class UserProfile(models.Model):
     fullname = models.CharField(max_length=200, blank=True)
     weight = models.FloatField(default=1.0)
     isDeleted = models.IntegerField(default=0)
+
+    def number_of_votes(self):
+        num_votes = Ranking.objects.filter(ranker=self).count()
+        return num_votes
+
+    def interesting_objects(self):
+        intesting_rankings = Ranking.objects.filter(ranker=self).\
+            filter(isInteresting=True)
+        interesting_objects = TransientCandidate.objects.\
+            filter(ranking=intesting_rankings)
+        return interesting_objects
+
+    def comments(self):
+        return Comment.objects.filter(user=self.user)
 
     def save(self, *args, **kwargs):
         if self.user.first_name != "" or self.user.last_name != "":

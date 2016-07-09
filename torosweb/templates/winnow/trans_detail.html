@@ -8,11 +8,10 @@
 {% block header_extra %}
 <script src="{% static "js/d3.v3.min.js" %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static "css/barplot.css" %}">
-{% get_votes_for_object object.pk as votes %}
 <script>
-var real_votes = {{ votes.real }}
-var bogus_votes = {{ votes.bogus }}
-var unknown_votes = {{ votes.unknown }}
+var real_votes = {{ object.number_of_real_votes }}
+var bogus_votes = {{ object.number_of_bogus_votes }}
+var unknown_votes = {{ object.number_of_unclassified_votes }}
 </script>
 {% endblock %}
 

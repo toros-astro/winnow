@@ -25,17 +25,16 @@
 			{% endif %}
 		</div><!-- profileinfo -->
 		<div style="clear:both;"></div>
-		{% get_profile_stats the_userprofile as prof_stats %}
-		<p>{{ the_userprofile.user.username }} has ranked {{ prof_stats.num_rankings }} transients.</p>
+		<p>{{ the_userprofile.user.username }} has ranked {{ the_userprofile.number_of_votes }} transients.</p>
 		<h3>My Interesting objects:</h3><br>
 		<ul>
-		{% for obj in prof_stats.int_objects %}
+		{% for obj in the_userprofile.interesting_objects %}
 		 <li><a href="{% url 'object_detail' obj.slug %}">{{ obj }}</a></li>
 		{% endfor %}
 	    </ul>
 
-		<h3>My latest comments:</h3>
-		{% for comment in prof_stats.latestComments|slice:":3" %}
+		<h3>My comments:</h3>
+		{% for comment in the_userprofile.comments %}
 		<i>On {{ comment.submit_date }}, {{ comment.user }} wrote about object
 			<a href="{% url 'object_detail' comment.content_object.slug %}">
 				{{comment.content_object.slug}}
@@ -44,7 +43,6 @@
 		<blockquote><p>{{ comment.comment }}</p></blockquote>
 		<hr width="90%" align="left">
 		{% endfor %}
-		<a href="">See all comments from this user.</p>
 			
 	{% else %}
 		<br>
