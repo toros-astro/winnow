@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Experiment
+from .models import Experiment, Feature
 from .forms import ExperimentForm
 
 from winnow.models import UserProfile
@@ -26,12 +26,14 @@ def index(request):
                     notification_passed['message'] += \
                         " A new profile has been created for the user."
                 new_exp.user = user_prof
-
-                print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG ")
-                print(exp_form['features'])
-                print("DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG ")
-
                 new_exp.save()
+
+                # Create and save the associated features
+                for name, description in exp_form.cleaned_data['features']:
+                    new_feat = Feature(name=name, description=description)
+                    new_feat.experiment = new_exp
+                    new_feat.save()
+
                 notification = notification_passed
                 exp_form = ExperimentForm()
             else:  # if user is not authenticated

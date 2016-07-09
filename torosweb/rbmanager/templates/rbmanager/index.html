@@ -78,6 +78,7 @@
                 <th>User</th>
                 <th>Dataset</th>
                 <th>Algorithm Name</th>
+                <th>Features</th>
                 <th>Platform</th>
                 <th>Confusion Matrix</th>
                 <th>Description</th>
@@ -91,6 +92,15 @@
             <td>{{ exp.user }}</td>
             <td>{{ exp.dataset }}</td>
             <td>{{ exp.alg_name }} </td>
+            <td>
+              {% for feat in exp.feature_set.all %}
+              {% if forloop.last %}
+              {{ feat.name }}
+              {% else %}
+              {{ feat.name }}, 
+              {% endif %}
+              {% endfor %}
+            </td>
             {% if exp.platform == "3" %}
             <td>{{ exp.other_platform_name }} </td>
             {% else %}

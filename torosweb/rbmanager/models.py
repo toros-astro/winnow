@@ -39,9 +39,6 @@ class Experiment(models.Model):
         'other input files', null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
-    def features(self):
-        return Feature.objects.filter(experiment=self)
-
     def __str__(self):
         if self.platform != '3':
             p_name = self.get_platform_display()

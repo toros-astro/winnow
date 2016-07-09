@@ -21,7 +21,6 @@ class ExperimentForm(forms.ModelForm):
         alg_name = self.cleaned_data.get('alg_name', None)
         if alg_name is not None:
             cleaned_data['alg_name'] = alg_name.title()
-            return self.cleaned_data
 
         def feature_set(feature_text_field):
             def parse_descriptions(astr):
@@ -34,5 +33,8 @@ class ExperimentForm(forms.ModelForm):
             return [parse_descriptions(afeat)
                     for afeat in feature_text_field.split(',')]
 
-        cleaned_data['features'] = feature_set(cleaned_data['features'])
+        the_feat = self.cleaned_data.get('features', None)
+        if the_feat is not None:
+            cleaned_data['features'] = feature_set(the_feat)
+
         return cleaned_data
