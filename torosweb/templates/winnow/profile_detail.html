@@ -27,13 +27,16 @@
 		<div style="clear:both;"></div>
 		<p>{{ the_userprofile.user.username }} has ranked {{ the_userprofile.number_of_votes }} transients.</p>
 		<h3>My Interesting objects:</h3><br>
+		<div style="max-height: 30em; overflow: auto; padding-right: 2em;">
 		<ul>
 		{% for obj in the_userprofile.interesting_objects %}
 		 <li><a href="{% url 'object_detail' obj.slug %}">{{ obj }}</a></li>
 		{% endfor %}
 	    </ul>
+		</div>
 
 		<h3>My comments:</h3>
+		<div style="max-height: 30em; overflow: auto; padding-right: 2em;">
 		{% for comment in the_userprofile.comments %}
 		<i>On {{ comment.submit_date }}, {{ comment.user }} wrote about object
 			<a href="{% url 'object_detail' comment.content_object.slug %}">
@@ -43,6 +46,7 @@
 		<blockquote><p>{{ comment.comment }}</p></blockquote>
 		<hr width="90%" align="left">
 		{% endfor %}
+		</div>
 			
 	{% else %}
 		<br>
