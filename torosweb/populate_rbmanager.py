@@ -5,7 +5,7 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from rbmanager.models import Experiment
+from rbmanager.models import Experiment, Feature
 from winnow.models import UserProfile, Dataset
 
 
@@ -25,11 +25,33 @@ def create_user(last_user_id):
 def populate(num_users, num_exp_per_user):
     fake_dset = Dataset(name='fake_dataset')
     fake_dset.save()
+    print("Saved Dataset {}.".format(fake_dset))
 
     for userid in range(num_users):
         myuser = create_user(userid)
-        for exp in range(num_exp_per_user):
-            add_experiment(myuser, fake_dset)
+        for exp_counter in range(num_exp_per_user):
+            exp = add_experiment(myuser, fake_dset)
+            print("Saved experiment {} for user {}".format(exp, myuser))
+            for name, description in get_features():
+                feat = Feature(name=name, description=description)
+                feat.experiment = exp
+                feat.save()
+                print("Saved feature {} for experiment {}".format(feat, exp))
+            print("")
+
+
+def get_features():
+    import random
+    feat_all = [('num_neg_pix', 'number of negative pixels'),
+                ('roundness', 'a/b major over minor semiaxis'),
+                ('width', ''),
+                ('height', ''),
+                ('sep_flags', 'flags returned by SExtractor'),
+                ('close_to_boundary', "boolean if it's close to image bounds"),
+                ('fwhm_x', 'Full width half maximum in x direction'),
+                ('fwhm_y', 'Full width half maximum in y direction')]
+    random.shuffle(feat_all)
+    return feat_all[:3]
 
 
 def add_experiment(user, dataset):
@@ -64,9 +86,3 @@ if __name__ == '__main__':
     print("Starting rbmamager population script...")
     populate(3, 5)
 
-    # Print out what we have added.
-    print("This has been added to the database:")
-    for u in User.objects.all():
-        for e in Experiment.objects.\
-                filter(user=UserProfile.objects.get(user=u)):
-            print "Experiment {0} done by user: {1}".format(e, u)
