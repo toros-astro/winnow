@@ -1,0 +1,41 @@
+{% block header_extra %}
+<link rel="stylesheet" href="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+<!-- you can skip the following line if your page already integrates the jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>
+{% endblock %}
+
+<div id="SEPInfoBox" style="width:50%; padding:0.5em; border:1px solid #000; border-radius:5px; background-color:#ddd;">
+    <!-- insert this snippet where you want Aladin Lite viewer to appear and after the loading of jQuery -->
+            <div id="aladin-lite-div"></div>
+            <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript">
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:0.08, target: "{{object.aladin_coords}}",
+                                                    showZoomControl: false, showFullscreenControl: false, showLayersControl: false,
+                                                    showGotoControl: false, showReticle: false, showFrame: false, fullscreen: false});
+            </script>
+    <b>id:</b> {{ object.slug }}</br>
+    <b>file:</b> {{ object.filename }}</br>
+    <b>RA:</b> {{ object.ra|floatformat:6}} deg.</br>
+    <b>Dec:</b> {{ object.dec|floatformat:6 }} deg.</br>
+    <b>mag (candidate):</b> {{ object.mag_orig|floatformat:2 }}</br>
+
+{% if object.sepinfo %}
+    <b>a:</b> {{ object.sepinfo.a|floatformat:2 }}</br>
+    <b>b:</b> {{ object.sepinfo.b|floatformat:2 }}</br>
+    <b>fwhm (x):</b> {{ object.sepinfo.fwhm_x|floatformat:2 }} px</br>
+    <b>fwhm (y):</b> {{ object.sepinfo.fwhm_y|floatformat:2 }} px</br>
+    <b>flags:</b>
+    <ul>
+    {% for aflag in object.sepinfo.flag_labels %}
+        <li>{{ aflag }}</li>
+    {% empty %}
+        None
+    {% endfor %}
+    </ul>
+{% else %}
+    <br>
+    <p>This object does not have extra meta information.</p>
+{% endif %}
+        Query this object on <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?output.format=HTML&Coord={{ object.sepinfo.aladin_coords }}&Radius=10&Radius.unit=arcmin" target="_blank">Simbad</a>
+    </br>
+</div>
