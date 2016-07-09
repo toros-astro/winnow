@@ -2,8 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-import os
 from stdimage.models import StdImageField
+
+import os
+import math
 
 # def __get_file_path(instance, filename):
 #    ext = filename.split('.')[-1]
@@ -68,7 +70,6 @@ class GetFilePathForObject(object):
 
 
 class Dataset(models.Model):
-
     name = models.CharField(max_length=100, unique=True)
     isCurrent = models.BooleanField(default=True)
     start_datetime = models.DateTimeField(null=True, blank=True)
@@ -151,6 +152,31 @@ class TransientCandidate(models.Model):
     mag_subt = models.FloatField(default=0., null=True)
     isDeleted = models.IntegerField(default=0)
 
+    def aladin_coords(self):
+        ra = self.ra
+        dec = self.dec
+        ra_deg = int(ra)
+        ra_min = int((ra - ra_deg) * 60.)
+        dec_deg = int(dec)
+        dec_min = abs(int((dec - dec_deg) * 60.))
+        sgn = "+" if dec > 0 else ""
+        return "%d %02d %s%02d %02d" % (ra_deg, ra_min, sgn, dec_deg, dec_min)
+
+    def number_of_real_votes(self):
+        num_real = Ranking.objects.filter(trans_candidate=self).\
+            filter(rank=1).count()
+        return num_real
+
+    def number_of_bogus_votes(self):
+        num_bogus = Ranking.objects.filter(trans_candidate=self).\
+            filter(rank=-1).count()
+        return num_bogus
+
+    def number_of_unclassified_votes(self):
+        num_unclassifed = Ranking.objects.filter(trans_candidate=self).\
+            filter(rank=0).count()
+        return num_unclassifed
+
     def save(self, *args, **kwargs):
         from django.utils.text import slugify
         self.slug = slugify(self.dataset.name + "_%05d" % (self.object_id))
@@ -162,7 +188,7 @@ class TransientCandidate(models.Model):
 
 
 class SEPInfo(models.Model):
-    trans_candidate = models.ForeignKey(TransientCandidate)
+    trans_candidate = models.OneToOneField(TransientCandidate)
     thresh = models.FloatField()
     npix   = models.IntegerField()
     tnpix  = models.IntegerField()
@@ -191,6 +217,30 @@ class SEPInfo(models.Model):
     ypeak  = models.IntegerField()
     flag   = models.IntegerField()
     isDeleted = models.IntegerField(default=0)
+
+    def fwhm_x(self):
+        return 2 * math.sqrt(2. * math.log(2.) * self.x2)
+
+    def fwhm_y(self):
+        return 2 * math.sqrt(2. * math.log(2.) * self.y2)
+
+    def flag_labels(self):
+        flags = []
+        if (self.flag & 1) != 0:
+            flags.append('Object is result of deblending')
+        if (self.flag & 2) != 0:
+            flags.append('Object is truncated at image boundary')
+        if (self.flag & 8) != 0:
+            flags.append('x, y fully correlated in object')
+        if (self.flag & 16) != 0:
+            flags.append('Aperture truncated at image boundary')
+        if (self.flag & 32) != 0:
+            flags.append('Aperture contains one or more masked pixels')
+        if (self.flag & 64) != 0:
+            flags.append('Aperture contains only masked pixels')
+        if (self.flag & 128) != 0:
+            flags.append('Aperture sum is negative in kron_radius')
+        return flags
 
 
 class Session(models.Model):
