@@ -39,6 +39,9 @@ class Experiment(models.Model):
         'other input files', null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
+    def features(self):
+        return Feature.objects.filter(experiment=self)
+
     def __str__(self):
         if self.platform != '3':
             p_name = self.get_platform_display()
@@ -50,35 +53,7 @@ class Experiment(models.Model):
         return "#{}: {} in {}".format(self.id, self.alg_name, p_name)
 
 
-# class Dataset(models.Model):
-#     name = models.CharField(max_length=50)
-#     start_datetime = models.DateTimeField(null=True, blank=True)
-#     end_datetime = models.DateTimeField(null=True, blank=True)
-#     cadence_sec = models.FloatField(null=True, blank=True)
-#     subset_of = models.ForeignKey('self', null=True, blank=True)
-#     number_of_files = models.IntegerField(null=True, blank=True)
-#     description = models.TextField(null=True, blank=True)
-#
-#     def clean(self):
-#         if self.subset_of == self:
-#             raise ValidationError("A dataset can't be subset of itself.")
-#
-#     def __str__(self):
-#         return self.name
-
-
-# class RBUserProfile(models.Model):
-#     user = models.OneToOneField(User)
-#     affiliation = models.CharField(max_length=200, blank=True)
-#     website = models.URLField('personal website', blank=True)
-#     fullname = models.CharField(max_length=200, blank=True)
-#     isDeleted = models.IntegerField(default=0)
-#
-#     def save(self, *args, **kwargs):
-#         if self.user.first_name != "" or self.user.last_name != "":
-#             self.fullname = " ".join(
-#                 [self.user.first_name, self.user.last_name])
-#         super(RBUserProfile, self).save(*args, **kwargs)
-#
-#     def __str__(self):
-#         return self.user.username
+class Feature(models.Model):
+    name = models.CharField(max_length=20)
+    experiment = models.ForeignKey(Experiment)
+    description = models.TextField(null=True, blank=True)
