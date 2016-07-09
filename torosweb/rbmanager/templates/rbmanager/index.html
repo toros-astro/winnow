@@ -74,20 +74,23 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>User</th>
-                <th>Algorithm Name</th>
                 <th>Date</th>
+                <th>User</th>
+                <th>Dataset</th>
+                <th>Algorithm Name</th>
                 <th>Platform</th>
                 <th>Confusion Matrix</th>
+                <th>Description</th>
               </tr>
             </thead>
         <tbody>
             {% for exp in experiment_list %}
           <tr>
             <td>{{ exp.pk }}</td>
+            <td>{{ exp.date }}</td>
             <td>{{ exp.user }}</td>
+            <td>{{ exp.dataset }}</td>
             <td>{{ exp.alg_name }} </td>
-            <td>{{ exp.date }} </td>
             {% if exp.platform == "3" %}
             <td>{{ exp.other_platform_name }} </td>
             {% else %}
@@ -116,6 +119,7 @@
                 </table>
                 </div>
             </td>
+            <td>{{ exp.description }}</td>
           </tr>
           {% endfor %}
         </tbody>
