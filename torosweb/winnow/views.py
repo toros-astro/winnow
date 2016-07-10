@@ -110,7 +110,6 @@ def about(request):
 
 
 def object_detail(request, object_slug):
-
     trans_obj = TransientCandidate.objects.get(slug=object_slug)
     trans_candidate_id = trans_obj.pk
     ranked_interesting = Ranking.objects.filter(trans_candidate=trans_obj).filter(isInteresting = True)
@@ -198,7 +197,6 @@ def register(request):
 
 
 def user_login(request):
-
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

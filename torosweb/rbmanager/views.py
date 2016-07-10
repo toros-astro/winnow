@@ -52,3 +52,7 @@ def index(request):
                   {'exp_form': exp_form,
                    'experiment_list': Experiment.objects.all(),
                    'notification': notification})
+
+
+def dataset_detail(request):
+    return render(request, 'rbmanager/dataset_detail.html')
