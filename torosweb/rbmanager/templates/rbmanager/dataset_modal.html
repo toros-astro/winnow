@@ -1,0 +1,36 @@
+<!-- Modal -->
+<div id="datasetmodal" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ dataset_object.name }}</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="well">
+        <dl>
+          <dt>Start Date:</dt> <dd>{{ dataset_object.start_datetime|default_if_none:"Not specified" }}</dd>
+          <dt>End Date:</dt> <dd>{{ dataset_object.end_datetime|default_if_none:"Not specified" }}</dd>
+          <dt>Cadence:</dt> <dd>{{ dataset_object.cadence_sec|default_if_none:"Not specified" }} s</dd>
+          <dt>Number of files:</dt> <dd>{{ dataset_object.number_of_files|default_if_none:"Not specified" }}</dd>
+          {% if dataset_object.subset_of %}
+          <dt>Subset of:</dt> <dd>{{ dataset_object.subset_of.name }}</dd>
+          {% endif %}
+          <dt>Description:</dt> <dd>{{ dataset_object.description|default_if_none:"No description" }}</dd>
+      </dl>
+      </div class="well">
+      </div class="modal-body">
+      <div class="modal-footer">
+        {% if dataset_object.isCurrent %}
+        <p>{{ dataset_object.name }} is the active dataset being labeled.</p>
+        {% endif %}
+      </div class="modal-footer">
+
+    </div class="modal-content">
+
+  </div class="modal-dialog">
+</div id="datasetmodal" class="modal fade" role="dialog">
