@@ -24,6 +24,7 @@ def create_user(last_user_id):
 
 def populate(num_users, num_exp_per_user):
     fake_dset = Dataset(name='fake_dataset')
+    fake_dset.isCurrent = False
     fake_dset.save()
     print("Saved Dataset {}.".format(fake_dset))
 
