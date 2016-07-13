@@ -21,6 +21,8 @@ class Experiment(models.Model):
     params_file = models.FileField('parameter file name',
                                    max_length=50, null=True, blank=True)
     labels_file = models.FileField('label file name', null=True, blank=True)
+
+    features = models.ManyToManyField('Feature')
     featureset_infofile = models.FileField('feature set file name',
                                            null=True, blank=True)
     featuretable_datafile = models.FileField('feature table file name',
@@ -49,10 +51,13 @@ class Experiment(models.Model):
                 p_name = self.other_platform_name
         return "#{}: {} in {}".format(self.id, self.alg_name, p_name)
 
+    class Meta:
+        ordering = ('-date',)
+
 
 class Feature(models.Model):
     name = models.CharField(max_length=20)
-    experiment = models.ForeignKey(Experiment)
+    code = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):

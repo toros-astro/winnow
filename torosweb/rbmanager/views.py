@@ -29,10 +29,17 @@ def index(request):
                 new_exp.save()
 
                 # Create and save the associated features
+                all_features = []
                 for name, description in exp_form.cleaned_data['features']:
-                    new_feat = Feature(name=name, description=description)
-                    new_feat.experiment = new_exp
+                    new_feat, created = Feature.objects.\
+                        get_or_create(name=name.lower())
+                    if description != '' and (new_feat.description is None
+                                              or new_feat.description == ''):
+                        new_feat.description = description
+
                     new_feat.save()
+                    all_features.append(new_feat)
+                new_exp.features.add(*all_features)
 
                 notification = notification_passed
                 exp_form = ExperimentForm()
