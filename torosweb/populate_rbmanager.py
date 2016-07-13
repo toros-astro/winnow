@@ -23,15 +23,16 @@ def create_user(last_user_id):
 
 
 def populate(num_users, num_exp_per_user):
-    fake_dset = Dataset(name='fake_dataset')
-    fake_dset.isCurrent = False
-    fake_dset.save()
-    print("Saved Dataset {}.".format(fake_dset))
+    dbg_dataset, created = Dataset.objects.get_or_create(name='DBG_DJANGO')
+    if created:
+        dbg_dataset.isCurrent = False
+        dbg_dataset.save()
+    print("Saved Dataset {}.".format(dbg_dataset))
 
     for userid in range(num_users):
         myuser = create_user(userid)
         for exp_counter in range(num_exp_per_user):
-            exp = add_experiment(myuser, fake_dset)
+            exp = add_experiment(myuser, dbg_dataset)
             print("Saved experiment {} for user {}".format(exp, myuser))
             for name, description in get_features():
                 feat, created = Feature.objects.get_or_create(name=name)
