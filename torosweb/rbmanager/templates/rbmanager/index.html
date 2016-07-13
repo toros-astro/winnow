@@ -99,7 +99,7 @@
             </td>
             <td>{{ exp.alg_name }} </td>
             <td>
-              {% for feat in exp.feature_set.all %}
+              {% for feat in exp.features.all %}
               {% if forloop.last %}
               {{ feat.name }}
               {% else %}
