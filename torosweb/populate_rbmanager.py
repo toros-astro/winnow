@@ -34,9 +34,11 @@ def populate(num_users, num_exp_per_user):
             exp = add_experiment(myuser, fake_dset)
             print("Saved experiment {} for user {}".format(exp, myuser))
             for name, description in get_features():
-                feat = Feature(name=name, description=description)
-                feat.experiment = exp
-                feat.save()
+                feat, created = Feature.objects.get_or_create(name=name)
+                if created:
+                    feat.description = description
+                    feat.save()
+                exp.features.add(feat)
                 print("Saved feature {} for experiment {}".format(feat, exp))
             print("")
 
