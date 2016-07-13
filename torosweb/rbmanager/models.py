@@ -40,6 +40,7 @@ class Experiment(models.Model):
     other_inputfiles = models.TextField(
         'other input files', null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    is_favorite = models.BooleanField(default=False)
 
     def __str__(self):
         if self.platform != '3':
