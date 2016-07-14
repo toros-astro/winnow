@@ -22,10 +22,10 @@
   <h1>Browse old experiments or input a new one</h1>
 
     {% if notification.value %}
-        <div class="alert alert-{{ notification.type }}">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ notification.message }}
-        </div>
+    <div class="alert alert-{{ notification.type }}">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ notification.message }}
+    </div>
     {% endif %}
 
   <div class="panel panel-primary">
@@ -134,6 +134,10 @@
                     </tr>
                 </table>
                 </div>
+                <br>
+                <p><strong>Recall</strong>: {{ exp.recall|floatformat:2 }}</p>
+                <p><strong>Precision</strong>: {{ exp.precision|floatformat:2 }}</p>
+                <p><strong>F-measure</strong>: {{ exp.f_measure|floatformat:2 }}</p>
             </td>
             <td>{{ exp.description }}</td>
           </tr>
