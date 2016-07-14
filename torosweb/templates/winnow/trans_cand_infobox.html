@@ -1,13 +1,13 @@
 {% block header_extra %}
-<link rel="stylesheet" href="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+<link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
 <!-- you can skip the following line if your page already integrates the jQuery library -->
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>
 {% endblock %}
 
 <div id="SEPInfoBox" style="width:50%; padding:0.5em; border:1px solid #000; border-radius:5px; background-color:#ddd;">
     <!-- insert this snippet where you want Aladin Lite viewer to appear and after the loading of jQuery -->
             <div id="aladin-lite-div"></div>
-            <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
             <script type="text/javascript">
                 var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:0.08, target: "{{object.aladin_coords}}",
                                                     showZoomControl: false, showFullscreenControl: false, showLayersControl: false,
