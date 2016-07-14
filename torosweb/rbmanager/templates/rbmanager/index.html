@@ -78,10 +78,23 @@
                 <th>Date</th>
                 <th>User</th>
                 <th>Dataset</th>
-                <th>Algorithm Name</th>
+                <th>Algorithm</th>
                 <th>Features</th>
+                <th>Confusion Matrix
+                  <table style="border: 1px solid;">
+                    <thead>
+                    <tr>
+                        <th style="padding: 2px; border-right: 1px solid; background-color: #9cf799; border-bottom: 1px solid;">true reals</td>
+                        <th style="padding: 2px; background-color: #f79292; border-bottom: 1px solid;">false reals</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 2px; border-right: 1px solid; background-color: #f79292; ">false bogus</td>
+                        <th style="padding: 2px; background-color: #9cf799;">true bogus</td>
+                    </tr>
+                </table>
+                </th>
+                <th>Measures</th>
                 <th>Platform</th>
-                <th>Confusion Matrix</th>
                 <th>Description</th>
               </tr>
             </thead>
@@ -107,38 +120,32 @@
               {% endif %}
               {% endfor %}
             </td>
-            {% if exp.platform == "3" %}
-            <td>{{ exp.other_platform_name }} </td>
-            {% else %}
-            <td>{{ exp.get_platform_display }} </td>
-            {% endif %}
             <td>
+                <div class="well" style="width: 100%;">
                 <div align=center>
                 <table>
-                    <thead>
                     <tr>
-                        <th></th>
-                        <th style="text-align: center;">r</th>
-                        <th style="text-align: center;">b</th>
-                    </tr>
-                    </thead>
-                    <tr>
-                        <th>classified as r</th>
-                        <td style="padding: 2px; border-right: 1px solid;">{{ exp.conf_mat_rr }}</td>
-                        <td style="padding: 2px;">{{ exp.conf_mat_br }}</td>
+                        <td style="padding: 2px; border-right: 1px solid; border-bottom: 1px solid;">{{ exp.conf_mat_rr }}</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">{{ exp.conf_mat_br }}</td>
                     </tr>
                     <tr>
-                        <th style="text-align: right">b</th>
                         <td style="padding: 2px; border-right: 1px solid;">{{ exp.conf_mat_rb }}</td>
                         <td style="padding: 2px;">{{ exp.conf_mat_bb }}</td>
                     </tr>
                 </table>
                 </div>
-                <br>
+                </div>
+            </td>
+            <td>
                 <p><strong>Recall</strong>: {{ exp.recall|floatformat:2 }}</p>
                 <p><strong>Precision</strong>: {{ exp.precision|floatformat:2 }}</p>
                 <p><strong>F-measure</strong>: {{ exp.f_measure|floatformat:2 }}</p>
             </td>
+            {% if exp.platform == "3" %}
+            <td>{{ exp.other_platform_name }} </td>
+            {% else %}
+            <td>{{ exp.get_platform_display }} </td>
+            {% endif %}
             <td>{{ exp.description }}</td>
           </tr>
           {% endfor %}
