@@ -103,7 +103,7 @@
           <tr>
             <td>{{ exp.pk }}</td>
             <td>{{ exp.date }}</td>
-            <td>{{ exp.user }}</td>
+            <td><a href="{% url 'profile_detail' exp.user %}">{{ exp.user }}</a></td>
             <td>
               <a data-toggle="modal" data-target="#datasetmodal">
                 {{ exp.dataset }}
@@ -113,11 +113,9 @@
             <td>{{ exp.alg_name }} </td>
             <td>
               {% for feat in exp.features.all %}
-              {% if forloop.last %}
-              {{ feat.name }}
-              {% else %}
-              {{ feat.name }}, 
-              {% endif %}
+              <a href="#" data-toggle="tooltip" title="{{ feat.description|default_if_none:'No description' }}">
+              {% if forloop.last %}{{ feat.name }}{% else %}{{ feat.name }},{% endif %}
+              </a>
               {% endfor %}
             </td>
             <td>
