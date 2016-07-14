@@ -42,6 +42,27 @@ class Experiment(models.Model):
     description = models.TextField(null=True, blank=True)
     is_favorite = models.BooleanField(default=False)
 
+    def recall(self):
+        "Return the Recall: Proportion of Real Positive cases "\
+            "that are correctly Predicted Positive."
+        r = float(self.conf_mat_rr) / float(self.conf_mat_rr +
+                                            self.conf_mat_rb)
+        return r
+
+    def precision(self):
+        "Return the Precision: Proportion of Predicted Positive cases"\
+            "that are correctly Real Positives"
+        p = float(self.conf_mat_rr) / float(self.conf_mat_rr +
+                                            self.conf_mat_br)
+        return p
+
+    def f_measure(self):
+        r = float(self.conf_mat_rr) / float(self.conf_mat_rr +
+                                            self.conf_mat_rb)
+        p = float(self.conf_mat_rr) / float(self.conf_mat_rr +
+                                            self.conf_mat_br)
+        return 2. * p * r / (p + r)
+
     def __str__(self):
         if self.platform != '3':
             p_name = self.get_platform_display()
