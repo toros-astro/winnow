@@ -19,7 +19,7 @@
       <li><a href="#">Upload</a></li>
   </ul>
 
-  <h1>Browse old experiments or input a new one</h1>
+  <h1>Browse past experiments or input a new one</h1>
 
     {% if notification.value %}
     <div class="alert alert-{{ notification.type }}">
@@ -86,10 +86,17 @@
                     <tr>
                         <th style="padding: 2px; border-right: 1px solid; background-color: #9cf799; border-bottom: 1px solid;">true reals</td>
                         <th style="padding: 2px; background-color: #f79292; border-bottom: 1px solid;">false reals</td>
+                        <th style="padding: 2px; border: 1px solid;">tr + fr</td>
                     </tr>
                     <tr>
                         <th style="padding: 2px; border-right: 1px solid; background-color: #f79292; ">false bogus</td>
                         <th style="padding: 2px; background-color: #9cf799;">true bogus</td>
+                        <th style="padding: 2px; border: 1px solid;">fb + tb</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 2px; border: 1px solid;">tr + fb</td>
+                        <th style="padding: 2px; border: 1px solid;">fr + tb</td>
+                        <th style="padding: 2px; border: 1px solid;">N</td>
                     </tr>
                 </table>
                 </th>
@@ -125,10 +132,17 @@
                     <tr>
                         <td style="padding: 2px; border-right: 1px solid; border-bottom: 1px solid;">{{ exp.conf_mat_rr }}</td>
                         <td style="padding: 2px; border-bottom: 1px solid;">{{ exp.conf_mat_br }}</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">{{ exp.predicted_reals }}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 2px; border-right: 1px solid;">{{ exp.conf_mat_rb }}</td>
-                        <td style="padding: 2px;">{{ exp.conf_mat_bb }}</td>
+                        <td style="padding: 2px; border-width: 0 1px 1px 0; border-style: solid;">{{ exp.conf_mat_rb }}</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">{{ exp.conf_mat_bb }}</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">{{ exp.predicted_bogus }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid;">{{ exp.total_reals }}</td>
+                        <td style="padding: 2px; border-right: 1px solid;">{{ exp.total_bogus }}</td>
+                        <td style="padding: 2px;">{{ exp.total_samples }}</td>
                     </tr>
                 </table>
                 </div>

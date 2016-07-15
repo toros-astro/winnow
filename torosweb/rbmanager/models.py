@@ -63,6 +63,22 @@ class Experiment(models.Model):
                                             self.conf_mat_br)
         return 2. * p * r / (p + r)
 
+    def predicted_reals(self):
+        return self.conf_mat_rr + self.conf_mat_br
+
+    def predicted_bogus(self):
+        return self.conf_mat_rb + self.conf_mat_bb
+
+    def total_reals(self):
+        return self.conf_mat_rr + self.conf_mat_rb
+
+    def total_bogus(self):
+        return self.conf_mat_br + self.conf_mat_bb
+
+    def total_samples(self):
+        return (self.conf_mat_rr + self.conf_mat_rb + self.conf_mat_br +
+                self.conf_mat_bb)
+
     def __str__(self):
         if self.platform != '3':
             p_name = self.get_platform_display()
