@@ -63,6 +63,14 @@ class Experiment(models.Model):
                                             self.conf_mat_br)
         return 2. * p * r / (p + r)
 
+    def false_positive_rate(self):
+        return (float(self.conf_mat_br) /
+                float(self.conf_mat_rr + self.conf_mat_br))
+
+    def miss_rate(self):
+        return (float(self.conf_mat_rb) /
+                float(self.conf_mat_rb + self.conf_mat_bb))
+
     def predicted_reals(self):
         return self.conf_mat_rr + self.conf_mat_br
 

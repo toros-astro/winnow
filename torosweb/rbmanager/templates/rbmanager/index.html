@@ -152,6 +152,8 @@
                 <p><strong>Recall</strong>: {{ exp.recall|floatformat:2 }}</p>
                 <p><strong>Precision</strong>: {{ exp.precision|floatformat:2 }}</p>
                 <p><strong>F-measure</strong>: {{ exp.f_measure|floatformat:2 }}</p>
+                <p><strong>FPR</strong>: {{ exp.false_positive_rate|floatformat:2 }}</p>
+                <p><strong>Miss Rate</strong>: {{ exp.miss_rate|floatformat:2 }}</p>
             </td>
             {% if exp.platform == "3" %}
             <td>{{ exp.other_platform_name }} </td>
