@@ -9,4 +9,5 @@ urlpatterns = patterns(
     url(r'^', include("winnow.urls")),
     url(r'^comments/', include('django_comments.urls')),
     url(r'^rb/', include('rbmanager.urls', namespace='rbmanager')),
+    url(r'^broker/', include('broker.urls', namespace='broker')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
