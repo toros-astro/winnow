@@ -1,8 +1,18 @@
 from django.shortcuts import render, redirect
 from .models import Assignment, Observatory, Alert
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 
 
 def index(request):
+    if not request.user.is_authenticated():
+        return user_login(request)
+
+    if not request.user.groups.filter(name='Telescope_operators').exists():
+        request.message = \
+            "You must be an approved telescope operator to log in."
+        return user_login(request)
+
     context = {}
     current_alert, created = Alert.objects.get_or_create(pk=1)
     context['all_assingments'] = Assignment.objects.filter(alert=current_alert)
@@ -56,3 +66,32 @@ def update(request):
         asg.save()
 
     return redirect("broker:index")
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return redirect('broker:index')
+            else:
+                return HttpResponse("<h1>Your account is disabled.</h1>")
+        else:
+            return HttpResponse("<h1>Invalid login details supplied.</h1>")
+
+    else:
+        context = {}
+        try:
+            context['message'] = request.message
+        except:
+            context['message'] = None
+        return render(request, 'broker/login.html', context)
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('broker:login')

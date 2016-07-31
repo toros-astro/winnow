@@ -47,7 +47,6 @@ def rank(request):
 
             return HttpResponseRedirect(reverse('rank'))
         else:
-            print form.errors
             tc_id = int(request.POST.get('tc_id'))
             tc = TransientCandidate.objects.get(pk=tc_id)
     else:
@@ -61,7 +60,9 @@ def rank(request):
             try:
                 currentUser = UserProfile.objects.get(user=request.user)
                 ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
-                tc = TransientCandidate.objects.filter(dataset=ds).exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
+                tc = TransientCandidate.objects.filter(dataset=ds)\
+                    .exclude(
+                        ranking=Ranking.objects.filter(ranker=currentUser))[0]
             except IndexError:
                 tc = None
 
@@ -82,9 +83,9 @@ def about(request):
 
 # Completely deprecated, I leave it here just in case
 #def thumb(request, trans_candidate_id):
-#    
+#
 #    tc = TransientCandidate.objects.get(pk=trans_candidate_id)
-#    
+#
 #    from astropy.io import fits
 #    from toros.settings import ASTRO_IMAGE_DIR
 #    from os import path
@@ -93,7 +94,7 @@ def about(request):
 #
 #    #import numpy as np
 #    #thumb_arr = np.random.random((10,10))
-#    
+#
 #    import matplotlib
 #    matplotlib.use("Agg")
 #    import matplotlib.pyplot as plt
@@ -111,8 +112,9 @@ def about(request):
 
 def object_detail(request, object_slug):
     trans_obj = TransientCandidate.objects.get(slug=object_slug)
-    trans_candidate_id = trans_obj.pk
-    ranked_interesting = Ranking.objects.filter(trans_candidate=trans_obj).filter(isInteresting = True)
+    ranked_interesting = Ranking.objects\
+        .filter(trans_candidate=trans_obj)\
+        .filter(isInteresting=True)
     int_users_list = UserProfile.objects.filter(ranking=ranked_interesting)
     int_counts = len(int_users_list)
 
@@ -126,7 +128,8 @@ def object_detail(request, object_slug):
                 newComment.user = request.user
                 newComment.user_name = request.user.username
                 newComment.user_email = request.user.email
-                newComment.user_url = UserProfile.objects.get(user=request.user).website
+                newComment.user_url = UserProfile.objects\
+                    .get(user=request.user).website
                 newComment.comment = comment_text
                 newComment.site = get_current_site(request)
                 newComment.content_object = trans_obj
@@ -157,13 +160,16 @@ def register(request):
             user.save()
 
             # Now sort out the UserProfile instance.
-            # Since we need to set the user attribute ourselves, we set commit=False.
-            # This delays saving the model until we're ready to avoid integrity problems.
+            # Since we need to set the user attribute ourselves,
+            # we set commit=False.
+            # This delays saving the model until we're ready
+            # to avoid integrity problems.
             profile = profile_form.save(commit=False)
             profile.user = user
 
             # Did the user provide a profile picture?
-            # If so, we need to get it from the input form and put it in the UserProfile model.
+            # If so, we need to get it from the input form
+            # and put it in the UserProfile model.
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
             # Now we save the UserProfile model instance.
@@ -182,10 +188,6 @@ def register(request):
                     return HttpResponseRedirect(reverse('index'))
                 else:
                     return HttpResponse("Sorry, your account has been disabled.")
-
-        # Print form errors if any to the terminal
-        else:
-            print user_form.errors, profile_form.errors
 
     else:
         user_form = UserForm()
@@ -214,7 +216,6 @@ def user_login(request):
             else:
                 return HttpResponse("Your account is disabled.")
         else:
-            print "Invalid login details: {0}, {1}".format(username, password)
             return HttpResponse("Invalid login details supplied.")
 
     else:

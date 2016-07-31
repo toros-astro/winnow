@@ -57,6 +57,7 @@ function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
 <h1>Toros Broker</h1>
 </header>
 
+<p>You are logged in as <a href="#">{{ request.user }}</a> | <a href="{% url 'broker:logout' %}">Log out</a></p>
 
 <section>
 <h1>Guidelines</h1>
