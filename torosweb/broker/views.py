@@ -87,7 +87,7 @@ def user_login(request):
         context = {}
         try:
             context['message'] = request.message
-        except:
+        except AttributeError:
             context['message'] = None
         return render(request, 'broker/login.html', context)
 
