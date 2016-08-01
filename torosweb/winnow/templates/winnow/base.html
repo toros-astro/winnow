@@ -24,7 +24,7 @@
 			<div id="authbox">
 				{% if user.is_active %}
 					{% get_userprofile user as userprofile %}
-					<a href="{% url 'profile_detail' user.username %}">
+					<a href="{% url 'winnow:profile_detail' user.username %}">
 						{% if userprofile.picture %} 
 							<div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); margin:0px auto;"></div>
 						{% else %} 
@@ -32,10 +32,10 @@
 						{% endif %}
 					</a>
 					<div style="clear:both; display:block; float:left; padding:5px;">
-						<a href="{% url 'profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'logout' %}">Log out</a>
+						<a href="{% url 'winnow:profile_detail' user.username %}">{{ user.username }}</a> | <a href="{% url 'winnow:logout' %}">Log out</a>
 					</div>
 				{% else %}
-					<form method="post" action="{% url 'login' %}">
+					<form method="post" action="{% url 'winnow:login' %}">
 					{% csrf_token %}
 					<div style="margin:0.2em; float:right;">
 						<input name="submit" class="formbutton" value="Log in" type="submit" />
@@ -51,7 +51,7 @@
 				    </form>
 				    <div style="clear:both; display:block; padding-left:5px;">
 				    	<hr>
-						Or <a href="{% url 'register' %}" style="font-weight:bold; color:#76a800;">Sign up!</a>
+						Or <a href="{% url 'winnow:register' %}" style="font-weight:bold; color:#76a800;">Sign up!</a>
 					</div>
 
 
@@ -59,7 +59,7 @@
 			</div><!-- authbox -->
 			
 			<div class="width">
-				<h1><a href="{% url 'index' %}">TOROS<span>training</span></a></h1>
+				<h1><a href="{% url 'winnow:index' %}">TOROS<span>training</span></a></h1>
 				<h2>Training website</h2>
 			</div>
 		</header>
@@ -69,10 +69,10 @@
 			<div class="width">
 				<ul>
 					<!-- The main horizontal menu bar common to all pages -->
-					<li class="start {{ page_index }}"><a href="{% url 'index' %}">Home</a></li>
-					<li class="{{ page_rank }}"><a href="{% url 'rank' %}">Classify</a></li>
-					<li class="{{ page_data }}"><a href="{% url 'data' %}">Data</a></li>
-					<li class="end {{ page_about }}"><a href="{% url 'about' %}">About Us</a></li>
+					<li class="start {{ page_index }}"><a href="{% url 'winnow:index' %}">Home</a></li>
+					<li class="{{ page_rank }}"><a href="{% url 'winnow:rank' %}">Classify</a></li>
+					<li class="{{ page_data }}"><a href="{% url 'winnow:data' %}">Data</a></li>
+					<li class="end {{ page_about }}"><a href="{% url 'winnow:about' %}">About Us</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -89,7 +89,7 @@
                 	<ul>
 						{% if top3int %}
 						{% for astro_object in top3int %}                    	
-							<a href="{% url 'object_detail' astro_object.slug %}">
+							<a href="{% url 'winnow:object_detail' astro_object.slug %}">
 							<li class="sidebarInteresting">
 							<img src="{{ astro_object.subtImg.thumbnail.url }}" width="40" height="40" align=bottom>
 							{{ astro_object }}
@@ -109,15 +109,15 @@
 						{% for comment in last3comm %}
 						<li class="sidebarInteresting">
 						{% get_userprofile comment.user_name as userprofile %}
-					    <a href="{% url 'profile_detail' comment.user_name %}">
+					    <a href="{% url 'winnow:profile_detail' comment.user_name %}">
 						{% if userprofile.picture %} 
 							<div class="profilethumb" style="background-image:url({{ userprofile.picture.thumbnail.url }}); float:left;"></div>
 						{% else %} 
 							<div class="profilethumb" style="background-image:url(/media/profile_images/default.thumbnail.png); float:left;"></div>
 						{% endif %}
 						</a>
-                    	On {{comment.submit_date}} <a href="{% url 'profile_detail' comment.user_name %}">{{comment.user_name}}</a>
-						commented on <a href="{% url 'object_detail' comment.content_object.slug %}">object {{ comment.content_object.slug }}:</a>
+                    	On {{comment.submit_date}} <a href="{% url 'winnow:profile_detail' comment.user_name %}">{{comment.user_name}}</a>
+						commented on <a href="{% url 'winnow:object_detail' comment.content_object.slug %}">object {{ comment.content_object.slug }}:</a>
 						<br clear=all>
                     	"{{ comment.comment }}"
 						<br>

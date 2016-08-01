@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'winnow/base.html' %}
 
 {% load winnow_tags %}
 
@@ -11,7 +11,7 @@
 <div id="block" style="width:90%; margin:1em auto; border:2px; display:inline-block">
     <h1>Data Set Information</h1>
     <br>
-    <form id="dump_db" method="post" action="{% url 'data' %}">
+    <form id="dump_db" method="post" action="{% url 'winnow:data' %}">
         {% csrf_token %}
         <fieldset>
             <legend>Request a DB Dump</legend>

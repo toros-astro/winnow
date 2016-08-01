@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'winnow/base.html' %}
 
 {% load staticfiles %}
 
@@ -14,9 +14,9 @@
 		<p>As a volunteer on this website, you can become a citizen scientist and citizen researcher, participating in real science and other research. If you think you have made a mistake, do not worry. This project is set up to have more than one volunteer analyzing each piece of data, thereby eliminating the vast majority of human error. Mistakes are a part of the process, and can even help us evaluate the difficulty of the data. As long as everyone does their best, they are helping!</p>
 		<p>A short training tutorial is available. Please register and create an account to contribute and collaborate with TOROS.</p>
 
-		<a href="{% url 'register' %}" class="button">Register</a>
-		<a href="{% url 'login' %}" class="button">Log In</a>
-		<a href="{% url 'rank' %}" class="button">Start Tutorial</a>
+		<a href="{% url 'winnow:register' %}" class="button">Register</a>
+		<a href="{% url 'winnow:login' %}" class="button">Log In</a>
+		<a href="{% url 'winnow:rank' %}" class="button">Start Tutorial</a>
 		
 	</section>
 {% endblock %}

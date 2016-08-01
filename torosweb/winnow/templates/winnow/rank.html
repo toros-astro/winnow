@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'winnow/base.html' %}
 
 {% load staticfiles %}
 {% load comments %}
@@ -31,7 +31,7 @@
     <h5>Meta data</h5>
     {% include "winnow/trans_cand_infobox.html" %}
 
-	<form id="page_form" method="post" action="{% url 'rank' %}">
+	<form id="page_form" method="post" action="{% url 'winnow:rank' %}">
 	<div id="form_widgets" style="padding:1em;">
 		<style type="text/css">
 			#id_rank {

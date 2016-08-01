@@ -1,6 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from winnow.forms import RankingForm, UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile, Dataset
@@ -34,18 +33,18 @@ def rank(request):
                 comment_text = request.POST.get('comment')
                 if len(comment_text) > 0:
                     # save the comment
-                    newComment = Comment()
-                    newComment.user = request.user
-                    newComment.user_name = request.user.username
-                    newComment.user_email = request.user.email
-                    newComment.user_url = UserProfile.objects.\
+                    new_comment = Comment()
+                    new_comment.user = request.user
+                    new_comment.user_name = request.user.username
+                    new_comment.user_email = request.user.email
+                    new_comment.user_url = UserProfile.objects.\
                         get(user=request.user).website
-                    newComment.comment = comment_text
-                    newComment.site = get_current_site(request)
-                    newComment.content_object = tc
-                    newComment.save()
+                    new_comment.comment = comment_text
+                    new_comment.site = get_current_site(request)
+                    new_comment.content_object = tc
+                    new_comment.save()
 
-            return HttpResponseRedirect(reverse('rank'))
+            return redirect('winnow:rank')
         else:
             print form.errors
             tc_id = int(request.POST.get('tc_id'))
@@ -59,9 +58,11 @@ def rank(request):
         except IndexError:
             # Fetch any tc not ranked by the current user
             try:
-                currentUser = UserProfile.objects.get(user=request.user)
+                current_user = UserProfile.objects.get(user=request.user)
                 ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
-                tc = TransientCandidate.objects.filter(dataset=ds).exclude(ranking=Ranking.objects.filter(ranker=currentUser))[0]
+                tc = TransientCandidate.objects.filter(dataset=ds)\
+                    .exclude(
+                        ranking=Ranking.objects.filter(ranker=current_user))[0]
             except IndexError:
                 tc = None
 
@@ -81,19 +82,20 @@ def about(request):
     return render(request, 'winnow/about.html', {'page_about': 'selected'})
 
 # Completely deprecated, I leave it here just in case
-#def thumb(request, trans_candidate_id):
-#    
+# def thumb(request, trans_candidate_id):
+#
 #    tc = TransientCandidate.objects.get(pk=trans_candidate_id)
-#    
+#
 #    from astropy.io import fits
 #    from toros.settings import ASTRO_IMAGE_DIR
 #    from os import path
 #    image_data = fits.getdata(path.join(ASTRO_IMAGE_DIR, tc.filename))
-#    thumb_arr = image_data[tc.y_pix - tc.height: tc.y_pix + tc.height, tc.x_pix - tc.width: tc.x_pix + tc.width]
+#    thumb_arr = image_data[tc.y_pix - tc.height: tc.y_pix + tc.height,
+#                           tc.x_pix - tc.width: tc.x_pix + tc.width]
 #
 #    #import numpy as np
 #    #thumb_arr = np.random.random((10,10))
-#    
+#
 #    import matplotlib
 #    matplotlib.use("Agg")
 #    import matplotlib.pyplot as plt
@@ -111,8 +113,8 @@ def about(request):
 
 def object_detail(request, object_slug):
     trans_obj = TransientCandidate.objects.get(slug=object_slug)
-    trans_candidate_id = trans_obj.pk
-    ranked_interesting = Ranking.objects.filter(trans_candidate=trans_obj).filter(isInteresting = True)
+    ranked_interesting = Ranking.objects.filter(trans_candidate=trans_obj)\
+        .filter(isInteresting=True)
     int_users_list = UserProfile.objects.filter(ranking=ranked_interesting)
     int_counts = len(int_users_list)
 
@@ -122,15 +124,16 @@ def object_detail(request, object_slug):
             comment_text = request.POST.get('comment')
             if len(comment_text) > 0:
                 # save the comment
-                newComment = Comment()
-                newComment.user = request.user
-                newComment.user_name = request.user.username
-                newComment.user_email = request.user.email
-                newComment.user_url = UserProfile.objects.get(user=request.user).website
-                newComment.comment = comment_text
-                newComment.site = get_current_site(request)
-                newComment.content_object = trans_obj
-                newComment.save()
+                new_comment = Comment()
+                new_comment.user = request.user
+                new_comment.user_name = request.user.username
+                new_comment.user_email = request.user.email
+                new_comment.user_url = \
+                    UserProfile.objects.get(user=request.user).website
+                new_comment.comment = comment_text
+                new_comment.site = get_current_site(request)
+                new_comment.content_object = trans_obj
+                new_comment.save()
 
     return render(request, 'winnow/trans_detail.html',
                   {'object': trans_obj, 'interesting_count': str(int_counts),
@@ -179,9 +182,9 @@ def register(request):
             if newuser:
                 if newuser.is_active:
                     login(request, newuser)
-                    return HttpResponseRedirect(reverse('index'))
+                    return redirect('winnow:index')
                 else:
-                    return HttpResponse("Sorry, your account has been disabled.")
+                    return HttpResponse("<h1>Sorry, your account has been disabled.</h1>")
 
         # Print form errors if any to the terminal
         else:
@@ -208,9 +211,9 @@ def user_login(request):
 
                 # This returns users to whatever page they were when logged in
                 if request.POST['next']:
-                    return HttpResponseRedirect(request.POST['next'])
+                    return redirect(request.POST['next'])
                 else:
-                    return HttpResponseRedirect(reverse('index'))
+                    return redirect('winnow:index')
             else:
                 return HttpResponse("Your account is disabled.")
         else:
@@ -224,7 +227,7 @@ def user_login(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('index'))
+    return redirect('winnow:index')
 
 
 def show_profile(request, a_username):

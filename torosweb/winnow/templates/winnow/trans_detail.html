@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'winnow/base.html' %}
 
 {% load staticfiles %}
 {% load comments %}
@@ -46,7 +46,7 @@ var unknown_votes = {{ object.number_of_unclassified_votes }}
 		It has been marked interesting {{ interesting_count }} time{%if interesting_count != "1" %}s{% endif %} by:<br>
 		<ul style="list-style: none; padding: 0; margin: 0;">
 		{% for name in interesting_user_list %}
-			<li><a href="{% url 'profile_detail' name %}">{{ name }}</a></li>
+			<li><a href="{% url 'winnow:profile_detail' name %}">{{ name }}</a></li>
 		{% endfor %}
 	    </ul>
 		<br>
@@ -58,7 +58,7 @@ var unknown_votes = {{ object.number_of_unclassified_votes }}
 		<br>
 		
 		{% if user.is_authenticated %}
-		<form id="page_form" method="post" action="{% url 'object_detail' object.slug %}">
+		<form id="page_form" method="post" action="{% url 'winnow:object_detail' object.slug %}">
 		{% csrf_token %}
 		<input type="hidden" value="{{ object.pk }}" name="tc_id">
 		<p>Enter your comment below</p>

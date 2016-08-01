@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'winnow/base.html' %}
 
 {% load staticfiles %}
 {% load winnow_tags %}
@@ -30,7 +30,7 @@
 		<div style="max-height: 30em; overflow: auto; padding-right: 2em;">
 		<ul>
 		{% for obj in the_userprofile.interesting_objects %}
-		 <li><a href="{% url 'object_detail' obj.slug %}">{{ obj }}</a></li>
+		 <li><a href="{% url 'winnow:object_detail' obj.slug %}">{{ obj }}</a></li>
 		{% endfor %}
 	    </ul>
 		</div>
@@ -39,7 +39,7 @@
 		<div style="max-height: 30em; overflow: auto; padding-right: 2em;">
 		{% for comment in the_userprofile.comments %}
 		<i>On {{ comment.submit_date }}, {{ comment.user }} wrote about object
-			<a href="{% url 'object_detail' comment.content_object.slug %}">
+			<a href="{% url 'winnow:object_detail' comment.content_object.slug %}">
 				{{comment.content_object.slug}}
 			</a>:
 		</i>
