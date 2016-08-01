@@ -1,6 +1,6 @@
-# TOROS Winnower web page
+# TOROS Winnow web page
 
-This django web app is designed to "winnow the wheat from the chaff" in the Image Difference analysis of astronomical images. 
+This Django web app is designed to "winnow the wheat from the chaff" in the Image Difference analysis of astronomical images. 
 
 Image Differencing will leave behind many fake objects due to bad subtraction that will be classified as bogus by a Machine Learning algorithm. This ML algorithm has to be 'trained' with labeled data and this website provides a web interface to generate this training set via human input classification.
 
@@ -11,21 +11,30 @@ Follow the following steps to download, install, and run this Django project.
 
 ### Clone the repository
 ```
-git clone git@github.com:toros-astro/winnower.git
+git clone git@github.com:toros-astro/winnow.git
 ```
 
 ### Navigate to the main directory. Then type:
 ```
-python manager.py migrate
+python manage.py makemigrations
+python manage.py migrate
 ```
 in order to set up the sqlite database.
 
-#### Start the Django server
+#### Populate the database
+You can populate the database with mock data for each app by typing:
+
 ```
-python manager.py runserver
+python populate_winnow.py
+python populate_rbmanager.py
 ```
 
-### Use your webbrowser to visit
+#### Start the Django server
+```
+python manage.py runserver
+```
+
+### Use your web browser to visit
 ```
 http://127.0.0.1:8000/
 ```
