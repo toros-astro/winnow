@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+header {
+    background-color:#104E8B;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;
+}
+section {
+    width:650px;
+    float:center;
+    padding:10px;
+}
+footer {
+    background-color:#104E8B;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+table.tableizer-table {
+    font-size: 11px;
+    border: 1px solid #CCC; 
+    font-family: Arial, Helvetica, sans-serif;
+} 
+.tableizer-table td {
+    padding: 4px;
+    margin: 3px;
+    border: 1px solid #CCC;
+}
+.tableizer-table th {
+    background-color: #104E8B; 
+    color: #FFF;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Toros Broker</h1>
+</header>
+
+{% if message %}
+<section>
+<div style="border: 1px solid black; padding: 1em;">
+<p>{{ message }}</p>
+</div>
+</section>
+{% endif %}
+
+<section>
+<h1>Log in</h1>
+<form method='post' action='{% url 'broker:login' %}'>
+{% csrf_token %}                    
+<table class="tableizer-table">
+  <tr>
+    <th>User name:</th>
+    <td><input type="text" name="username"/></td>
+</tr>
+<tr>
+    <th>Password:</th>
+    <td><input type="password" name="password"/></td>
+</tr>
+</table>
+<input type='submit' />
+</form>
+</section>
+
+<section>
+<p>To have access to the TOROS broker system you need to register a broker account with the admins.</p>
+</section>
+
+<footer>
+Copyright The TOROS project 2016
+</footer>
+
+</body>
+</html>
