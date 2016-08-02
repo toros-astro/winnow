@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+header {
+    background-color:#104E8B;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;
+}
+section {
+    width:650px;
+    float:center;
+    padding:10px;
+}
+footer {
+    background-color:#104E8B;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+table.tableizer-table {
+    font-size: 11px;
+    border: 1px solid #CCC; 
+    font-family: Arial, Helvetica, sans-serif;
+} 
+.tableizer-table td {
+    padding: 4px;
+    margin: 3px;
+    border: 1px solid #CCC;
+}
+.tableizer-table th {
+    background-color: #104E8B; 
+    color: #FFF;
+    font-weight: bold;
+}
+</style>
+<script>
+function mtofeet(x) {return 3.2808399 * x;}
+function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+</script>
+</head>
+<body>
+
+{% load humanize %}
+
+<header>
+<h1>Toros Broker</h1>
+</header>
+
+<p>You are logged in as <a href="#">{{ request.user }}</a> | <a href="{% url 'broker:logout' %}">Log out</a></p>
+
+<section>
+<h1>Guidelines</h1>
+<p>The ranking by observatory is shown in the following tables, once a target is selected for observation please check the 'Selected' checkbox,
+once the images are completely taken then check the 'Observed' checkbox.</p>
+</section>
+
+
+<section>
+<h1>All observatories</h1>
+<table class="tableizer-table">
+<thead>
+  <tr class="tableizer-firstrow">
+    <th>PGC</th>
+    <th>Name</th>
+    <th>RA</th>
+    <th>Dec</th>
+    <th>Type</th>
+    <th>App_Mag</th>
+    <th>Maj_Diam (a)</th>
+    <th>err_Maj_Diam</th>
+    <th>Min_Diam (b)</th>
+    <th>err_Min_Diam</th>
+    <th>b/a</th>
+    <th>err_b/a</th>
+    <th>PA</th>
+    <th>Abs_Mag</th>
+    <th>Dist</th>
+    <th>err_Dist</th>
+    <th>err_App_Mag</th>
+    <th>err_Abs_Mag</th>
+    <th>P_{ig}</th>
+    <th>Selected</th>
+    <th>Observed</th>
+    <th>Observation date/time</th>
+    <th>Observatory</th>
+</tr>
+</thead>
+<tbody>
+    {% for asg in all_assingments %}
+ <tr>
+  <td>{{asg.target.pgc}}</td>
+  <td>{{asg.target.name}}</td>
+  <td>{{asg.target.ra}}</td>
+  <td>{{asg.target.dec}}</td>
+  <td>{{asg.target.type }}</td>
+  <td>{{asg.target.app_mag }}</td>
+  <td>{{asg.target.maj_diam_a }}</td>
+  <td>{{asg.target.err_maj_diam}}</td>
+  <td>{{asg.target.min_diam_b}}</td>
+  <td>{{asg.target.err_min_diam}}</td>
+  <td>{{asg.target.b_over_a}}</td>
+  <td>{{asg.target.err_b_over_a}}</td>
+  <td>{{asg.target.pa}}</td>
+  <td>{{asg.target.abs_mag}}</td>
+  <td>{{asg.target.dist}}</td>
+  <td>{{asg.target.err_dist}}</td>
+  <td>{{asg.target.err_app_mag}}</td>
+  <td>{{asg.target.err_abs_mag}}</td>
+  <td></td>
+  <td>
+    <div align="center">
+    <input type="checkbox" name="istaken" {% if asg.is_taken %}checked{% endif %} disabled>
+    </div>
+  </td>
+  <td>
+    <div align="center">
+    <input type="checkbox" name="istaken" {% if asg.was_observed %}checked{% endif %} disabled>
+    </div>
+  </td>
+  <td>{{asg.datetime}}</td>
+  {% if asg.observatory.short_name %}
+  <td>{{asg.observatory.short_name}}</td>
+  {% else %}
+  <td>{{asg.observatory}}</td>
+  {% endif %}
+ </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+<button type="button" >Back &lt&lt </button><button type="button" >Next &gt&gt </button>
+<p>Total of observed galaxies: {{observed_targets}}</p>
+<p>Total of ongoing galaxy observations: {{selected_targets}}</p>
+</section>
+
+
+{% for obs, assignments_obs in assn_per_obs %}
+<section>
+<h1>{{obs.name}}{% if obs.short_name %} ({{obs.short_name}}){% endif %}
+  at {{obs.city}}, {{obs.country}}</h1>
+<p>Geo 
+  <a href="https://tools.wmflabs.org/geohack/geohack.php?pagename=Vicu%C3%B1a%2C_Chile&params=33_00_S_71_31_W_type:city(25085)_region:CL-CO ">
+    long: {{obs.longitude}} lat: {{obs.latitude}}
+  </a>
+  Elevation: {{obs.elevation|floatformat:0|intcomma}} m (<span id="obs{{obs.id}}">None</span> ft)
+</p>
+<script>
+document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elevation}}).toFixed(0))
+</script>
+<form method="post" action="{% url 'broker:update' %}">
+<input type="hidden" value="{{ obs.pk }}" name="obs_id">
+{% csrf_token %}
+<table class="tableizer-table">
+<thead>
+  <tr class="tableizer-firstrow">
+    <th>PGC</th>
+    <th>Name</th>
+    <th>RA</th>
+    <th>Dec</th>
+    <th>Type</th>
+    <th>App_Mag</th>
+    <th>Maj_Diam (a)</th>
+    <th>err_Maj_Diam</th>
+    <th>Min_Diam (b)</th>
+    <th>err_Min_Diam</th>
+    <th>b/a</th>
+    <th>err_b/a</th>
+    <th>PA</th>
+    <th>Abs_Mag</th>
+    <th>Dist</th>
+    <th>err_Dist</th>
+    <th>err_App_Mag</th>
+    <th>err_Abs_Mag</th>
+    <th>P_{ig}</th>
+    <th>Selected</th>
+    <th>Observed</th>
+    <th>Observation date/time</th>
+    <th>Observatory</th>
+</tr>
+</thead>
+<tbody>
+{% for asg in assignments_obs %}
+<tr>
+  <td>{{asg.target.pgc}}</td>
+  <td>{{asg.target.name}}</td>
+  <td>{{asg.target.ra}}</td>
+  <td>{{asg.target.dec}}</td>
+  <td>{{asg.target.type }}</td>
+  <td>{{asg.target.app_mag }}</td>
+  <td>{{asg.target.maj_diam_a }}</td>
+  <td>{{asg.target.err_maj_diam}}</td>
+  <td>{{asg.target.min_diam_b}}</td>
+  <td>{{asg.target.err_min_diam}}</td>
+  <td>{{asg.target.b_over_a}}</td>
+  <td>{{asg.target.err_b_over_a}}</td>
+  <td>{{asg.target.pa}}</td>
+  <td>{{asg.target.abs_mag}}</td>
+  <td>{{asg.target.dist}}</td>
+  <td>{{asg.target.err_dist}}</td>
+  <td>{{asg.target.err_app_mag}}</td>
+  <td>{{asg.target.err_abs_mag}}</td>
+  <td></td>
+  <td>
+    <div align="center">
+    <input type="checkbox" name="istaken[]" {% if asg.is_taken %}checked{% endif %} value="{{asg.pk}}">
+    </div>
+  </td>
+  <td>
+    <div align="center">
+    <input type="checkbox" name="wasobserved[]" {% if asg.was_observed %}checked{% endif %} value="{{asg.pk}}">
+    </div>
+  </td>
+  <td>{{asg.datetime}}</td>
+  {% if asg.observatory.short_name %}
+  <td>{{asg.observatory.short_name}}</td>
+  {% else %}
+  <td>{{asg.observatory}}</td>
+  {% endif %}</tr>
+{% endfor %}
+</tbody>
+</table>
+<button type="button" >Back &lt&lt</button>
+<button type="button" >Next &gt&gt</button>
+<input type="submit" class="button" value="Submit" />
+
+</form>
+</section>
+{% endfor %}
+
+<footer>
+Copyright The TOROS project 2016
+</footer>
+
+</body>
+</html>

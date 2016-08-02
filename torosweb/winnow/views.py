@@ -46,7 +46,6 @@ def rank(request):
 
             return redirect('winnow:rank')
         else:
-            print form.errors
             tc_id = int(request.POST.get('tc_id'))
             tc = TransientCandidate.objects.get(pk=tc_id)
     else:
@@ -113,7 +112,8 @@ def about(request):
 
 def object_detail(request, object_slug):
     trans_obj = TransientCandidate.objects.get(slug=object_slug)
-    ranked_interesting = Ranking.objects.filter(trans_candidate=trans_obj)\
+    ranked_interesting = Ranking.objects\
+        .filter(trans_candidate=trans_obj)\
         .filter(isInteresting=True)
     int_users_list = UserProfile.objects.filter(ranking=ranked_interesting)
     int_counts = len(int_users_list)
@@ -160,13 +160,16 @@ def register(request):
             user.save()
 
             # Now sort out the UserProfile instance.
-            # Since we need to set the user attribute ourselves, we set commit=False.
-            # This delays saving the model until we're ready to avoid integrity problems.
+            # Since we need to set the user attribute ourselves,
+            # we set commit=False.
+            # This delays saving the model until we're ready
+            # to avoid integrity problems.
             profile = profile_form.save(commit=False)
             profile.user = user
 
             # Did the user provide a profile picture?
-            # If so, we need to get it from the input form and put it in the UserProfile model.
+            # If so, we need to get it from the input form
+            # and put it in the UserProfile model.
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
             # Now we save the UserProfile model instance.
@@ -185,10 +188,6 @@ def register(request):
                     return redirect('winnow:index')
                 else:
                     return HttpResponse("<h1>Sorry, your account has been disabled.</h1>")
-
-        # Print form errors if any to the terminal
-        else:
-            print user_form.errors, profile_form.errors
 
     else:
         user_form = UserForm()
@@ -217,7 +216,6 @@ def user_login(request):
             else:
                 return HttpResponse("Your account is disabled.")
         else:
-            print "Invalid login details: {0}, {1}".format(username, password)
             return HttpResponse("Invalid login details supplied.")
 
     else:
