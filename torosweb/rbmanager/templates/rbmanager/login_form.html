@@ -9,7 +9,7 @@
         <h4 class="modal-title">Log in</h4>
       </div>
 
-      <form method="post" role="form" action="{% url 'login' %}">
+      <form method="post" role="form" action="{% url 'winnow:login' %}">
       <div class="modal-body">
       {% csrf_token %}
         <div class="form-group">

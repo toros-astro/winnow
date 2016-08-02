@@ -33,15 +33,15 @@
             <li>
                 {% if user.is_active %}
                 <div class="btn-group">
-                  <a href="{% url 'profile_detail' user.username %}" type="button" class="btn btn-primary btn-sm">
+                  <a href="{% url 'winnow:profile_detail' user.username %}" type="button" class="btn btn-primary btn-sm">
                     {{ user.username }}
                   </a>
-                  <a href="{% url 'logout' %}" type="button" class="btn btn-danger btn-sm">Log out</a>
+                  <a href="{% url 'winnow:logout' %}" type="button" class="btn btn-danger btn-sm">Log out</a>
                 </div>
                 {% else %}
                 <div class="btn-group">
                   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginmodal">Login</button>
-                  <a href="{% url 'register' %}" type="button" class="btn btn-success btn-sm">Sign Up!</a>
+                  <a href="{% url 'winnow:register' %}" type="button" class="btn btn-success btn-sm">Sign Up!</a>
                 </div>
                 {% include "rbmanager/login_form.html" %}
                 {% endif %}
