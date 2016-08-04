@@ -21,7 +21,7 @@ a Weblog::
     from django.db import models
 
     class Entry(models.Model):
-        title = models.CharField(maxlength=250)
+        title = models.CharField(max_length=250)
         body = models.TextField()
         pub_date = models.DateField()
         enable_comments = models.BooleanField()
@@ -56,15 +56,18 @@ class.
 
 import datetime
 
+from django import VERSION
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.db.models.base import ModelBase
 from django.template import Context, loader
-from django.contrib.sites.models import get_current_site
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 import django_comments
 from django_comments import signals
+
 
 class AlreadyModerated(Exception):
     """
@@ -74,6 +77,7 @@ class AlreadyModerated(Exception):
     """
     pass
 
+
 class NotModerated(Exception):
     """
     Raised when a model which is not registered for moderation is
@@ -81,6 +85,7 @@ class NotModerated(Exception):
 
     """
     pass
+
 
 class CommentModerator(object):
     """
@@ -209,7 +214,8 @@ class CommentModerator(object):
                 return False
         if self.auto_close_field and self.close_after is not None:
             close_after_date = getattr(content_object, self.auto_close_field)
-            if close_after_date is not None and self._get_delta(timezone.now(), close_after_date).days >= self.close_after:
+            if close_after_date is not None and self._get_delta(timezone.now(),
+                                                                close_after_date).days >= self.close_after:
                 return False
         return True
 
@@ -225,7 +231,8 @@ class CommentModerator(object):
         """
         if self.auto_moderate_field and self.moderate_after is not None:
             moderate_after_date = getattr(content_object, self.auto_moderate_field)
-            if moderate_after_date is not None and self._get_delta(timezone.now(), moderate_after_date).days >= self.moderate_after:
+            if moderate_after_date is not None and self._get_delta(timezone.now(),
+                                                                   moderate_after_date).days >= self.moderate_after:
                 return True
         return False
 
@@ -239,12 +246,17 @@ class CommentModerator(object):
             return
         recipient_list = [manager_tuple[1] for manager_tuple in settings.MANAGERS]
         t = loader.get_template('comments/comment_notification_email.txt')
-        c = Context({ 'comment': comment,
-                      'content_object': content_object })
-        subject = '[%s] New comment posted on "%s"' % (get_current_site(request).name,
-                                                          content_object)
-        message = t.render(c)
+        c = {
+            'comment': comment,
+            'content_object': content_object,
+        }
+        subject = _('[%(site)s] New comment posted on "%(object)s"') % {
+            'site': get_current_site(request).name,
+            'object': content_object,
+        }
+        message = t.render(Context(c) if VERSION < (1, 8) else c)
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list, fail_silently=True)
+
 
 class Moderator(object):
     """
@@ -277,6 +289,7 @@ class Moderator(object):
     around, will send any notification emails the comment generated.
 
     """
+
     def __init__(self):
         self._registry = {}
         self.connect()
@@ -303,7 +316,7 @@ class Moderator(object):
             model_or_iterable = [model_or_iterable]
         for model in model_or_iterable:
             if model in self._registry:
-                raise AlreadyModerated("The model '%s' is already being moderated" % model._meta.module_name)
+                raise AlreadyModerated("The model '%s' is already being moderated" % model._meta.model_name)
             self._registry[model] = moderation_class(model)
 
     def unregister(self, model_or_iterable):
@@ -319,7 +332,7 @@ class Moderator(object):
             model_or_iterable = [model_or_iterable]
         for model in model_or_iterable:
             if model not in self._registry:
-                raise NotModerated("The model '%s' is not currently being moderated" % model._meta.module_name)
+                raise NotModerated("The model '%s' is not currently being moderated" % model._meta.model_name)
             del self._registry[model]
 
     def pre_save_moderation(self, sender, comment, request, **kwargs):
