@@ -1,7 +1,7 @@
 from django import template
 from winnow.models import Ranking, TransientCandidate, UserProfile
 from django.contrib.auth.models import User
-from django_comments import Comment
+import django_comments
 
 register = template.Library()
 
@@ -20,6 +20,7 @@ def get_top3interesting():
 @register.assignment_tag
 def get_last3comments():
     # Get the last 3 comments
+    Comment = django_comments.get_model()  # noqa
     last3_comm = Comment.objects.all().order_by('-submit_date')[:3]
     return last3_comm
 

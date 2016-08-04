@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from stdimage.models import StdImageField
-from django_comments import Comment
+import django_comments
+
 
 import os
 import math
@@ -58,6 +59,7 @@ class UserProfile(models.Model):
         return interesting_objects
 
     def comments(self):
+        Comment = django_comments.get_model()  # noqa
         return Comment.objects.filter(user=self.user)
 
     def save(self, *args, **kwargs):
