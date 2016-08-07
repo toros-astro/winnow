@@ -1,0 +1,17 @@
+{% extends 'winnow/base.html' %}
+
+{% block title %}Winnow{% endblock %}
+
+{% block content %}
+
+	<section id="content">
+
+	{% if message.headline %}
+	<h1>{{ message.headline }}</h1>
+	{% endif %}
+	{% if message.body %}
+	<p>{{ message.body }}</p>
+	{% endif %}
+	
+	</section>
+{% endblock %}

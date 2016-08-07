@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from winnow.forms import RankingForm, UserForm, UserProfileForm
-from django.contrib.auth.decorators import login_required
 from winnow.models import TransientCandidate, Ranking, UserProfile, Dataset
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -16,33 +15,38 @@ def index(request):
     return render(request, 'winnow/index.html', {'page_index': 'selected'})
 
 
-@login_required
 def rank(request):
+    if not request.user.is_authenticated():
+        context = {}
+        context['message'] = {
+            'headline': "Access denied",
+            'body': "You need to be logged in to view this page"}
+        return render(request, 'winnow/message.html', context)
+
     if request.method == "POST":
         form = RankingForm(request.POST)
         if form.is_valid():
-            if request.user.is_authenticated():
-                r = form.save(commit=False)
-                r.ranker = UserProfile.objects.get(user=request.user)
-                tc_id = int(request.POST.get('tc_id'))
-                tc = TransientCandidate.objects.get(pk=tc_id)
-                r.trans_candidate = tc
-                r.save()
+            r = form.save(commit=False)
+            r.ranker = UserProfile.objects.get(user=request.user)
+            tc_id = int(request.POST.get('tc_id'))
+            tc = TransientCandidate.objects.get(pk=tc_id)
+            r.trans_candidate = tc
+            r.save()
 
-                # Now save the comment if there is one.
-                comment_text = request.POST.get('comment')
-                if len(comment_text) > 0:
-                    # save the comment
-                    new_comment = Comment()
-                    new_comment.user = request.user
-                    new_comment.user_name = request.user.username
-                    new_comment.user_email = request.user.email
-                    new_comment.user_url = UserProfile.objects.\
-                        get(user=request.user).website
-                    new_comment.comment = comment_text
-                    new_comment.site = get_current_site(request)
-                    new_comment.content_object = tc
-                    new_comment.save()
+            # Now save the comment if there is one.
+            comment_text = request.POST.get('comment')
+            if len(comment_text) > 0:
+                # save the comment
+                new_comment = Comment()
+                new_comment.user = request.user
+                new_comment.user_name = request.user.username
+                new_comment.user_email = request.user.email
+                new_comment.user_url = UserProfile.objects.\
+                    get(user=request.user).website
+                new_comment.comment = comment_text
+                new_comment.site = get_current_site(request)
+                new_comment.content_object = tc
+                new_comment.save()
 
             return redirect('winnow:rank')
         else:
@@ -79,35 +83,6 @@ def rank(request):
 
 def about(request):
     return render(request, 'winnow/about.html', {'page_about': 'selected'})
-
-# Completely deprecated, I leave it here just in case
-# def thumb(request, trans_candidate_id):
-#
-#    tc = TransientCandidate.objects.get(pk=trans_candidate_id)
-#
-#    from astropy.io import fits
-#    from toros.settings import ASTRO_IMAGE_DIR
-#    from os import path
-#    image_data = fits.getdata(path.join(ASTRO_IMAGE_DIR, tc.filename))
-#    thumb_arr = image_data[tc.y_pix - tc.height: tc.y_pix + tc.height,
-#                           tc.x_pix - tc.width: tc.x_pix + tc.width]
-#
-#    #import numpy as np
-#    #thumb_arr = np.random.random((10,10))
-#
-#    import matplotlib
-#    matplotlib.use("Agg")
-#    import matplotlib.pyplot as plt
-#    fig = plt.figure(figsize=(5,5))
-#    plt.imshow(thumb_arr, interpolation='none', cmap='gray')
-#    plt.xticks([]); plt.yticks([]) #Remove tick marks
-#    plt.tight_layout()
-#    from matplotlib.backends.backend_agg import FigureCanvasAgg
-#    canvas = FigureCanvasAgg(fig)
-#    response = HttpResponse(content_type='image/png')
-#    canvas.print_png(response)
-#    plt.close()
-#    return response
 
 
 def object_detail(request, object_slug):
@@ -175,7 +150,8 @@ def register(request):
             # Now we save the UserProfile model instance.
             profile.save()
 
-            # Update our variable to tell the template registration was successful.
+            # Update our variable to tell the template registration was
+            # successful.
             registered = True
 
             # Now the user has been created, log them in
@@ -187,8 +163,11 @@ def register(request):
                     login(request, newuser)
                     return redirect('winnow:index')
                 else:
-                    return HttpResponse("<h1>Sorry, your account has been disabled.</h1>")
-
+                    context = {}
+                    context['message'] = {
+                        'headline': "Error loggin in",
+                        'body': "Sorry, your account has been disabled."}
+                    return render(request, 'winnow/message.html', context)
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
@@ -222,9 +201,9 @@ def user_login(request):
         return render(request, 'winnow/login.html', {})
 
 
-@login_required
 def user_logout(request):
-    logout(request)
+    if request.user.is_authenticated():
+        logout(request)
     return redirect('winnow:index')
 
 
@@ -238,49 +217,81 @@ def show_profile(request, a_username):
                   {'the_userprofile': the_userprofile})
 
 
-@login_required
 def data(request):
+    if not request.user.is_superuser:
+        context = {}
+        context['message'] = {
+            'headline': "Access denied",
+            'body': "You need to be a logged in superuser to view this page"}
+        return render(request, 'winnow/message.html', context)
+
     from django.db.models import Sum
     if request.method == 'POST':
-        if request.user.is_superuser:
-            dataset = request.POST['dataset']
-            alltc = TransientCandidate.objects.filter(dataset__name=dataset)
+        dataset = request.POST['dataset']
+        alltc = TransientCandidate.objects.filter(dataset__name=dataset)
 
-            from django.conf import settings
-            import os
-            from django.utils import timezone
-            dumpfilename = os.path.join(settings.MEDIA_ROOT,
-                                        'db_dumps/%s_dump.txt' % (dataset))
-            dumpfile = open(dumpfilename, 'w')
-            dumpfile.write("#" + str(timezone.now()) + "\n")
-            dumpfile.write(
-                "#unique_id, object id, dataset id, file name, x_pix, y_pix, "
-                "RA, Dec, height, width, original magnitude, "
-                "reference magnitude, subtraction magnitude, ranking\n")
+        from django.conf import settings
+        import os
+        from django.utils import timezone
+        dumpfilename = os.path.join(settings.MEDIA_ROOT,
+                                    'db_dumps/%s_dump.txt' % (dataset))
+        dumpfile = open(dumpfilename, 'w')
+        dumpfile.write("#" + str(timezone.now()) + "\n")
+        dumpfile.write(
+            "#unique_id, object id, dataset id, file name, x_pix, y_pix, "
+            "RA, Dec, height, width, original magnitude, "
+            "reference magnitude, subtraction magnitude, ranking\n")
 
-            for atc in alltc:
-                aline = "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " % \
-                    (atc.slug, atc.object_id, dataset, atc.filename, atc.x_pix,
-                     atc.y_pix, atc.ra, atc.dec, atc.height, atc.width,
-                     atc.mag_orig, atc.mag_ref, atc.mag_subt)
+        for atc in alltc:
+            aline = "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " % \
+                (atc.slug, atc.object_id, dataset, atc.filename, atc.x_pix,
+                 atc.y_pix, atc.ra, atc.dec, atc.height, atc.width,
+                 atc.mag_orig, atc.mag_ref, atc.mag_subt)
 
-                rbclass = atc.ranking_set.all().\
-                    aggregate(Sum('rank'))['rank__sum']
-                rbclass = rbclass if rbclass is not None else 0
-                aline += "%d\n" % (rbclass)
-                dumpfile.write(aline)
-            dumpfile.close()
+            rbclass = atc.ranking_set.all().\
+                aggregate(Sum('rank'))['rank__sum']
+            rbclass = rbclass if rbclass is not None else 0
+            aline += "%d\n" % (rbclass)
+            dumpfile.write(aline)
+        dumpfile.close()
 
-            from django.core.servers.basehttp import FileWrapper
-            wrapper = FileWrapper(file(dumpfilename))
-            response = HttpResponse(wrapper, content_type='text/plain')
-            response['Content-Length'] = os.path.getsize(dumpfilename)
-            return response
-        else:
-            return HttpResponse(
-                "Only super users are allowed for this operation.")
+        from django.core.servers.basehttp import FileWrapper
+        wrapper = FileWrapper(file(dumpfilename))
+        response = HttpResponse(wrapper, content_type='text/plain')
+        response['Content-Length'] = os.path.getsize(dumpfilename)
+        return response
 
     else:
         datasets = Dataset.objects.all()
         return render(request, 'winnow/data_interface.html',
                       {'page_data': 'selected', 'datasets': datasets})
+
+
+# Completely deprecated, I leave it here just in case
+# def thumb(request, trans_candidate_id):
+#
+#    tc = TransientCandidate.objects.get(pk=trans_candidate_id)
+#
+#    from astropy.io import fits
+#    from toros.settings import ASTRO_IMAGE_DIR
+#    from os import path
+#    image_data = fits.getdata(path.join(ASTRO_IMAGE_DIR, tc.filename))
+#    thumb_arr = image_data[tc.y_pix - tc.height: tc.y_pix + tc.height,
+#                           tc.x_pix - tc.width: tc.x_pix + tc.width]
+#
+#    #import numpy as np
+#    #thumb_arr = np.random.random((10,10))
+#
+#    import matplotlib
+#    matplotlib.use("Agg")
+#    import matplotlib.pyplot as plt
+#    fig = plt.figure(figsize=(5,5))
+#    plt.imshow(thumb_arr, interpolation='none', cmap='gray')
+#    plt.xticks([]); plt.yticks([]) #Remove tick marks
+#    plt.tight_layout()
+#    from matplotlib.backends.backend_agg import FigureCanvasAgg
+#    canvas = FigureCanvasAgg(fig)
+#    response = HttpResponse(content_type='image/png')
+#    canvas.print_png(response)
+#    plt.close()
+#    return response
