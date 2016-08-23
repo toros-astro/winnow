@@ -34,7 +34,7 @@ def index(request):
                             filter(observatory=obs)])
     context['assn_per_obs'] = assn_per_obs
     context['is_admin'] = request.user.groups\
-        .filter(name='broker_admin').exists()
+        .filter(name='broker_admins').exists()
 
     return render(request, 'broker/index.html', context)
 
@@ -77,7 +77,7 @@ def upload(request):
     if not request.user.is_authenticated():
         return user_login(request)
 
-    if not request.user.groups.filter(name='broker_admin').exists():
+    if not request.user.groups.filter(name='broker_admins').exists():
         request.message = \
             "You must be an approved broker admin to upload targets."
         return user_login(request)
