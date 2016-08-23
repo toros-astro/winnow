@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Assignment, Observatory, Alert
+from .models import Assignment, Observatory, Alert, GWGCCatalog
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.db.models import Q
 
 
 def index(request):
@@ -66,6 +67,53 @@ def update(request):
         asg.save()
 
     return redirect("broker:index")
+
+
+def upload(request):
+    import datetime as d
+    context = {}
+    context['alerts'] = Alert.objects.all()
+
+    if request.method == 'POST':
+        assgn_text = request.POST.get('assignments', '')
+        alert_id = request.POST.get('alert', None)
+        thealert = Alert.objects.get(pk=alert_id)
+
+        was_error = False
+        error_msg = []
+        obss = filter(None, assgn_text.split(';'))
+        for anobs_text in obss:
+            split = anobs_text.split(':')
+            try:
+                obs, obj_text = split
+            except:
+                was_error = True
+                error_msg.append("Error parsing line: {}".format(anobs_text))
+                continue
+            obs = obs.strip()
+            name_lookup = Q(name__contains=obs) | Q(short_name__contains=obs)
+            try:
+                theobs = Observatory.objects.get(name_lookup)
+            except:
+                was_error = True
+                error_msg.append("Could not find observatory {}".format(obs))
+                continue
+            objs = [obj.strip() for obj in filter(None, obj_text.split(','))]
+            for obj in objs:
+                try:
+                    theobj = GWGCCatalog.objects.get(name=obj)
+                except:
+                    was_error = True
+                    error_msg.append("Could not find object {}".format(obj))
+                    continue
+                new_assgn = Assignment(
+                    target=theobj, observatory=theobs,
+                    alert=thealert, datetime=d.datetime.now())
+                new_assgn.save()
+        if was_error:
+            context['errors'] = error_msg
+
+    return render(request, 'broker/upload.html', context)
 
 
 def user_login(request):

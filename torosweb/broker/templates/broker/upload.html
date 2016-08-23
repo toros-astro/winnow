@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+header {
+    background-color:#104E8B;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;
+}
+section {
+    width:650px;
+    float:center;
+    padding:10px;
+}
+footer {
+    background-color:#104E8B;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+table.tableizer-table {
+    font-size: 11px;
+    border: 1px solid #CCC; 
+    font-family: Arial, Helvetica, sans-serif;
+} 
+.tableizer-table td {
+    padding: 4px;
+    margin: 3px;
+    border: 1px solid #CCC;
+}
+.tableizer-table th {
+    background-color: #104E8B; 
+    color: #FFF;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Toros Broker</h1>
+</header>
+
+{% if message %}
+<section>
+<div style="border: 1px solid black; padding: 1em;">
+<p>{{ message }}</p>
+</div>
+</section>
+{% endif %}
+
+<section>
+<h1>Upload targets</h1>
+<form method='post' action="{% url 'broker:upload' %}">
+{% csrf_token %}
+{% if errors %}
+<span style="color:red;">
+{% for aline in errors %}
+{{aline}}<br>
+{% endfor %}
+</span>
+{% endif %}
+
+<p><label>Alert</label>
+<select name="alert">
+{% for alert in alerts %}
+   <option value="{{alert.pk}}">{{alert}}</option>
+{% endfor %}
+</select>
+</p>
+<p><label>Assignments</label></p>
+<p>
+<textarea placeholder="EABA: PGC000004, UGC12895, IC5376; Mamalluca: PGC000006, NGC7802, UGC12905;" cols=40 rows=10 name="assignments"></textarea>
+</p>
+<input type='submit' />
+</form>
+</section>
+
+<footer>
+Copyright The TOROS project 2016
+</footer>
+
+</body>
+</html>
