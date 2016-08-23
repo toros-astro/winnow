@@ -33,6 +33,8 @@ def index(request):
                             filter(alert=current_alert).
                             filter(observatory=obs)])
     context['assn_per_obs'] = assn_per_obs
+    context['is_admin'] = request.user.groups\
+        .filter(name='broker_admin').exists()
 
     return render(request, 'broker/index.html', context)
 
@@ -70,7 +72,16 @@ def update(request):
 
 
 def upload(request):
-    import datetime as d
+    from django.utils import timezone
+
+    if not request.user.is_authenticated():
+        return user_login(request)
+
+    if not request.user.groups.filter(name='broker_admin').exists():
+        request.message = \
+            "You must be an approved broker admin to upload targets."
+        return user_login(request)
+
     context = {}
     context['alerts'] = Alert.objects.all()
 
@@ -108,7 +119,7 @@ def upload(request):
                     continue
                 new_assgn = Assignment(
                     target=theobj, observatory=theobs,
-                    alert=thealert, datetime=d.datetime.now())
+                    alert=thealert, datetime=timezone.now())
                 new_assgn.save()
         if was_error:
             context['errors'] = error_msg
