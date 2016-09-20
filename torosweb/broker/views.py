@@ -16,6 +16,7 @@ def index(request):
 
     context = {}
     current_alert, created = Alert.objects.get_or_create(pk=1)
+    context['alert'] = current_alert
     context['all_assingments'] = Assignment.objects.filter(alert=current_alert)
 
     selected_targets = Assignment.objects.filter(alert=current_alert)\

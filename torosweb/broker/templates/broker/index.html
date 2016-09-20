@@ -54,13 +54,14 @@ function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
 {% load humanize %}
 
 <header>
-<h1>Toros Broker</h1>
+<h1>Assignments for the LVC alert {{alert}}</h1>
 </header>
 
 <p>You are logged in as <a href="#">{{ request.user }}</a> | <a href="{% url 'broker:logout' %}">Log out</a></p>
 {% if is_admin %}
 <p><a href="{% url 'broker:upload' %}">Upload targets</a></p>
 {% endif %}
+
 
 <section>
 <h1>Guidelines</h1>
