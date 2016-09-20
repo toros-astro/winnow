@@ -15,7 +15,7 @@ def index(request):
         return user_login(request)
 
     context = {}
-    current_alert, created = Alert.objects.get_or_create(pk=1)
+    current_alert = Alert.objects.order_by('-datetime').first()
     context['alert'] = current_alert
     context['all_assingments'] = Assignment.objects.filter(alert=current_alert)
 
