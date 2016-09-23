@@ -67,6 +67,7 @@ class Assignment(models.Model):
     datetime = models.DateTimeField()
     is_taken = models.BooleanField(default=False)
     was_observed = models.BooleanField(default=False)
+    probability = models.FloatField(null=True, blank=True, default=0.)
 
     def __str__(self):
         obs_name = self.observatory.short_name

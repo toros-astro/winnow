@@ -121,7 +121,7 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
   <td>{{asg.target.err_dist}}</td>
   <td>{{asg.target.err_app_mag}}</td>
   <td>{{asg.target.err_abs_mag}}</td>
-  <td></td>
+  <td>{{asg.probability}}</td>
   <td>
     <div align="center">
     <input type="checkbox" name="istaken" {% if asg.is_taken %}checked{% endif %} disabled>
@@ -214,7 +214,7 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
   <td>{{asg.target.err_dist}}</td>
   <td>{{asg.target.err_app_mag}}</td>
   <td>{{asg.target.err_abs_mag}}</td>
-  <td></td>
+  <td>{{asg.probability}}</td>
   <td>
     <div align="center">
     <input type="checkbox" name="istaken[]" {% if asg.is_taken %}checked{% endif %} value="{{asg.pk}}">
