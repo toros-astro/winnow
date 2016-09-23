@@ -111,7 +111,19 @@ def upload(request):
                 error_msg.append("Could not find observatory {}".format(obs))
                 continue
             objs = [obj.strip() for obj in filter(None, obj_text.split(','))]
-            for obj in objs:
+            for obj_prob in objs:
+                try:
+                    obj_prob_split = filter(None, obj_prob.split())
+                    if len(obj_prob_split) == 1:
+                        obj = obj_prob_split[0]
+                        prob = 0.0
+                    else:
+                        obj, prob = obj_prob_split
+                        prob = float(prob)
+                except:
+                    was_error = True
+                    error_msg.append("Could not parse '{}'".format(obj_prob))
+                    continue
                 try:
                     theobj = GWGCCatalog.objects.get(name=obj)
                 except:
@@ -120,7 +132,7 @@ def upload(request):
                     continue
                 new_assgn = Assignment(
                     target=theobj, observatory=theobs,
-                    alert=thealert, datetime=timezone.now())
+                    alert=thealert, datetime=timezone.now(), probability=prob)
                 new_assgn.save()
         if was_error:
             context['errors'] = error_msg

@@ -43,6 +43,7 @@ def populate():
                 target=obj, observatory=anobs, alert=the_alert,
                 datetime=timezone.now(), is_taken=is_taken,
                 was_observed=was_observed)
+            new_asg.probability = random.random()
             new_asg.save()
             print("Created Assignment for observatory %s and object %s"
                   % (anobs, obj))
