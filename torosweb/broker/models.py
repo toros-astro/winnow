@@ -6,7 +6,7 @@ class GWGCCatalog(models.Model):
     name = models.CharField("Common Name", max_length=20)
     ra = models.FloatField("Right Ascension", null=True, blank=True)
     dec = models.FloatField("Declination", null=True, blank=True)
-    obj_type = models.FloatField("Type", null=True, blank=True)
+    obj_type = models.CharField("Type", max_length=5, null=True, blank=True)
     app_mag = models.FloatField("Apparent Blue Magnitude",
                                 null=True, blank=True)
     maj_diam_a = models.FloatField("Major Diameter(a)", null=True, blank=True)

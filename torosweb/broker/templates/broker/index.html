@@ -153,10 +153,7 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
 <section>
 <h1>{{obs.name}}{% if obs.short_name %} ({{obs.short_name}}){% endif %}
   at {{obs.city}}, {{obs.country}}</h1>
-<p>Geo 
-  <a href="https://tools.wmflabs.org/geohack/geohack.php?pagename=Vicu%C3%B1a%2C_Chile&params=33_00_S_71_31_W_type:city(25085)_region:CL-CO ">
-    long: {{obs.longitude}} lat: {{obs.latitude}}
-  </a>
+<p>Geo long: {{obs.longitude}} lat: {{obs.latitude}}
   Elevation: {{obs.elevation|floatformat:0|intcomma}} m (<span id="obs{{obs.id}}">None</span> ft)
 </p>
 <script>
