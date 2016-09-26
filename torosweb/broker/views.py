@@ -19,7 +19,8 @@ def index(request):
     context['alert'] = current_alert
     context['all_assingments'] = Assignment.objects\
         .filter(alert=current_alert)\
-        .filter(is_taken=True)
+        .filter(is_taken=True)\
+        .order_by('target__name')
 
     selected_targets = Assignment.objects.filter(alert=current_alert)\
         .filter(is_taken=True).count()
