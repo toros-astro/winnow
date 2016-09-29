@@ -70,8 +70,9 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
 </section>
 
 
-<section>
+<div style="padding: 1em;">
 <h1>Selected targets for all observatories</h1>
+<div style="max-height: 30em; width: auto; overflow: auto;">
 <table class="tableizer-table">
 <thead>
   <tr class="tableizer-firstrow">
@@ -142,15 +143,16 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
     {% endfor %}
 </tbody>
 </table>
+</div><!--scrollable-->
 
-<button type="button" >Back &lt&lt </button><button type="button" >Next &gt&gt </button>
+<button type="button" >&lt&lt Back</button><button type="button" >Next &gt&gt </button>
 <p>Total of observed galaxies: {{observed_targets}}</p>
 <p>Total of ongoing galaxy observations: {{selected_targets}}</p>
-</section>
+</div><!-- padding -->
 
 
 {% for obs, assignments_obs in assn_per_obs %}
-<section>
+<div style="padding: 1em;">
 <h1>{{obs.name}}{% if obs.short_name %} ({{obs.short_name}}){% endif %}
   at {{obs.city}}, {{obs.country}}</h1>
 <p>Geo long: {{obs.longitude}} lat: {{obs.latitude}}
@@ -162,6 +164,7 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
 <form method="post" action="{% url 'broker:update' %}">
 <input type="hidden" value="{{ obs.pk }}" name="obs_id">
 {% csrf_token %}
+<div style="max-height: 30em; width: auto; overflow: auto;">
 <table class="tableizer-table">
 <thead>
   <tr class="tableizer-firstrow">
@@ -225,13 +228,15 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
 {% endfor %}
 </tbody>
 </table>
-<button type="button" >Back &lt&lt</button>
+</div><!--scrollable-->
+<button type="button" >&lt&lt Back</button>
 <button type="button" >Next &gt&gt</button>
 <input type="submit" class="button" value="Submit" />
 
 </form>
-</section>
+</div><!-- padding -->
 {% endfor %}
+
 
 <footer>
 Copyright The TOROS project 2016
