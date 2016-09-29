@@ -47,7 +47,7 @@ def update(request):
     if request.method == "GET":
         return redirect("broker:index")
 
-    current_alert, created = Alert.objects.get_or_create(pk=1)
+    current_alert = Alert.objects.order_by('-datetime').first()
     obs_id = int(request.POST['obs_id'])
     obs = Observatory.objects.get(pk=obs_id)
 
@@ -57,13 +57,33 @@ def update(request):
     aretakenlist = [int(k) for k in request.POST.getlist('istaken[]')]
     areobservedlist = [int(k) for k in request.POST.getlist('wasobserved[]')]
 
+    print(aretakenlist)
+
+    def taken_by_others(asg):
+        other_assng = Assignment.objects.filter(alert=current_alert)\
+            .exclude(observatory=asg.observatory)\
+            .filter(is_taken=True)\
+            .filter(target=asg.target)
+        return other_assng.exists()
+
+    def turn_on_taken(asg):
+        if asg.is_taken is False:
+            asg.is_taken = True
+
+    def turn_off_taken(asg):
+        if asg.is_taken is True:
+            asg.is_taken = False
+
     for asg in obs_asg:
         if asg.id in aretakenlist:
-            if asg.is_taken is False:
-                asg.is_taken = True
+            if not taken_by_others(asg) \
+                    or asg.id in areobservedlist:
+                turn_on_taken(asg)
+            else:
+                turn_off_taken(asg)
+                # Change mode to taken
         else:
-            if asg.is_taken is True:
-                asg.is_taken = False
+            turn_off_taken(asg)
         if asg.id in areobservedlist:
             if asg.was_observed is False:
                 asg.was_observed = True
