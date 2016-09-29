@@ -2,9 +2,11 @@
 <html>
 <body>
 These are the targets observed for the LVC alert {{alert}}
+<br><br>
 
 {% for obs, assignments in observed_per_obs %}
 <p>{{obs.name}}:</p>
+Lat: {{obs.latitude}}, Long: {{obs.longitude}}
 {% if assignments %}
 <ul>
 {% for assgn in assignments %}
@@ -16,6 +18,7 @@ These are the targets observed for the LVC alert {{alert}}
 <li>No observations for this telescope.</li>
 </ul>
 {% endif %}
+<br>
 {% endfor %}
 
 
