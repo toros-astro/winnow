@@ -145,7 +145,9 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
 </table>
 </div><!--scrollable-->
 
+{% comment %}
 <button type="button" >&lt&lt Back</button><button type="button" >Next &gt&gt </button>
+{% endcomment %}
 <p>Total of observed galaxies: {{observed_targets}}</p>
 <p>Total of ongoing galaxy observations: {{selected_targets}}</p>
 </div><!-- padding -->
@@ -229,8 +231,10 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
 </tbody>
 </table>
 </div><!--scrollable-->
+{% comment %}
 <button type="button" >&lt&lt Back</button>
 <button type="button" >Next &gt&gt</button>
+{% endcomment %}
 <input type="submit" class="button" value="Submit" />
 
 </form>
