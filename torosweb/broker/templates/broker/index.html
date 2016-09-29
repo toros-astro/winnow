@@ -71,7 +71,7 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
 
 
 <section>
-<h1>All observatories</h1>
+<h1>Selected targets for all observatories</h1>
 <table class="tableizer-table">
 <thead>
   <tr class="tableizer-firstrow">
@@ -132,7 +132,7 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
     <input type="checkbox" name="istaken" {% if asg.was_observed %}checked{% endif %} disabled>
     </div>
   </td>
-  <td>{{asg.datetime}}</td>
+  <td></td>
   {% if asg.observatory.short_name %}
   <td>{{asg.observatory.short_name}}</td>
   {% else %}
@@ -187,7 +187,6 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
     <th>Selected</th>
     <th>Observed</th>
     <th>Observation date/time</th>
-    <th>Observatory</th>
 </tr>
 </thead>
 <tbody>
@@ -222,12 +221,7 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
     <input type="checkbox" name="wasobserved[]" {% if asg.was_observed %}checked{% endif %} value="{{asg.pk}}">
     </div>
   </td>
-  <td>{{asg.datetime}}</td>
-  {% if asg.observatory.short_name %}
-  <td>{{asg.observatory.short_name}}</td>
-  {% else %}
-  <td>{{asg.observatory}}</td>
-  {% endif %}</tr>
+  <td></td>
 {% endfor %}
 </tbody>
 </table>
