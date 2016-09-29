@@ -143,6 +143,30 @@ def upload(request):
     return render(request, 'broker/upload.html', context)
 
 
+def circular(request):
+    if not request.user.is_authenticated():
+        return user_login(request)
+
+    if not request.user.groups.filter(name='broker_admins').exists():
+        request.message = \
+            "You must be an approved telescope operator to see this page."
+        return user_login(request)
+
+    context = {}
+    current_alert = Alert.objects.order_by('-datetime').first()
+    context['alert'] = current_alert
+
+    observed_per_obs = []
+    for obs in Observatory.objects.all():
+        observed_per_obs.append([obs,
+                                 Assignment.objects.
+                                 filter(alert=current_alert).
+                                 filter(observatory=obs).
+                                 filter(was_observed=True)])
+    context['observed_per_obs'] = observed_per_obs
+    return render(request, 'broker/circular.html', context)
+
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')

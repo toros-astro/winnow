@@ -57,7 +57,7 @@ class Alert(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "{0}_{1:03d}".format(self.ligo_run, self.alert_number)
+        return "{0} {1:03d}".format(self.ligo_run, self.alert_number)
 
 
 class Assignment(models.Model):

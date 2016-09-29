@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+These are the targets observed for the LVC alert {{alert}}
+
+{% for obs, assignments in observed_per_obs %}
+<p>{{obs.name}}:</p>
+{% if assignments %}
+<ul>
+{% for assgn in assignments %}
+<li>{{assgn.target}}: RA: {{assgn.target.ra}} deg Dec: {{assgn.target.dec}} deg</li>
+{% endfor %}
+</ul>
+{% else %}
+<ul>
+<li>No observations for this telescope.</li>
+</ul>
+{% endif %}
+{% endfor %}
+
+
+</body>
+</html>
