@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
-TOROS Collaboration observation for the LVC alert {{alert}} on {{alert.datetime.date}}
+TOROS Collaboration circular for the observations for the LVC alert {{alert}} on {{alert.datetime.date}}.
 <br><br>
 
 {% for obs, assignments in observed_per_obs %}
@@ -20,7 +20,5 @@ Lat: {{obs.latitude}}, Long: {{obs.longitude}}
 {% endif %}
 <br>
 {% endfor %}
-
-
 </body>
 </html>
