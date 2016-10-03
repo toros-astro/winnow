@@ -163,6 +163,10 @@ once the images are completely taken then check the 'Observed' checkbox.</p>
 <script>
 document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elevation}}).toFixed(0))
 </script>
+{% if not assignments_obs %}
+<p>No targets for this observatory.</p>
+{% else %}
+<p>WARNING: A red background means that the target was selected by another observatory.</p>
 <form method="post" action="{% url 'broker:update' %}">
 <input type="hidden" value="{{ obs.pk }}" name="obs_id">
 {% csrf_token %}
@@ -196,7 +200,11 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
 </thead>
 <tbody>
 {% for asg in assignments_obs %}
+{% if asg.flag_unavailable %}
+<tr style="background-color: #ffe6e6;">
+{% else %}
 <tr>
+{% endif %}
   <td>{{asg.target.pgc}}</td>
   <td>{{asg.target.name}}</td>
   <td>{{asg.target.ra}}</td>
@@ -238,6 +246,7 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
 <input type="submit" class="button" value="Submit" />
 
 </form>
+{% endif %}
 </div><!-- padding -->
 {% endfor %}
 

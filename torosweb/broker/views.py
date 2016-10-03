@@ -30,12 +30,23 @@ def index(request):
         .filter(was_observed=True).count()
     context['observed_targets'] = observed_targets
 
+    def taken_by_others(asg):
+        other_assng = Assignment.objects.filter(alert=current_alert)\
+            .exclude(observatory=asg.observatory)\
+            .filter(is_taken=True)\
+            .filter(target=asg.target)
+        return other_assng.exists()
+
     assn_per_obs = []
     for obs in Observatory.objects.all():
-        assn_per_obs.append([obs,
-                            Assignment.objects.
-                            filter(alert=current_alert).
-                            filter(observatory=obs)])
+        assgnms = Assignment.objects.filter(alert=current_alert)\
+                                    .filter(observatory=obs)
+        for asg in assgnms:
+            if (not asg.is_taken) and taken_by_others(asg):
+                asg.flag_unavailable = True
+            else:
+                asg.flag_unavailable = False
+        assn_per_obs.append([obs, assgnms])
     context['assn_per_obs'] = assn_per_obs
     context['is_admin'] = request.user.groups\
         .filter(name='broker_admins').exists()
