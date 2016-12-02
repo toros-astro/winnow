@@ -9,7 +9,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 # This secret key should be used only for debug mode,
 # use a different one for production
@@ -38,5 +37,4 @@ STATIC_URL = '/globalurl/static/'
 MEDIA_URL = '/globalurl/media/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
