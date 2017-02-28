@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Assignment, Observatory, Alert, GWGCCatalog
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 
 def index(request):
@@ -172,6 +174,42 @@ def upload(request):
             context['errors'] = error_msg
 
     return render(request, 'broker/upload.html', context)
+
+
+@require_POST
+@csrf_exempt
+def uploadjson(request):
+    import json
+    import datetime as d
+    import pytz
+    from django.utils import timezone
+    try:
+        # Parse alert
+        alert = json.loads(request.POST["targets.json"])
+        dt = d.datetime.strptime(alert["datetime"], "%Y-%m-%dT%H:%M:%S.%f")
+        dt = pytz.utc.localize(dt)
+        thealert = Alert(grace_id=alert["graceid"], datetime=dt)
+        thealert.save()
+        for obs_name, obs_assgn in alert["assignments"].iteritems():
+            name_lookup = (Q(name__contains=obs_name) |
+                           Q(short_name__contains=obs_name))
+            try:
+                theobs = Observatory.objects.get(name_lookup)
+            except:
+                continue
+            for obj, prob in obs_assgn.iteritems():
+                try:
+                    theobj = GWGCCatalog.objects.get(name=obj)
+                except:
+                    continue
+                new_assgn = Assignment(
+                    target=theobj, observatory=theobs,
+                    alert=thealert, datetime=timezone.now(), probability=prob)
+                new_assgn.save()
+    except:
+        return HttpResponseBadRequest()
+
+    return HttpResponse()
 
 
 def circular(request):

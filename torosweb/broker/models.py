@@ -51,13 +51,15 @@ class Observatory(models.Model):
 
 
 class Alert(models.Model):
-    ligo_run = models.CharField("LIGO run", max_length=20)
-    alert_number = models.IntegerField()
+    ligo_run = models.CharField("LIGO run", max_length=20,
+                                null=True, blank=True)
+    grace_id = models.CharField("GraceDB ID", max_length=20)
+    alert_number = models.IntegerField(null=True, blank=True)
     datetime = models.DateTimeField()
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "{0} {1:03d}".format(self.ligo_run, self.alert_number)
+        return self.grace_id
 
 
 class Assignment(models.Model):
