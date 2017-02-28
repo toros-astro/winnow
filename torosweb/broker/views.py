@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 
-def index(request):
+def index(request, the_alert=None):
     if not request.user.is_authenticated():
         return user_login(request)
 
@@ -16,24 +16,75 @@ def index(request):
             "You must be an approved telescope operator to log in."
         return user_login(request)
 
+    if request.method == 'POST':
+        the_alert = Alert.objects.filter(pk=request.POST['alert_id']).get()
+        obs_id = int(request.POST['obs_id'])
+        obs = Observatory.objects.get(pk=obs_id)
+
+        obs_asg = Assignment.objects.filter(alert=the_alert)\
+            .filter(observatory=obs)
+
+        aretakenlist = [int(k) for k in request.POST.getlist('istaken[]')]
+        areobservedlist = [int(k)
+                           for k in request.POST.getlist('wasobserved[]')]
+
+        print(aretakenlist)
+
+        def taken_by_others(asg):
+            other_assng = Assignment.objects.filter(alert=the_alert)\
+                .exclude(observatory=asg.observatory)\
+                .filter(is_taken=True)\
+                .filter(target=asg.target)
+            return other_assng.exists()
+
+        def turn_on_taken(asg):
+            if asg.is_taken is False:
+                asg.is_taken = True
+
+        def turn_off_taken(asg):
+            if asg.is_taken is True:
+                asg.is_taken = False
+
+        for asg in obs_asg:
+            if asg.id in aretakenlist:
+                if not taken_by_others(asg) \
+                        or asg.id in areobservedlist:
+                    turn_on_taken(asg)
+                else:
+                    turn_off_taken(asg)
+                    # Change mode to taken
+            else:
+                turn_off_taken(asg)
+            if asg.id in areobservedlist:
+                if asg.was_observed is False:
+                    asg.was_observed = True
+            else:
+                if asg.was_observed is True:
+                    asg.was_observed = False
+            asg.save()
+
     context = {}
-    current_alert = Alert.objects.order_by('-datetime').first()
-    context['alert'] = current_alert
+    context['alerts'] = Alert.objects.order_by('-datetime')
+
+    if the_alert is None:
+        the_alert = Alert.objects.order_by('-datetime').first()
+    context['the_alert'] = the_alert
+
     context['all_assingments'] = Assignment.objects\
-        .filter(alert=current_alert)\
+        .filter(alert=the_alert)\
         .filter(is_taken=True)\
         .order_by('target__name')
 
-    selected_targets = Assignment.objects.filter(alert=current_alert)\
+    selected_targets = Assignment.objects.filter(alert=the_alert)\
         .filter(is_taken=True).count()
     context['selected_targets'] = selected_targets
 
-    observed_targets = Assignment.objects.filter(alert=current_alert)\
+    observed_targets = Assignment.objects.filter(alert=the_alert)\
         .filter(was_observed=True).count()
     context['observed_targets'] = observed_targets
 
     def taken_by_others(asg):
-        other_assng = Assignment.objects.filter(alert=current_alert)\
+        other_assng = Assignment.objects.filter(alert=the_alert)\
             .exclude(observatory=asg.observatory)\
             .filter(is_taken=True)\
             .filter(target=asg.target)
@@ -41,7 +92,7 @@ def index(request):
 
     assn_per_obs = []
     for obs in Observatory.objects.all():
-        assgnms = Assignment.objects.filter(alert=current_alert)\
+        assgnms = Assignment.objects.filter(alert=the_alert)\
                                     .filter(observatory=obs)
         for asg in assgnms:
             if (not asg.is_taken) and taken_by_others(asg):
@@ -56,56 +107,9 @@ def index(request):
     return render(request, 'broker/index.html', context)
 
 
-def update(request):
-    if request.method == "GET":
-        return redirect("broker:index")
-
-    current_alert = Alert.objects.order_by('-datetime').first()
-    obs_id = int(request.POST['obs_id'])
-    obs = Observatory.objects.get(pk=obs_id)
-
-    obs_asg = Assignment.objects.filter(alert=current_alert)\
-        .filter(observatory=obs)
-
-    aretakenlist = [int(k) for k in request.POST.getlist('istaken[]')]
-    areobservedlist = [int(k) for k in request.POST.getlist('wasobserved[]')]
-
-    print(aretakenlist)
-
-    def taken_by_others(asg):
-        other_assng = Assignment.objects.filter(alert=current_alert)\
-            .exclude(observatory=asg.observatory)\
-            .filter(is_taken=True)\
-            .filter(target=asg.target)
-        return other_assng.exists()
-
-    def turn_on_taken(asg):
-        if asg.is_taken is False:
-            asg.is_taken = True
-
-    def turn_off_taken(asg):
-        if asg.is_taken is True:
-            asg.is_taken = False
-
-    for asg in obs_asg:
-        if asg.id in aretakenlist:
-            if not taken_by_others(asg) \
-                    or asg.id in areobservedlist:
-                turn_on_taken(asg)
-            else:
-                turn_off_taken(asg)
-                # Change mode to taken
-        else:
-            turn_off_taken(asg)
-        if asg.id in areobservedlist:
-            if asg.was_observed is False:
-                asg.was_observed = True
-        else:
-            if asg.was_observed is True:
-                asg.was_observed = False
-        asg.save()
-
-    return redirect("broker:index")
+def alert_detail(request, alert_name):
+    the_alert = Alert.objects.filter(grace_id=alert_name).first()
+    return index(request, the_alert)
 
 
 def upload(request):

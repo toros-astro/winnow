@@ -54,7 +54,7 @@ function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
 {% load humanize %}
 
 <header>
-<h1>Assignments for the LVC alert {{alert}}</h1>
+<h1>Assignments for the LVC alert {{the_alert}}</h1>
 </header>
 
 <p>You are logged in as <a href="#">{{ request.user }}</a> | <a href="{% url 'broker:logout' %}">Log out</a></p>
@@ -62,6 +62,18 @@ function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
 <p><a href="{% url 'broker:upload' %}">Upload targets</a> | <a href="{% url 'broker:circular' %}">Generate circular</a></p>
 {% endif %}
 
+<section>
+<h1>Change alert:</h1>
+<div style="max-height: 5em; max-width: 15em; overflow: auto;">
+<ul>
+{% for alert in alerts %}
+   <li>
+    <a href="{% url 'broker:alert_detail' alert.grace_id %}">{{alert}}</a>
+   </li>
+{% endfor %}
+</ul>
+</div>
+</section>
 
 <section>
 <h1>Guidelines</h1>
@@ -167,7 +179,8 @@ document.getElementById("obs{{obs.id}}").innerHTML = intcomma(mtofeet({{obs.elev
 <p>No targets for this observatory.</p>
 {% else %}
 <p>WARNING: A red background means that the target was selected by another observatory.</p>
-<form method="post" action="{% url 'broker:update' %}">
+<form method="post" action="{% url 'broker:index' %}">
+<input type="hidden" value="{{ the_alert.pk }}" name="alert_id">
 <input type="hidden" value="{{ obs.pk }}" name="obs_id">
 {% csrf_token %}
 <div style="max-height: 30em; width: auto; overflow: auto;">
