@@ -120,7 +120,7 @@ def upload(request):
         return user_login(request)
 
     context = {}
-    context['alerts'] = Alert.objects.all()
+    context['alerts'] = Alert.objects.order_by('-datetime')
 
     if request.method == 'POST':
         assgn_text = request.POST.get('assignments', '')
