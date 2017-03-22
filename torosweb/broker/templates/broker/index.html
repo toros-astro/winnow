@@ -59,7 +59,7 @@ function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
 
 <p>You are logged in as <a href="#">{{ request.user }}</a> | <a href="{% url 'broker:logout' %}">Log out</a></p>
 {% if is_admin %}
-<p><a href="{% url 'broker:upload' %}">Upload targets</a> | <a href="{% url 'broker:circular' %}">Generate circular</a></p>
+<p><a href="{% url 'broker:upload' %}">Upload targets</a> | <a href="{% url 'broker:circular' the_alert.grace_id %}">Generate circular</a></p>
 {% endif %}
 
 <section>

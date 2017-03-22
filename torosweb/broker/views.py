@@ -216,7 +216,7 @@ def uploadjson(request):
     return HttpResponse()
 
 
-def circular(request):
+def circular(request, alert_name=None):
     if not request.user.is_authenticated():
         return user_login(request)
 
@@ -226,14 +226,17 @@ def circular(request):
         return user_login(request)
 
     context = {}
-    current_alert = Alert.objects.order_by('-datetime').first()
-    context['alert'] = current_alert
+
+    the_alert = Alert.objects.filter(grace_id=alert_name).first()
+    if the_alert is None:
+        the_alert = Alert.objects.order_by('-datetime').first()
+    context['alert'] = the_alert
 
     observed_per_obs = []
     for obs in Observatory.objects.all():
         observed_per_obs.append([obs,
                                  Assignment.objects.
-                                 filter(alert=current_alert).
+                                 filter(alert=the_alert).
                                  filter(observatory=obs).
                                  filter(was_observed=True)])
     context['observed_per_obs'] = observed_per_obs
