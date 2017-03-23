@@ -4,21 +4,17 @@
 TOROS Collaboration circular for the observations for the LVC alert {{alert}} on {{alert.datetime.date}}.
 <br><br>
 
-{% for obs, assignments in observed_per_obs %}
+{% for obs, targets in observed_per_obs %}
+{% if targets %}
 <p>{{obs.name}}:</p>
 Lat: {{obs.latitude}}, Long: {{obs.longitude}}
-{% if assignments %}
 <ul>
-{% for assgn in assignments %}
-<li>{{assgn.target}}: RA: {{assgn.target.ra}} deg Dec: {{assgn.target.dec}} deg</li>
+{% for t in targets %}
+<li>{{t.target}}: RA: {{t.target.ra}} deg Dec: {{t.target.dec}} deg</li>
 {% endfor %}
 </ul>
-{% else %}
-<ul>
-<li>No observations for this telescope.</li>
-</ul>
-{% endif %}
 <br>
+{% endif %}
 {% endfor %}
 </body>
 </html>
