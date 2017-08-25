@@ -1,89 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-header {
-    background-color:#104E8B;
-    color:white;
-    text-align:center;
-    padding:5px;
-}
-nav {
-    line-height:30px;
-    background-color:#eeeeee;
-    height:300px;
-    width:100px;
-    float:left;
-    padding:5px;
-}
-section {
-    width:650px;
-    float:center;
-    padding:10px;
-}
-footer {
-    background-color:#104E8B;
-    color:white;
-    clear:both;
-    text-align:center;
-    padding:5px;
-}
-table.tableizer-table {
-    font-size: 11px;
-    border: 1px solid #CCC; 
-    font-family: Arial, Helvetica, sans-serif;
-} 
-.tableizer-table td {
-    padding: 4px;
-    margin: 3px;
-    border: 1px solid #CCC;
-}
-.tableizer-table th {
-    background-color: #104E8B; 
-    color: #FFF;
-    font-weight: bold;
-}
-</style>
+    <title>{% block title %}TOROS Broker{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+    function mtofeet(x) {return 3.2808399 * x;}
+    function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+    </script>
 </head>
 <body>
 
-<header>
-<h1>Toros Broker</h1>
-</header>
 
-{% if message %}
-<section>
-<div style="border: 1px solid black; padding: 1em;">
-<p>{{ message }}</p>
-</div>
-</section>
-{% endif %}
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">TOROS Broker</a>
+            </div class="navbar-header">
+        </div class="container-fluid">
+    </nav class="navbar navbar-inverse">
 
-<section>
-<h1>Log in</h1>
-<form method='post' action='{% url 'broker:login' %}'>
-{% csrf_token %}                    
-<table class="tableizer-table">
-  <tr>
-    <th>User name:</th>
-    <td><input type="text" name="username"/></td>
-</tr>
-<tr>
-    <th>Password:</th>
-    <td><input type="password" name="password"/></td>
-</tr>
-</table>
-<input type='submit' />
-</form>
-</section>
 
-<section>
-<p>To have access to the TOROS broker system you need to register a broker account with the admins.</p>
-</section>
+    <div class="container-fluid">
+        <div class="container">
 
-<footer>
-Copyright The TOROS project 2016
-</footer>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="well">
+                        {% if message %}
+                        <div style="border: 1px solid black; padding: 1em;">
+                            <p>{{ message }}</p>
+                        </div>
+                        {% endif %}
+
+                        <h1>Log in</h1>
+                        <form method='post' action='{% url 'broker:login' %}'>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>User name:</label>
+                                <input type="text" class="form-control" name="username"/>
+                            </div class="form-group">
+                            <div class="form-group">
+                                <label>Password:</label>
+                                <input type="password" class="form-control" name="password"/>
+                            </div class="form-group">
+                            <input type='submit' class="btn btn-primary"/>
+                        </form>
+                    </div class="col-sm-4">
+                </div class="row">
+
+
+            </div class="well">
+
+            <p>To have access to the TOROS broker system you need to register a broker account with the admins.</p>
+
+        </div class="container">
+
+        <div id="footer">
+            <div class="container">
+                <p class="text-muted">Copyright The TOROS project 2017</p>
+            </div>
+        </div>
+
+    </div class="container-fluid">
 
 </body>
 </html>

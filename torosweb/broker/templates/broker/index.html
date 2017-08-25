@@ -32,8 +32,8 @@
                         {% endfor %}
                     </ul>
                 </li>
-                <li><a href="{% url 'broker:upload' %}">Upload Targets</a></li>
-                <li><a href="{% url 'broker:circular' the_alert.grace_id %}">Generate Circular</a></li>
+                <li><a data-toggle="modal" data-target="#circularUploadModal">Upload Targets</a></li>
+                <li><a href="{% url 'broker:circular' the_alert.grace_id %}" target=_blank>Generate Circular</a></li>
             </ul>
 
             <div class="collapse navbar-collapse" id="myNavbar">
@@ -46,12 +46,6 @@
                             </a>
                             <a href="{% url 'winnow:logout' %}" type="button" class="btn btn-danger navbar-btn">Log out</a>
                         </div>
-                        {% else %}
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginmodal">Login</button>
-                            <a href="{% url 'winnow:register' %}" type="button" class="btn btn-success btn-sm">Sign Up!</a>
-                        </div>
-                        {% include "rbmanager/login_form.html" %}
                         {% endif %}
                     </li>
                 </ul class="nav navbar-nav navbar-right">
@@ -60,19 +54,57 @@
     </nav class="navbar navbar-inverse">
 
 
+    <!-- Modal to upload targets manually -->
+    <div id="circularUploadModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Targets Upload</h4>
+                </div>
+                <div class="modal-body">
+                    <form method='post' action="{% url 'broker:upload' %}">
+                        {% csrf_token %}
+                        {% if errors %}
+                        <span style="color:red;">
+                            {% for aline in errors %}
+                            <p>{{aline}}</p>
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label>Alert</label>
+                            <select name="alert">
+                                {% for alert in alerts %}
+                                <option value="{{alert.pk}}">{{alert}} ({{alert.datetime | date:"N j, Y"}})</option>
+                                {% endfor %}
+                            </select>
+                        </div class="form-group">
+                        <p><label>Assignments</label></p>
+                        <textarea placeholder="EABA: PGC000004 1.2E-3, UGC12895 0.5E-4, IC5376; Mamalluca: PGC000006 3.2E-5, NGC7802 1.1E-2, UGC12905 5.2E-6;" cols=40 rows=10 name="assignments"></textarea>
+                        <p>
+                            <input type='submit' class="btn btn-primary"/>
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
         {% load humanize %}
         <div class="container">
-
             <h1>Assignments for the LVC alert {{the_alert}}</h1>
-
             <div class="well">
                 <h1>Guidelines</h1>
                 <p>The ranking by observatory is shown in the following tables, once a target is selected for observation please check the 'Selected' checkbox,
                     once the images are completely taken then check the 'Observed' checkbox.
                 </p>
             </div>
-
             <div class="panel panel-primary">
                 <div class="panel-heading">Selected targets for all observatories</div>
                 <div class="panel-body">
@@ -207,7 +239,7 @@
 
         <div id="footer">
             <div class="container">
-                <p class="text-muted">Copyright The TOROS project 2016</p>
+                <p class="text-muted">Copyright The TOROS project 2017</p>
             </div>
         </div>
 
