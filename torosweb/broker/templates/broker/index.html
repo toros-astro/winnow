@@ -41,10 +41,10 @@
                     <li>
                         {% if user.is_active %}
                         <div class="btn-group">
-                            <a href="{% url 'winnow:profile_detail' user.username %}" type="button" class="btn btn-primary btn-sm">
+                            <a href="{% url 'winnow:profile_detail' user.username %}" type="button" class="btn btn-primary navbar-btn">
                                 {{ user.username }}
                             </a>
-                            <a href="{% url 'winnow:logout' %}" type="button" class="btn btn-danger btn-sm">Log out</a>
+                            <a href="{% url 'winnow:logout' %}" type="button" class="btn btn-danger navbar-btn">Log out</a>
                         </div>
                         {% else %}
                         <div class="btn-group">
@@ -203,12 +203,14 @@
                 </div class="panel-body">
             </div class="panel panel-primary">
             {% endfor %}
-
-            <footer>
-                Copyright The TOROS project 2016
-            </footer>
-
         </div class="container">
+
+        <div id="footer">
+            <div class="container">
+                <p class="text-muted">Copyright The TOROS project 2016</p>
+            </div>
+        </div>
+
     </div class="container-fluid">
 
 </body>
