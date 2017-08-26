@@ -8,10 +8,46 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="{static 'equatorial.js'}"></script>
     <script>
     function mtofeet(x) {return 3.2808399 * x;}
     function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+    </script>
+    <script>
+    function raDeg2Hms(ra) {
+        var prefix = ''
+        var deg = +ra
+        if (deg < 0) {
+            prefix = '-'
+            deg = Math.abs(deg)
+        }
+        var hour = Math.floor(deg / 15)
+        var min = Math.floor(((deg / 15) - hour) * 60)
+        var sec = ((((deg / 15) - hour) * 60) - min) * 60
+        sec = Math.floor(sec * 100) / 100
+        return prefix + [hour, min, sec].join(':')
+    }
+
+    function columnConvert_raHourangle2hhmmss_bkp(table_id) {
+        var table = document.getElementById(table_id);
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            var rah = row.cells[2].innerHTML
+            row.cells[2].innerHTML = raDeg2Hms(rah * 15)
+        }
+    }
+
+    function set_column_ra_hms(table_id) {
+        var table = document.getElementById(table_id);
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.cells[2].innerHTML = ra_hourangle[table_id]['hms'][i - 1]
+        }
+    }
+
+    function set_column_ra_hourangle(table_id) {
+        var table = document.getElementById(table_id);
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.cells[2].innerHTML = ra_hourangle[table_id]['hour'][i - 1]
+        }
+    }
     </script>
 </head>
 <body>
@@ -97,6 +133,8 @@
         </div>
     </div>
 
+
+
     <div class="container-fluid">
         {% load humanize %}
         <div class="container">
@@ -107,25 +145,42 @@
                     once the images are completely taken then check the 'Observed' checkbox.
                 </p>
             </div>
+
             <div class="panel panel-primary">
                 <div class="panel-heading">Selected targets for all observatories</div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover">
+                        <table class="table table-bordered table-striped table-hover" id="general_table">
                             <thead>
                                 <tr>
-                                    <th class="col-sm-1">PGC</th>
-                                    <th class="col-md-1">Name</th>
-                                    <th class="col-md-1">RA</th>
-                                    <th class="col-md-1">Dec</th>
-                                    <th class="col-md-1">Apparent Magnitude</th>
-                                    <th class="col-sm-1">Absolute Magnitude</th>
-                                    <th class="col-sm-1">Distance (MPc)</th>
-                                    <th class="col-sm-1">Localization probability</th>
-                                    <th class="col-sm-1">Selected</th>
-                                    <th class="col-sm-1">Observed</th>
-                                    <th class="col-sm-1">Observation date/time</th>
-                                    <th class="col-sm-1">Observatory</th>
+                                    <th>PGC</th>
+                                    <th>Name</th>
+                                    <th class="dropdown">
+                                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                            RA <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a onclick="set_column_ra_hourangle('general_table')">hour angle</a></li>
+                                            <li><a onclick="set_column_ra_hms('general_table')">hh:mm:ss</a></li>
+                                        </ul>
+                                    </th>
+                                    <th class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            Dec <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">degrees</a></li>
+                                            <li><a href="#">dd:mm:ss</a></li>
+                                        </ul>
+                                    </th>
+                                    <th>Apparent Magnitude</th>
+                                    <th>Absolute Magnitude</th>
+                                    <th>Distance (MPc)</th>
+                                    <th>Localization probability</th>
+                                    <th>Selected</th>
+                                    <th>Observed</th>
+                                    <th>Observation date/time</th>
+                                    <th>Observatory</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -186,25 +241,41 @@
                         <input type="hidden" value="{{ obs.pk }}" name="obs_id">
                         {% csrf_token %}
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped table-hover" id="table_{{obs.id}}">
                                 <thead>
                                     <tr>
-                                        <th class="col-sm-1">PGC</th>
-                                        <th class="col-md-1">Name</th>
-                                        <th class="col-md-1">RA</th>
-                                        <th class="col-md-1">Dec</th>
-                                        <th class="col-md-1">Apparent Magnitude</th>
-                                        <th class="col-sm-1">Absolute Magnitude</th>
-                                        <th class="col-sm-1">Distance (MPc)</th>
-                                        <th class="col-sm-1">Localization probability</th>
-                                        <th class="col-sm-1">Selected</th>
-                                        <th class="col-sm-1">Observed</th>
-                                        <th class="col-sm-1">Observation date/time</th>
+                                        <th>PGC</th>
+                                        <th>Name</th>
+                                        <th class="dropdown">
+                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                                RA <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_ra_hourangle('table_{{obs.id}}')">hour angle</a></li>
+                                                <li><a onclick="set_column_ra_hms('table_{{obs.id}}')">hh:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Dec <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">degrees</a></li>
+                                                <li><a href="#">dd:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th>Apparent Magnitude</th>
+                                        <th>Absolute Magnitude</th>
+                                        <th>Distance (MPc)</th>
+                                        <th>Localization probability</th>
+                                        <th>Selected</th>
+                                        <th>Observed</th>
+                                        <th>Observation date/time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for asg in assignments_obs %}
-                                    <tr {% if asg.flag_unavailable %}style="background-color: #ffe6e6;"{% endif %}>
+                                    <tr {% if asg.flag_unavailable %}class="danger"{% endif %}>
 
                                         <td>{{asg.target.pgc}}</td>
                                         <td>{{asg.target.name}}</td>
@@ -246,6 +317,26 @@
         </div>
 
     </div class="container-fluid">
+
+    <script>
+    alltables = document.getElementsByTagName('table')
+    var ra_hourangle = {}
+    for (var i = 0; i < alltables.length; i++) {
+        var table = alltables[i]
+        var rahs = []
+        var rahmss = []
+        for (var j = 1, row; row = table.rows[j]; j++) {
+            rah = row.cells[2].innerHTML
+            rahms = raDeg2Hms(rah * 15)
+            rahs.push(rah)
+            rahmss.push(rahms)
+        }
+        ra_hourangle[alltables[i].id] = {
+            'hour': rahs,
+            'hms': rahmss,
+        }
+    }
+    </script>
 
 </body>
 </html>
