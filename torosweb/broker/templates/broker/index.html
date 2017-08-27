@@ -13,6 +13,20 @@
     function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
     </script>
     <script>
+    function decDeg2Hms(dec) {
+      var prefix = ''
+      var deg = +dec
+      if (deg < 0) {
+        prefix = '-'
+        deg = Math.abs(deg)
+      }
+      var hour = Math.floor(deg)
+      var min = Math.abs(Math.floor((deg - hour) * 60))
+      var sec = (Math.abs((deg - hour) * 60) - min) * 60
+      sec = Math.floor(sec)
+      return prefix + [hour, min, sec].join(':')
+    }
+
     function raDeg2Hms(ra) {
         var prefix = ''
         var deg = +ra
@@ -27,25 +41,31 @@
         return prefix + [hour, min, sec].join(':')
     }
 
-    function columnConvert_raHourangle2hhmmss_bkp(table_id) {
-        var table = document.getElementById(table_id);
-        for (var i = 1, row; row = table.rows[i]; i++) {
-            var rah = row.cells[2].innerHTML
-            row.cells[2].innerHTML = raDeg2Hms(rah * 15)
-        }
-    }
-
     function set_column_ra_hms(table_id) {
         var table = document.getElementById(table_id);
         for (var i = 1, row; row = table.rows[i]; i++) {
-            row.cells[2].innerHTML = ra_hourangle[table_id]['hms'][i - 1]
+            row.cells[2].innerHTML = right_ascension[table_id]['hms'][i - 1]
         }
     }
 
     function set_column_ra_hourangle(table_id) {
         var table = document.getElementById(table_id);
         for (var i = 1, row; row = table.rows[i]; i++) {
-            row.cells[2].innerHTML = ra_hourangle[table_id]['hour'][i - 1]
+            row.cells[2].innerHTML = right_ascension[table_id]['hour'][i - 1]
+        }
+    }
+
+    function set_column_dec_degree(table_id) {
+        var table = document.getElementById(table_id);
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.cells[3].innerHTML = declination[table_id]['degree'][i - 1]
+        }
+    }
+
+    function set_column_dec_dms(table_id) {
+        var table = document.getElementById(table_id);
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.cells[3].innerHTML = declination[table_id]['dms'][i - 1]
         }
     }
     </script>
@@ -169,8 +189,8 @@
                                             Dec <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#">degrees</a></li>
-                                            <li><a href="#">dd:mm:ss</a></li>
+                                            <li><a onclick="set_column_dec_degree('general_table')">degrees</a></li>
+                                            <li><a onclick="set_column_dec_dms('general_table')">dd:mm:ss</a></li>
                                         </ul>
                                     </th>
                                     <th>Apparent Magnitude</th>
@@ -260,8 +280,8 @@
                                                 Dec <span class="caret"></span>
                                             </a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="#">degrees</a></li>
-                                                <li><a href="#">dd:mm:ss</a></li>
+                                                <li><a onclick="set_column_dec_degree('table_{{obs.id}}')">degrees</a></li>
+                                                <li><a onclick="set_column_dec_dms('table_{{obs.id}}')">dd:mm:ss</a></li>
                                             </ul>
                                         </th>
                                         <th>Apparent Magnitude</th>
@@ -320,20 +340,33 @@
 
     <script>
     alltables = document.getElementsByTagName('table')
-    var ra_hourangle = {}
+    var right_ascension = {}
+    var declination = {}
     for (var i = 0; i < alltables.length; i++) {
         var table = alltables[i]
-        var rahs = []
-        var rahmss = []
+        var rah_list = []
+        var rahms_list = []
+        var decdeg_list = []
+        var decdms_list = []
         for (var j = 1, row; row = table.rows[j]; j++) {
+            // Push Right Ascensions
             rah = row.cells[2].innerHTML
             rahms = raDeg2Hms(rah * 15)
-            rahs.push(rah)
-            rahmss.push(rahms)
+            rah_list.push(rah)
+            rahms_list.push(rahms)
+            // Push Declinations
+            decdeg = row.cells[3].innerHTML
+            decdms = decDeg2Hms(decdeg)
+            decdeg_list.push(decdeg)
+            decdms_list.push(decdms)
         }
-        ra_hourangle[alltables[i].id] = {
-            'hour': rahs,
-            'hms': rahmss,
+        right_ascension[alltables[i].id] = {
+            'hour': rah_list,
+            'hms': rahms_list,
+        }
+        declination[alltables[i].id] = {
+            'degree': decdeg_list,
+            'dms': decdms_list,
         }
     }
     </script>
