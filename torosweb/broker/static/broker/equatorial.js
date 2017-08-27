@@ -50,6 +50,22 @@ function decDeg2Hms(dec) {
   return prefix + [hour, min, sec].join(':')
 }
 
+function decHms2Deg(dec, round) {
+  var parts = dec.split(':')
+  var sign = 1
+  var d = parseFloat(parts[0])
+  var m = parseFloat(parts[1])
+  var s = parseFloat(parts[2])
+  if (d.toString()[0] === '-') {
+    sign = -1
+    d = Math.abs(d)
+  }
+  var sDeg = (s / 3600)
+  if (round) sDeg = Math.floor(sDeg)
+  var deg = d + (m / 60) + sDeg
+  return deg * sign
+}
+
 function raDeg2Hms(ra) {
     var prefix = ''
     var deg = +ra
@@ -62,6 +78,22 @@ function raDeg2Hms(ra) {
     var sec = ((((deg / 15) - hour) * 60) - min) * 60
     sec = Math.floor(sec * 100) / 100
     return prefix + [hour, min, sec].join(':')
+}
+
+function raHms2Deg(ra, round) {
+  var parts = ra.split(':')
+  var sign = 1
+  var h = parseFloat(parts[0])
+  var m = parseFloat(parts[1])
+  var s = parseFloat(parts[2])
+  if (h.toString()[0] === '-') {
+    sign = -1
+    h = Math.abs(h)
+  }
+  var sDeg = (s / 240)
+  if (round) sDeg = Math.floor(sDeg)
+  deg = (h * 15) + (m / 4) + sDeg
+  return deg * sign
 }
 
 function set_column_ra_hms(table_id) {
