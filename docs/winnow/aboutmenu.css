@@ -1,0 +1,59 @@
+/* The div that contains 'About Us' title */
+#aboutUsTitle {
+	font-weight: bold;
+	font-size: 3em;
+	color: black;
+}
+
+/* The main DIV inside of which is the tab menu and the panels */
+.tab-panels {
+}
+
+/* The outter menu tab container */
+.tab-panels ul {
+	margin: 0;
+	padding: 0;
+	background-color: #00A0EB;
+	text-align: left;
+}
+
+
+/* Inactive menu tabs  */
+.tab-panels ul li {
+	list-style-type: none;
+	cursor: pointer;
+	margin: 0;
+	padding: 3px 10px;
+	display: inline-block;
+	font-weight: normal;
+	font-size: 1.1em;
+	border-color: block;
+	color: #B2B2B2;
+}
+
+/* The active menu tab whose content is being shown */
+.tab-panels ul li.active {
+	font-weight: bold;
+	color: white;
+    border-bottom: thick solid black;
+}
+
+/* A tab that is hovered over */
+.tab-panels ul li:hover {
+	color: white;
+	background: #00A0EB;
+}
+
+/* Each content panel has these properties. */
+.tab-panels .panel {
+	padding: 30px;
+	border-collapse: separate;
+	border-spacing: 0 0;
+	padding: 0.5em;
+	display: none;
+}
+
+/* This represents the active panel */
+.tab-panels .panel.active {
+	display: block;
+}

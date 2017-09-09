@@ -1,0 +1,3096 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>TOROS Broker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="equatorial.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">TOROS Broker</a>
+            </div class="navbar-header">
+            <ul class="nav navbar-nav">
+                <li class="active dropdown">
+                    <a class="dropdown-toggle" type="button" data-toggle="dropdown">
+                        G123456
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a>G555123 (Aug. 10, 2017)</a></li>
+                        <li><a>G555234 (Aug. 5, 2017)</a></li>
+                        <li><a>G555345 (July 1, 2017)</a></li>
+                        <li><a>G555456 (Jan. 1, 2017)</a></li>
+                    </ul>
+                </li>
+                <li><a data-toggle="modal" data-target="#circularUploadModal">Upload Targets</a></li>
+                <li><a href="circular.html" target=_blank>Generate Circular</a></li>
+            </ul>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="btn-group">
+                            <a type="button" class="btn btn-primary navbar-btn">john_doe</a>
+                            <a href="/winnow/logout/" type="button" class="btn btn-danger navbar-btn">Log out</a>
+                        </div>
+                    </li>
+                </ul class="nav navbar-nav navbar-right">
+            </div class="collapse navbar-collapse" id="myNavbar">
+        </div class="container-fluid">
+    </nav class="navbar navbar-inverse">
+
+
+    <!-- Modal to upload targets manually -->
+    <div id="circularUploadModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Targets Upload</h4>
+                </div>
+                <div class="modal-body">
+                    <form method='post' action="/winnow/broker/upload">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+
+
+                        <div class="form-group">
+                            <label>Alert</label>
+                            <select name="alert">
+                                <option value="10">G555123 (Aug. 10, 2017)</option>
+                                <option value="5">G555234 (Aug. 5, 2017)</option>
+                                <option value="9">G555345 (July 1, 2017)</option>
+                                <option value="8">G555456 (Jan. 1, 2017)</option>
+                            </select>
+                        </div class="form-group">
+                        <p><label>Assignments</label></p>
+                        <textarea placeholder="EABA: PGC000004 1.2E-3, UGC12895 0.5E-4, IC5376; Mamalluca: PGC000006 3.2E-5, NGC7802 1.1E-2, UGC12905 5.2E-6;" cols=40 rows=10 name="assignments"></textarea>
+                        <p>
+                            <input type='submit' class="btn btn-primary"/>
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container-fluid">
+
+        <div class="container">
+            <h1>Assignments for the LVC alert G123456</h1>
+            <div class="well">
+                <h1>Guidelines</h1>
+                <p>The ranking by observatory is shown in the following tables, once a target is selected for observation please check the 'Selected' checkbox,
+                    once the images are completely taken then check the 'Observed' checkbox.
+                </p>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Selected targets for all observatories</div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="general_table">
+                            <thead>
+                                <tr>
+                                    <th>PGC</th>
+                                    <th>Name</th>
+                                    <th class="dropdown">
+                                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                            RA <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a onclick="set_column_ra_hourangle('general_table')">hour angle</a></li>
+                                            <li><a onclick="set_column_ra_hms('general_table')">hh:mm:ss</a></li>
+                                        </ul>
+                                    </th>
+                                    <th class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            Dec <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a onclick="set_column_dec_degree('general_table')">degrees</a></li>
+                                            <li><a onclick="set_column_dec_dms('general_table')">dd:mm:ss</a></li>
+                                        </ul>
+                                    </th>
+                                    <th>Apparent Magnitude</th>
+                                    <th>Absolute Magnitude</th>
+                                    <th>Distance (MPc)</th>
+                                    <th>Localization probability</th>
+                                    <th>Selected</th>
+                                    <th>Observed</th>
+                                    <th>Observation date/time</th>
+                                    <th>Observatory</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td>50470</td>
+                                    <td>ESO175-002</td>
+                                    <td>14.14333</td>
+                                    <td>-53.35286</td>
+                                    <td>12.61</td>
+                                    <td>-21.02</td>
+                                    <td>54.236</td>
+                                    <td>7.047e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>50496</td>
+                                    <td>ESO221-028</td>
+                                    <td>14.15061</td>
+                                    <td>-51.16873</td>
+                                    <td>14.17</td>
+                                    <td>-19.8</td>
+                                    <td>60.403</td>
+                                    <td>6.539e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>50618</td>
+                                    <td>ESO221-030</td>
+                                    <td>14.17809</td>
+                                    <td>-52.18414</td>
+                                    <td>13.56</td>
+                                    <td>-19.53</td>
+                                    <td>42.319</td>
+                                    <td>9.181e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>49282</td>
+                                    <td>ESO271-003</td>
+                                    <td>13.87424</td>
+                                    <td>-43.8812</td>
+                                    <td>14.61</td>
+                                    <td>-17.86</td>
+                                    <td>31.542</td>
+                                    <td>5.332e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>141857</td>
+                                    <td>PGC141857</td>
+                                    <td>14.17597</td>
+                                    <td>-52.31706</td>
+                                    <td>14.7</td>
+                                    <td>-18.38</td>
+                                    <td>41.722</td>
+                                    <td>9.183e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>166335</td>
+                                    <td>PGC166335</td>
+                                    <td>14.26722</td>
+                                    <td>-53.7165</td>
+                                    <td>14.3</td>
+                                    <td>-19.28</td>
+                                    <td>51.125</td>
+                                    <td>7.098e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>2800412</td>
+                                    <td>PGC2800412</td>
+                                    <td>14.28611</td>
+                                    <td>-55.6199</td>
+                                    <td>13.98</td>
+                                    <td>-19.62</td>
+                                    <td>52.583</td>
+                                    <td>7.097e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>448694</td>
+                                    <td>PGC448694</td>
+                                    <td>14.17695</td>
+                                    <td>-52.10164</td>
+                                    <td>14.56</td>
+                                    <td>-19.23</td>
+                                    <td>56.194</td>
+                                    <td>9.181e-08</td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken" checked disabled>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div align="center">
+                                            <input type="checkbox" name="istaken"  disabled>
+                                        </div>
+                                    </td>
+                                    <td></td>
+
+                                    <td>Macon</td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div class="table-responsive">
+                    <p>Total observed galaxies: 13</p>
+                    <p>Total ongoing galaxy observations: 8</p>
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Mamalluca Observatory (Mamalluca)
+                    at La Serena, Chile
+                </div>
+                <div class="panel-body">
+                    <p>Geo long: -70.6833 lat: -29.9833
+                        Elevation: 1,100 m (<span id="obs1">None</span> ft)
+                    </p>
+                    <script>
+                    document.getElementById("obs1").innerHTML = intcomma(mtofeet(1100.0).toFixed(0))
+                    </script>
+
+                    <p>WARNING: A red background means that the target was selected by another observatory.</p>
+                    <form method="post" action="/winnow/broker/">
+                        <input type="hidden" value="10" name="alert_id">
+                        <input type="hidden" value="1" name="obs_id">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="table_1">
+                                <thead>
+                                    <tr>
+                                        <th>PGC</th>
+                                        <th>Name</th>
+                                        <th class="dropdown">
+                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                                RA <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_ra_hourangle('table_1')">hour angle</a></li>
+                                                <li><a onclick="set_column_ra_hms('table_1')">hh:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Dec <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_dec_degree('table_1')">degrees</a></li>
+                                                <li><a onclick="set_column_dec_dms('table_1')">dd:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th>Apparent Magnitude</th>
+                                        <th>Absolute Magnitude</th>
+                                        <th>Distance (MPc)</th>
+                                        <th>Localization probability</th>
+                                        <th>Selected</th>
+                                        <th>Observed</th>
+                                        <th>Observation date/time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="danger">
+
+                                        <td>141857</td>
+                                        <td>PGC141857</td>
+                                        <td>14.17597</td>
+                                        <td>-52.31706</td>
+                                        <td>14.7</td>
+                                        <td>-18.38</td>
+                                        <td>41.722</td>
+                                        <td>9.183e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="858">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="858">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>50618</td>
+                                        <td>ESO221-030</td>
+                                        <td>14.17809</td>
+                                        <td>-52.18414</td>
+                                        <td>13.56</td>
+                                        <td>-19.53</td>
+                                        <td>42.319</td>
+                                        <td>9.181e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="859">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="859">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>448694</td>
+                                        <td>PGC448694</td>
+                                        <td>14.17695</td>
+                                        <td>-52.10164</td>
+                                        <td>14.56</td>
+                                        <td>-19.23</td>
+                                        <td>56.194</td>
+                                        <td>9.181e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="860">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="860">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>166335</td>
+                                        <td>PGC166335</td>
+                                        <td>14.26722</td>
+                                        <td>-53.7165</td>
+                                        <td>14.3</td>
+                                        <td>-19.28</td>
+                                        <td>51.125</td>
+                                        <td>7.098e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="861">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="861">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>2800412</td>
+                                        <td>PGC2800412</td>
+                                        <td>14.28611</td>
+                                        <td>-55.6199</td>
+                                        <td>13.98</td>
+                                        <td>-19.62</td>
+                                        <td>52.583</td>
+                                        <td>7.097e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="862">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="862">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>50470</td>
+                                        <td>ESO175-002</td>
+                                        <td>14.14333</td>
+                                        <td>-53.35286</td>
+                                        <td>12.61</td>
+                                        <td>-21.02</td>
+                                        <td>54.236</td>
+                                        <td>7.047e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="863">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="863">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>50496</td>
+                                        <td>ESO221-028</td>
+                                        <td>14.15061</td>
+                                        <td>-51.16873</td>
+                                        <td>14.17</td>
+                                        <td>-19.8</td>
+                                        <td>60.403</td>
+                                        <td>6.539e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="864">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="864">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>49282</td>
+                                        <td>ESO271-003</td>
+                                        <td>13.87424</td>
+                                        <td>-43.8812</td>
+                                        <td>14.61</td>
+                                        <td>-17.86</td>
+                                        <td>31.542</td>
+                                        <td>5.332e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="865">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="865">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>463082</td>
+                                        <td>PGC463082</td>
+                                        <td>14.05813</td>
+                                        <td>-50.77711</td>
+                                        <td>14.36</td>
+                                        <td>-19.01</td>
+                                        <td>45.792</td>
+                                        <td>4.232e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="866">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="866">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50968</td>
+                                        <td>ESO221-035</td>
+                                        <td>14.2679</td>
+                                        <td>-52.60871</td>
+                                        <td>12.86</td>
+                                        <td>-20.32</td>
+                                        <td>43.417</td>
+                                        <td>4.094e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="867">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="867">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>141859</td>
+                                        <td>PGC141859</td>
+                                        <td>14.33987</td>
+                                        <td>-55.06851</td>
+                                        <td>12.92</td>
+                                        <td>-19.95</td>
+                                        <td>36.667</td>
+                                        <td>3.809e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="868">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="868">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>485499</td>
+                                        <td>PGC485499</td>
+                                        <td>14.05333</td>
+                                        <td>-48.62736</td>
+                                        <td>14.67</td>
+                                        <td>-18.2</td>
+                                        <td>36.542</td>
+                                        <td>3.553e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="869">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="869">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49550</td>
+                                        <td>ESO271-005</td>
+                                        <td>13.93548</td>
+                                        <td>-45.65755</td>
+                                        <td>15.0</td>
+                                        <td>-17.65</td>
+                                        <td>32.931</td>
+                                        <td>3.484e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="870">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="870">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49493</td>
+                                        <td>ESO271-004</td>
+                                        <td>13.92284</td>
+                                        <td>-44.47837</td>
+                                        <td>13.12</td>
+                                        <td>-19.45</td>
+                                        <td>32.333</td>
+                                        <td>3.475e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="871">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="871">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49836</td>
+                                        <td>ESO221-022</td>
+                                        <td>14.00325</td>
+                                        <td>-48.26987</td>
+                                        <td>13.37</td>
+                                        <td>-19.3</td>
+                                        <td>34.198</td>
+                                        <td>3.224e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="872">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="872">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166323</td>
+                                        <td>PGC166323</td>
+                                        <td>14.07614</td>
+                                        <td>-52.69722</td>
+                                        <td>13.84</td>
+                                        <td>-19.67</td>
+                                        <td>49.417</td>
+                                        <td>3.206e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="873">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="873">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>2800413</td>
+                                        <td>PGC2800413</td>
+                                        <td>14.32778</td>
+                                        <td>-58.1738</td>
+                                        <td>13.6</td>
+                                        <td>-20.0</td>
+                                        <td>52.431</td>
+                                        <td>2.928e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="874">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="874">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49737</td>
+                                        <td>ESO221-021</td>
+                                        <td>13.97612</td>
+                                        <td>-48.52492</td>
+                                        <td>13.56</td>
+                                        <td>-19.21</td>
+                                        <td>35.81</td>
+                                        <td>2.780e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="875">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="875">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49722</td>
+                                        <td>ESO221-020</td>
+                                        <td>13.97307</td>
+                                        <td>-48.47607</td>
+                                        <td>12.66</td>
+                                        <td>-20.15</td>
+                                        <td>38.292</td>
+                                        <td>2.618e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="876">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="876">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166327</td>
+                                        <td>PGC166327</td>
+                                        <td>14.09906</td>
+                                        <td>-53.71956</td>
+                                        <td>13.56</td>
+                                        <td>-20.08</td>
+                                        <td>52.5</td>
+                                        <td>2.443e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="877">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]" checked value="877">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div class="table-responsive">
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </form>
+
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Estacion Astrofisica de Bosque Alegre (EABA)
+                    at Cordoba, Argentina
+                </div>
+                <div class="panel-body">
+                    <p>Geo long: -64.5467 lat: -31.5983
+                        Elevation: 1,350 m (<span id="obs2">None</span> ft)
+                    </p>
+                    <script>
+                    document.getElementById("obs2").innerHTML = intcomma(mtofeet(1350.0).toFixed(0))
+                    </script>
+
+                    <p>WARNING: A red background means that the target was selected by another observatory.</p>
+                    <form method="post" action="/winnow/broker/">
+                        <input type="hidden" value="10" name="alert_id">
+                        <input type="hidden" value="2" name="obs_id">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="table_2">
+                                <thead>
+                                    <tr>
+                                        <th>PGC</th>
+                                        <th>Name</th>
+                                        <th class="dropdown">
+                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                                RA <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_ra_hourangle('table_2')">hour angle</a></li>
+                                                <li><a onclick="set_column_ra_hms('table_2')">hh:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Dec <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_dec_degree('table_2')">degrees</a></li>
+                                                <li><a onclick="set_column_dec_dms('table_2')">dd:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th>Apparent Magnitude</th>
+                                        <th>Absolute Magnitude</th>
+                                        <th>Distance (MPc)</th>
+                                        <th>Localization probability</th>
+                                        <th>Selected</th>
+                                        <th>Observed</th>
+                                        <th>Observation date/time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="danger">
+
+                                        <td>141857</td>
+                                        <td>PGC141857</td>
+                                        <td>14.17597</td>
+                                        <td>-52.31706</td>
+                                        <td>14.7</td>
+                                        <td>-18.38</td>
+                                        <td>41.722</td>
+                                        <td>9.183e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="818">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="818">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>50618</td>
+                                        <td>ESO221-030</td>
+                                        <td>14.17809</td>
+                                        <td>-52.18414</td>
+                                        <td>13.56</td>
+                                        <td>-19.53</td>
+                                        <td>42.319</td>
+                                        <td>9.181e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="819">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="819">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>448694</td>
+                                        <td>PGC448694</td>
+                                        <td>14.17695</td>
+                                        <td>-52.10164</td>
+                                        <td>14.56</td>
+                                        <td>-19.23</td>
+                                        <td>56.194</td>
+                                        <td>9.181e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="820">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="820">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>166335</td>
+                                        <td>PGC166335</td>
+                                        <td>14.26722</td>
+                                        <td>-53.7165</td>
+                                        <td>14.3</td>
+                                        <td>-19.28</td>
+                                        <td>51.125</td>
+                                        <td>7.098e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="821">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="821">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>2800412</td>
+                                        <td>PGC2800412</td>
+                                        <td>14.28611</td>
+                                        <td>-55.6199</td>
+                                        <td>13.98</td>
+                                        <td>-19.62</td>
+                                        <td>52.583</td>
+                                        <td>7.097e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="822">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="822">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>50470</td>
+                                        <td>ESO175-002</td>
+                                        <td>14.14333</td>
+                                        <td>-53.35286</td>
+                                        <td>12.61</td>
+                                        <td>-21.02</td>
+                                        <td>54.236</td>
+                                        <td>7.047e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="823">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="823">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>50496</td>
+                                        <td>ESO221-028</td>
+                                        <td>14.15061</td>
+                                        <td>-51.16873</td>
+                                        <td>14.17</td>
+                                        <td>-19.8</td>
+                                        <td>60.403</td>
+                                        <td>6.539e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="824">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="824">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="danger">
+
+                                        <td>49282</td>
+                                        <td>ESO271-003</td>
+                                        <td>13.87424</td>
+                                        <td>-43.8812</td>
+                                        <td>14.61</td>
+                                        <td>-17.86</td>
+                                        <td>31.542</td>
+                                        <td>5.332e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="825">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="825">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>463082</td>
+                                        <td>PGC463082</td>
+                                        <td>14.05813</td>
+                                        <td>-50.77711</td>
+                                        <td>14.36</td>
+                                        <td>-19.01</td>
+                                        <td>45.792</td>
+                                        <td>4.232e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="826">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="826">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50968</td>
+                                        <td>ESO221-035</td>
+                                        <td>14.2679</td>
+                                        <td>-52.60871</td>
+                                        <td>12.86</td>
+                                        <td>-20.32</td>
+                                        <td>43.417</td>
+                                        <td>4.094e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="827">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="827">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>141859</td>
+                                        <td>PGC141859</td>
+                                        <td>14.33987</td>
+                                        <td>-55.06851</td>
+                                        <td>12.92</td>
+                                        <td>-19.95</td>
+                                        <td>36.667</td>
+                                        <td>3.809e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="828">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="828">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>485499</td>
+                                        <td>PGC485499</td>
+                                        <td>14.05333</td>
+                                        <td>-48.62736</td>
+                                        <td>14.67</td>
+                                        <td>-18.2</td>
+                                        <td>36.542</td>
+                                        <td>3.553e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="829">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="829">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49550</td>
+                                        <td>ESO271-005</td>
+                                        <td>13.93548</td>
+                                        <td>-45.65755</td>
+                                        <td>15.0</td>
+                                        <td>-17.65</td>
+                                        <td>32.931</td>
+                                        <td>3.484e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="830">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="830">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49493</td>
+                                        <td>ESO271-004</td>
+                                        <td>13.92284</td>
+                                        <td>-44.47837</td>
+                                        <td>13.12</td>
+                                        <td>-19.45</td>
+                                        <td>32.333</td>
+                                        <td>3.475e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="831">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="831">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49836</td>
+                                        <td>ESO221-022</td>
+                                        <td>14.00325</td>
+                                        <td>-48.26987</td>
+                                        <td>13.37</td>
+                                        <td>-19.3</td>
+                                        <td>34.198</td>
+                                        <td>3.224e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="832">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="832">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166323</td>
+                                        <td>PGC166323</td>
+                                        <td>14.07614</td>
+                                        <td>-52.69722</td>
+                                        <td>13.84</td>
+                                        <td>-19.67</td>
+                                        <td>49.417</td>
+                                        <td>3.206e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="833">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="833">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>2800413</td>
+                                        <td>PGC2800413</td>
+                                        <td>14.32778</td>
+                                        <td>-58.1738</td>
+                                        <td>13.6</td>
+                                        <td>-20.0</td>
+                                        <td>52.431</td>
+                                        <td>2.928e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="834">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="834">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49737</td>
+                                        <td>ESO221-021</td>
+                                        <td>13.97612</td>
+                                        <td>-48.52492</td>
+                                        <td>13.56</td>
+                                        <td>-19.21</td>
+                                        <td>35.81</td>
+                                        <td>2.780e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="835">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="835">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49722</td>
+                                        <td>ESO221-020</td>
+                                        <td>13.97307</td>
+                                        <td>-48.47607</td>
+                                        <td>12.66</td>
+                                        <td>-20.15</td>
+                                        <td>38.292</td>
+                                        <td>2.618e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="836">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="836">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166327</td>
+                                        <td>PGC166327</td>
+                                        <td>14.09906</td>
+                                        <td>-53.71956</td>
+                                        <td>13.56</td>
+                                        <td>-20.08</td>
+                                        <td>52.5</td>
+                                        <td>2.443e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="837">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="837">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div class="table-responsive">
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </form>
+
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Guillermo Haro Observatory (G. Haro)
+                    at La Sonora, Mexico
+                </div>
+                <div class="panel-body">
+                    <p>Geo long: 31.052778 lat: -110.384722
+                        Elevation: 2,480 m (<span id="obs3">None</span> ft)
+                    </p>
+                    <script>
+                    document.getElementById("obs3").innerHTML = intcomma(mtofeet(2480.0).toFixed(0))
+                    </script>
+
+                    <p>WARNING: A red background means that the target was selected by another observatory.</p>
+                    <form method="post" action="/winnow/broker/">
+                        <input type="hidden" value="10" name="alert_id">
+                        <input type="hidden" value="3" name="obs_id">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="table_3">
+                                <thead>
+                                    <tr>
+                                        <th>PGC</th>
+                                        <th>Name</th>
+                                        <th class="dropdown">
+                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                                RA <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_ra_hourangle('table_3')">hour angle</a></li>
+                                                <li><a onclick="set_column_ra_hms('table_3')">hh:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Dec <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_dec_degree('table_3')">degrees</a></li>
+                                                <li><a onclick="set_column_dec_dms('table_3')">dd:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th>Apparent Magnitude</th>
+                                        <th>Absolute Magnitude</th>
+                                        <th>Distance (MPc)</th>
+                                        <th>Localization probability</th>
+                                        <th>Selected</th>
+                                        <th>Observed</th>
+                                        <th>Observation date/time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="danger">
+
+                                        <td>49282</td>
+                                        <td>ESO271-003</td>
+                                        <td>13.87424</td>
+                                        <td>-43.8812</td>
+                                        <td>14.61</td>
+                                        <td>-17.86</td>
+                                        <td>31.542</td>
+                                        <td>5.332e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="898">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="898">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49128</td>
+                                        <td>ESO325-027</td>
+                                        <td>13.84233</td>
+                                        <td>-40.70714</td>
+                                        <td>14.54</td>
+                                        <td>-19.61</td>
+                                        <td>66.972</td>
+                                        <td>1.550e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="899">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="899">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49673</td>
+                                        <td>NGC5365</td>
+                                        <td>13.96406</td>
+                                        <td>-43.93138</td>
+                                        <td>12.2</td>
+                                        <td>-20.35</td>
+                                        <td>32.359</td>
+                                        <td>5.527e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="900">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="900">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49190</td>
+                                        <td>ESO384-003</td>
+                                        <td>13.85599</td>
+                                        <td>-37.62855</td>
+                                        <td>13.57</td>
+                                        <td>-20.1</td>
+                                        <td>52.667</td>
+                                        <td>9.978e-11</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="901">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="901">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>14274</td>
+                                        <td>UGC02922</td>
+                                        <td>4.01279</td>
+                                        <td>17.58314</td>
+                                        <td>13.12</td>
+                                        <td>-21.25</td>
+                                        <td>72.528</td>
+                                        <td>6.061e-11</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="902">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="902">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>632399</td>
+                                        <td>PGC632399</td>
+                                        <td>13.8479</td>
+                                        <td>-36.80506</td>
+                                        <td>16.23</td>
+                                        <td>-17.58</td>
+                                        <td>56.306</td>
+                                        <td>4.639e-11</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="903">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="903">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49129</td>
+                                        <td>ESO383-091</td>
+                                        <td>13.84215</td>
+                                        <td>-37.28914</td>
+                                        <td>12.69</td>
+                                        <td>-18.05</td>
+                                        <td>14.06</td>
+                                        <td>2.770e-11</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="904">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="904">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>4079583</td>
+                                        <td>6dFJ1401148-413140</td>
+                                        <td>14.02077</td>
+                                        <td>-41.52767</td>
+                                        <td>16.2</td>
+                                        <td>-17.63</td>
+                                        <td>56.681</td>
+                                        <td>2.230e-11</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="905">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="905">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49267</td>
+                                        <td>ESO384-005</td>
+                                        <td>13.87115</td>
+                                        <td>-37.45697</td>
+                                        <td>13.71</td>
+                                        <td>-17.96</td>
+                                        <td>22.847</td>
+                                        <td>1.675e-11</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="906">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="906">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>89952</td>
+                                        <td>PGC089952</td>
+                                        <td>3.56565</td>
+                                        <td>9.2675</td>
+                                        <td>14.39</td>
+                                        <td>-20.12</td>
+                                        <td>77.139</td>
+                                        <td>8.976e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="907">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="907">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>86269</td>
+                                        <td>PGC086269</td>
+                                        <td>4.73584</td>
+                                        <td>28.21675</td>
+                                        <td>11.96</td>
+                                        <td>-21.5</td>
+                                        <td>47.514</td>
+                                        <td>8.663e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="908">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="908">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>16360</td>
+                                        <td>UGC03205</td>
+                                        <td>4.93745</td>
+                                        <td>30.05217</td>
+                                        <td>12.12</td>
+                                        <td>-21.39</td>
+                                        <td>50.097</td>
+                                        <td>5.543e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="909">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="909">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>1683284</td>
+                                        <td>PGC1683284</td>
+                                        <td>4.23812</td>
+                                        <td>23.20444</td>
+                                        <td>14.57</td>
+                                        <td>-19.31</td>
+                                        <td>64.069</td>
+                                        <td>4.375e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="910">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="910">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>14789</td>
+                                        <td>UGC02999</td>
+                                        <td>4.28197</td>
+                                        <td>23.48644</td>
+                                        <td>13.8</td>
+                                        <td>-20.26</td>
+                                        <td>50.708</td>
+                                        <td>4.375e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="911">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="911">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>14427</td>
+                                        <td>UGC02948</td>
+                                        <td>4.08209</td>
+                                        <td>20.82983</td>
+                                        <td>13.53</td>
+                                        <td>-20.84</td>
+                                        <td>72.528</td>
+                                        <td>3.319e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="912">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="912">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>1614438</td>
+                                        <td>PGC1614438</td>
+                                        <td>4.06825</td>
+                                        <td>20.04425</td>
+                                        <td>14.85</td>
+                                        <td>-18.93</td>
+                                        <td>52.528</td>
+                                        <td>2.892e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="913">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="913">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49788</td>
+                                        <td>ESO325-042</td>
+                                        <td>13.98903</td>
+                                        <td>-40.06866</td>
+                                        <td>13.84</td>
+                                        <td>-19.76</td>
+                                        <td>53.125</td>
+                                        <td>2.006e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="914">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="914">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>14065</td>
+                                        <td>NGC1474</td>
+                                        <td>3.90843</td>
+                                        <td>10.70708</td>
+                                        <td>13.9</td>
+                                        <td>-20.46</td>
+                                        <td>72.5</td>
+                                        <td>1.726e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="915">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="915">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>3097122</td>
+                                        <td>PGC3097122</td>
+                                        <td>4.58196</td>
+                                        <td>26.71017</td>
+                                        <td>12.15</td>
+                                        <td>-20.0</td>
+                                        <td>26.917</td>
+                                        <td>1.692e-12</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="916">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="916">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>1664792</td>
+                                        <td>PGC1664792</td>
+                                        <td>4.12571</td>
+                                        <td>22.1668</td>
+                                        <td>16.55</td>
+                                        <td>-17.86</td>
+                                        <td>74.208</td>
+                                        <td>5.157e-13</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="917">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="917">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div class="table-responsive">
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </form>
+
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">MPEG
+                    at La Silla, Chile
+                </div>
+                <div class="panel-body">
+                    <p>Geo long: 1.0 lat: 1.0
+                        Elevation: 1,000 m (<span id="obs4">None</span> ft)
+                    </p>
+                    <script>
+                    document.getElementById("obs4").innerHTML = intcomma(mtofeet(1000.0).toFixed(0))
+                    </script>
+
+                    <p>No targets for this observatory.</p>
+
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Gran Telescopio de Canarias (Canarias)
+                    at La Palma, Spain
+                </div>
+                <div class="panel-body">
+                    <p>Geo long: -17.884722 lat: 28.754167
+                        Elevation: 2,300 m (<span id="obs5">None</span> ft)
+                    </p>
+                    <script>
+                    document.getElementById("obs5").innerHTML = intcomma(mtofeet(2300.0).toFixed(0))
+                    </script>
+
+                    <p>No targets for this observatory.</p>
+
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Nompuewenu
+                    at Brownsville, TX, USA
+                </div>
+                <div class="panel-body">
+                    <p>Geo long: -97.568956 lat: 25.995789
+                        Elevation: 12 m (<span id="obs6">None</span> ft)
+                    </p>
+                    <script>
+                    document.getElementById("obs6").innerHTML = intcomma(mtofeet(11.5).toFixed(0))
+                    </script>
+
+                    <p>WARNING: A red background means that the target was selected by another observatory.</p>
+                    <form method="post" action="/winnow/broker/">
+                        <input type="hidden" value="10" name="alert_id">
+                        <input type="hidden" value="6" name="obs_id">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="table_6">
+                                <thead>
+                                    <tr>
+                                        <th>PGC</th>
+                                        <th>Name</th>
+                                        <th class="dropdown">
+                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                                RA <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_ra_hourangle('table_6')">hour angle</a></li>
+                                                <li><a onclick="set_column_ra_hms('table_6')">hh:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Dec <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_dec_degree('table_6')">degrees</a></li>
+                                                <li><a onclick="set_column_dec_dms('table_6')">dd:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th>Apparent Magnitude</th>
+                                        <th>Absolute Magnitude</th>
+                                        <th>Distance (MPc)</th>
+                                        <th>Localization probability</th>
+                                        <th>Selected</th>
+                                        <th>Observed</th>
+                                        <th>Observation date/time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="danger">
+
+                                        <td>49282</td>
+                                        <td>ESO271-003</td>
+                                        <td>13.87424</td>
+                                        <td>-43.8812</td>
+                                        <td>14.61</td>
+                                        <td>-17.86</td>
+                                        <td>31.542</td>
+                                        <td>5.332e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="878">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="878">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>485499</td>
+                                        <td>PGC485499</td>
+                                        <td>14.05333</td>
+                                        <td>-48.62736</td>
+                                        <td>14.67</td>
+                                        <td>-18.2</td>
+                                        <td>36.542</td>
+                                        <td>3.553e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="879">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="879">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49550</td>
+                                        <td>ESO271-005</td>
+                                        <td>13.93548</td>
+                                        <td>-45.65755</td>
+                                        <td>15.0</td>
+                                        <td>-17.65</td>
+                                        <td>32.931</td>
+                                        <td>3.484e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="880">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="880">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49493</td>
+                                        <td>ESO271-004</td>
+                                        <td>13.92284</td>
+                                        <td>-44.47837</td>
+                                        <td>13.12</td>
+                                        <td>-19.45</td>
+                                        <td>32.333</td>
+                                        <td>3.475e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="881">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="881">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49836</td>
+                                        <td>ESO221-022</td>
+                                        <td>14.00325</td>
+                                        <td>-48.26987</td>
+                                        <td>13.37</td>
+                                        <td>-19.3</td>
+                                        <td>34.198</td>
+                                        <td>3.224e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="882">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="882">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49737</td>
+                                        <td>ESO221-021</td>
+                                        <td>13.97612</td>
+                                        <td>-48.52492</td>
+                                        <td>13.56</td>
+                                        <td>-19.21</td>
+                                        <td>35.81</td>
+                                        <td>2.780e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="883">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="883">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49722</td>
+                                        <td>ESO221-020</td>
+                                        <td>13.97307</td>
+                                        <td>-48.47607</td>
+                                        <td>12.66</td>
+                                        <td>-20.15</td>
+                                        <td>38.292</td>
+                                        <td>2.618e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="884">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="884">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166025</td>
+                                        <td>PGC166025</td>
+                                        <td>14.08597</td>
+                                        <td>-48.58916</td>
+                                        <td>14.52</td>
+                                        <td>-18.34</td>
+                                        <td>35.972</td>
+                                        <td>2.083e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="885">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="885">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49586</td>
+                                        <td>NGC5365A</td>
+                                        <td>13.94431</td>
+                                        <td>-44.00911</td>
+                                        <td>12.57</td>
+                                        <td>-20.27</td>
+                                        <td>36.983</td>
+                                        <td>1.954e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="886">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="886">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49591</td>
+                                        <td>ESO221-018</td>
+                                        <td>13.94583</td>
+                                        <td>-48.49721</td>
+                                        <td>13.99</td>
+                                        <td>-18.94</td>
+                                        <td>40.181</td>
+                                        <td>1.898e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="887">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="887">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49128</td>
+                                        <td>ESO325-027</td>
+                                        <td>13.84233</td>
+                                        <td>-40.70714</td>
+                                        <td>14.54</td>
+                                        <td>-19.61</td>
+                                        <td>66.972</td>
+                                        <td>1.550e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="888">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="888">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49884</td>
+                                        <td>ESO271-010</td>
+                                        <td>14.0129</td>
+                                        <td>-45.41853</td>
+                                        <td>12.5</td>
+                                        <td>-18.83</td>
+                                        <td>18.45</td>
+                                        <td>1.453e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="889">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="889">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50388</td>
+                                        <td>ESO221-025</td>
+                                        <td>14.12634</td>
+                                        <td>-48.39421</td>
+                                        <td>12.74</td>
+                                        <td>-20.26</td>
+                                        <td>38.931</td>
+                                        <td>9.402e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="890">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="890">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49424</td>
+                                        <td>NGC5333</td>
+                                        <td>13.90673</td>
+                                        <td>-48.51258</td>
+                                        <td>13.48</td>
+                                        <td>-19.29</td>
+                                        <td>35.81</td>
+                                        <td>6.884e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="891">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="891">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49673</td>
+                                        <td>NGC5365</td>
+                                        <td>13.96406</td>
+                                        <td>-43.93138</td>
+                                        <td>12.2</td>
+                                        <td>-20.35</td>
+                                        <td>32.359</td>
+                                        <td>5.527e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="892">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="892">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49750</td>
+                                        <td>NGC5365B</td>
+                                        <td>13.97765</td>
+                                        <td>-43.96367</td>
+                                        <td>13.11</td>
+                                        <td>-19.44</td>
+                                        <td>32.359</td>
+                                        <td>5.527e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="893">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="893">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>512410</td>
+                                        <td>PGC512410</td>
+                                        <td>14.11693</td>
+                                        <td>-46.65136</td>
+                                        <td>15.12</td>
+                                        <td>-18.73</td>
+                                        <td>57.347</td>
+                                        <td>2.831e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="894">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="894">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50448</td>
+                                        <td>ESO221-026</td>
+                                        <td>14.13991</td>
+                                        <td>-47.9705</td>
+                                        <td>11.12</td>
+                                        <td>-20.13</td>
+                                        <td>20.306</td>
+                                        <td>2.380e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="895">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="895">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50539</td>
+                                        <td>ESO221-029</td>
+                                        <td>14.16249</td>
+                                        <td>-48.33029</td>
+                                        <td>13.87</td>
+                                        <td>-20.04</td>
+                                        <td>56.181</td>
+                                        <td>2.236e-09</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="896">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="896">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50248</td>
+                                        <td>IC4359</td>
+                                        <td>14.08981</td>
+                                        <td>-45.26969</td>
+                                        <td>13.16</td>
+                                        <td>-20.61</td>
+                                        <td>54.917</td>
+                                        <td>6.857e-10</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="897">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="897">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div class="table-responsive">
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </form>
+
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">TOROS (Macon)
+                    at Tolar Grande, Argentina
+                </div>
+                <div class="panel-body">
+                    <p>Geo long: -67.2995 lat: -24.5554
+                        Elevation: 4,600 m (<span id="obs7">None</span> ft)
+                    </p>
+                    <script>
+                    document.getElementById("obs7").innerHTML = intcomma(mtofeet(4600.0).toFixed(0))
+                    </script>
+
+                    <p>WARNING: A red background means that the target was selected by another observatory.</p>
+                    <form method="post" action="/winnow/broker/">
+                        <input type="hidden" value="10" name="alert_id">
+                        <input type="hidden" value="7" name="obs_id">
+                        <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="table_7">
+                                <thead>
+                                    <tr>
+                                        <th>PGC</th>
+                                        <th>Name</th>
+                                        <th class="dropdown">
+                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                                RA <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_ra_hourangle('table_7')">hour angle</a></li>
+                                                <li><a onclick="set_column_ra_hms('table_7')">hh:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Dec <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a onclick="set_column_dec_degree('table_7')">degrees</a></li>
+                                                <li><a onclick="set_column_dec_dms('table_7')">dd:mm:ss</a></li>
+                                            </ul>
+                                        </th>
+                                        <th>Apparent Magnitude</th>
+                                        <th>Absolute Magnitude</th>
+                                        <th>Distance (MPc)</th>
+                                        <th>Localization probability</th>
+                                        <th>Selected</th>
+                                        <th>Observed</th>
+                                        <th>Observation date/time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr >
+
+                                        <td>141857</td>
+                                        <td>PGC141857</td>
+                                        <td>14.17597</td>
+                                        <td>-52.31706</td>
+                                        <td>14.7</td>
+                                        <td>-18.38</td>
+                                        <td>41.722</td>
+                                        <td>9.183e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="838">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="838">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50618</td>
+                                        <td>ESO221-030</td>
+                                        <td>14.17809</td>
+                                        <td>-52.18414</td>
+                                        <td>13.56</td>
+                                        <td>-19.53</td>
+                                        <td>42.319</td>
+                                        <td>9.181e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="839">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="839">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>448694</td>
+                                        <td>PGC448694</td>
+                                        <td>14.17695</td>
+                                        <td>-52.10164</td>
+                                        <td>14.56</td>
+                                        <td>-19.23</td>
+                                        <td>56.194</td>
+                                        <td>9.181e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="840">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="840">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166335</td>
+                                        <td>PGC166335</td>
+                                        <td>14.26722</td>
+                                        <td>-53.7165</td>
+                                        <td>14.3</td>
+                                        <td>-19.28</td>
+                                        <td>51.125</td>
+                                        <td>7.098e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="841">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="841">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>2800412</td>
+                                        <td>PGC2800412</td>
+                                        <td>14.28611</td>
+                                        <td>-55.6199</td>
+                                        <td>13.98</td>
+                                        <td>-19.62</td>
+                                        <td>52.583</td>
+                                        <td>7.097e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="842">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="842">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50470</td>
+                                        <td>ESO175-002</td>
+                                        <td>14.14333</td>
+                                        <td>-53.35286</td>
+                                        <td>12.61</td>
+                                        <td>-21.02</td>
+                                        <td>54.236</td>
+                                        <td>7.047e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="843">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="843">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50496</td>
+                                        <td>ESO221-028</td>
+                                        <td>14.15061</td>
+                                        <td>-51.16873</td>
+                                        <td>14.17</td>
+                                        <td>-19.8</td>
+                                        <td>60.403</td>
+                                        <td>6.539e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="844">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="844">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49282</td>
+                                        <td>ESO271-003</td>
+                                        <td>13.87424</td>
+                                        <td>-43.8812</td>
+                                        <td>14.61</td>
+                                        <td>-17.86</td>
+                                        <td>31.542</td>
+                                        <td>5.332e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]" checked value="845">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="845">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>463082</td>
+                                        <td>PGC463082</td>
+                                        <td>14.05813</td>
+                                        <td>-50.77711</td>
+                                        <td>14.36</td>
+                                        <td>-19.01</td>
+                                        <td>45.792</td>
+                                        <td>4.232e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="846">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="846">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>50968</td>
+                                        <td>ESO221-035</td>
+                                        <td>14.2679</td>
+                                        <td>-52.60871</td>
+                                        <td>12.86</td>
+                                        <td>-20.32</td>
+                                        <td>43.417</td>
+                                        <td>4.094e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="847">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="847">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>141859</td>
+                                        <td>PGC141859</td>
+                                        <td>14.33987</td>
+                                        <td>-55.06851</td>
+                                        <td>12.92</td>
+                                        <td>-19.95</td>
+                                        <td>36.667</td>
+                                        <td>3.809e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="848">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="848">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>485499</td>
+                                        <td>PGC485499</td>
+                                        <td>14.05333</td>
+                                        <td>-48.62736</td>
+                                        <td>14.67</td>
+                                        <td>-18.2</td>
+                                        <td>36.542</td>
+                                        <td>3.553e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="849">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="849">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49550</td>
+                                        <td>ESO271-005</td>
+                                        <td>13.93548</td>
+                                        <td>-45.65755</td>
+                                        <td>15.0</td>
+                                        <td>-17.65</td>
+                                        <td>32.931</td>
+                                        <td>3.484e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="850">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="850">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49493</td>
+                                        <td>ESO271-004</td>
+                                        <td>13.92284</td>
+                                        <td>-44.47837</td>
+                                        <td>13.12</td>
+                                        <td>-19.45</td>
+                                        <td>32.333</td>
+                                        <td>3.475e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="851">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="851">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49836</td>
+                                        <td>ESO221-022</td>
+                                        <td>14.00325</td>
+                                        <td>-48.26987</td>
+                                        <td>13.37</td>
+                                        <td>-19.3</td>
+                                        <td>34.198</td>
+                                        <td>3.224e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="852">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="852">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166323</td>
+                                        <td>PGC166323</td>
+                                        <td>14.07614</td>
+                                        <td>-52.69722</td>
+                                        <td>13.84</td>
+                                        <td>-19.67</td>
+                                        <td>49.417</td>
+                                        <td>3.206e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="853">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="853">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>2800413</td>
+                                        <td>PGC2800413</td>
+                                        <td>14.32778</td>
+                                        <td>-58.1738</td>
+                                        <td>13.6</td>
+                                        <td>-20.0</td>
+                                        <td>52.431</td>
+                                        <td>2.928e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="854">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="854">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49737</td>
+                                        <td>ESO221-021</td>
+                                        <td>13.97612</td>
+                                        <td>-48.52492</td>
+                                        <td>13.56</td>
+                                        <td>-19.21</td>
+                                        <td>35.81</td>
+                                        <td>2.780e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="855">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="855">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>49722</td>
+                                        <td>ESO221-020</td>
+                                        <td>13.97307</td>
+                                        <td>-48.47607</td>
+                                        <td>12.66</td>
+                                        <td>-20.15</td>
+                                        <td>38.292</td>
+                                        <td>2.618e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="856">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="856">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                    <tr >
+
+                                        <td>166327</td>
+                                        <td>PGC166327</td>
+                                        <td>14.09906</td>
+                                        <td>-53.71956</td>
+                                        <td>13.56</td>
+                                        <td>-20.08</td>
+                                        <td>52.5</td>
+                                        <td>2.443e-08</td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="istaken[]"  value="857">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div align="center">
+                                                <input type="checkbox" name="wasobserved[]"  value="857">
+                                            </div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div class="table-responsive">
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </form>
+
+                </div class="panel-body">
+            </div class="panel panel-primary">
+
+        </div class="container">
+
+        <div id="footer">
+            <div class="container">
+                <p class="text-muted">Copyright The TOROS project 2017</p>
+            </div>
+        </div>
+    </div class="container-fluid">
+
+</body>
+</html>

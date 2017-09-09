@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TOROS Broker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+    function mtofeet(x) {return 3.2808399 * x;}
+    function intcomma(x) {return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+    </script>
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">TOROS Broker</a>
+            </div class="navbar-header">
+        </div class="container-fluid">
+    </nav class="navbar navbar-inverse">
+
+
+    <div class="container-fluid">
+        <div class="container">
+
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="well">
+
+
+                        <h1>Log in</h1>
+                        <form method='post' action='/winnow/broker/login'>
+                            <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+                            <div class="form-group">
+                                <label>User name:</label>
+                                <input type="text" class="form-control" name="username"/>
+                            </div class="form-group">
+                            <div class="form-group">
+                                <label>Password:</label>
+                                <input type="password" class="form-control" name="password"/>
+                            </div class="form-group">
+                            <input type='submit' class="btn btn-primary"/>
+                        </form>
+                    </div class="col-sm-4">
+                </div class="row">
+
+
+            </div class="well">
+
+            <p>To have access to the TOROS broker system you need to register a broker account with the admins.</p>
+
+        </div class="container">
+
+        <div id="footer">
+            <div class="container">
+                <p class="text-muted">Copyright The TOROS project 2017</p>
+            </div>
+        </div>
+
+    </div class="container-fluid">
+
+</body>
+</html>

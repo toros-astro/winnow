@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="description" content="An astronomy citizen science project for transient classification"/>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="styles.css" />
+	<link rel="stylesheet" type="text/css" href="aboutmenu.css" />
+	<!-- you can skip the following line if your page already integrates the jQuery library -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>
+	<title>Winnow - Home</title>
+</head>
+
+<body>
+	<div id="container">
+		<header>
+			<div id="authbox">
+					<form method="post" action="/winnow/login/">
+					<div style="margin:0.2em; float:right;">
+						<input name="submit" class="formbutton" value="Log in" type="submit" />
+					</div>
+					<div id="enterauthdata">
+					    <label for="name" style="float:left; display:block; width:80px;">Username:</label>
+					    <input name="username" id="name" value="" type="text" style="float:left; display:block; width:100px;" />
+					    <hr style="color:#fff;">
+					    <label for="password" style="float:left; display:block; width:80px;">Password:</label>
+					    <input name="password" id="password" value="" type="password" style="float:left; display:block; width:100px;" />
+                        <input type="hidden" name="next" value="/winnow/" />
+					</div><!-- enterauthdata -->
+				    </form>
+				    <div style="clear:both; display:block; padding-left:5px;">
+				    	<hr>
+						Or <a href="/winnow/register/" style="font-weight:bold; color:#76a800;">Sign up!</a>
+					</div>
+
+			</div><!-- authbox -->
+
+			<div class="width">
+				<h1><a href="/winnow/">TOROS<span>training</span></a></h1>
+				<h2>Training website</h2>
+			</div>
+		</header>
+
+		<nav>
+			<!-- <div class="width"> -->
+			<div class="width">
+				<ul>
+					<!-- The main horizontal menu bar common to all pages -->
+					<li class="start selected"><a href="/winnow/">Home</a></li>
+					<li class=""><a href="/winnow/rank/">Classify</a></li>
+					<li class=""><a href="/winnow/data/">Data</a></li>
+					<li class="end "><a href="/winnow/about/">About Us</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<div id="body" class="width">
+		<section id="content">
+		<h2>Welcome to the training workshop for TOROS </h2>
+		<p>The Transient Optical Robotic Observatory of the South (TOROS) needs your amazing pattern-recognition ability to differentiate between unreal and real image detection.</p>
+		<p>Image differencing leaves behind many unreal (bogus) objects due to bad subtraction. Such images will be classified as bogus by a Machine Learning (ML) algorithm. This ML algorithm has to be “trained” with labeled data. This is where you come in. Your classification of, real or bogus images, will generate this training data set.</p>
+		<p>As a volunteer on this website, you can become a citizen scientist and citizen researcher, participating in real science and other research. If you think you have made a mistake, do not worry. This project is set up to have more than one volunteer analyzing each piece of data, thereby eliminating the vast majority of human error. Mistakes are a part of the process, and can even help us evaluate the difficulty of the data. As long as everyone does their best, they are helping!</p>
+		<p>A short training tutorial is available. Please register and create an account to contribute and collaborate with TOROS.</p>
+
+		<a href="/winnow/register/" class="button">Register</a>
+		<a href="/winnow/login/" class="button">Log In</a>
+		<a href="/winnow/rank/" class="button">Start Tutorial</a>
+
+	</section>
+			<aside class="sidebar">
+			<ul>
+				<li>
+					<h4>Latest interesting objects</h4>
+                	<ul>
+						<a href="/winnow/object/first_cstar_diff_00010/">
+							<li class="sidebarInteresting">
+							<img src="first_cstar_diff_00010_subt.thumbnail.png" width="40" height="40" align=bottom>
+							Object first_cstar_diff_00010 at (327.702, -87.3902) from file: 151K5947_diff.fits.gz
+							</li>
+							</a>
+                	</ul>
+				</li>
+				<li>
+					<h4>Latest comments</h4>
+                	<ul>
+						<li class="sidebarInteresting">
+					    <a href="/winnow/profile/jhon_doe/">
+							<div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); float:left;"></div>
+						</a>
+                    	On Oct. 20, 2015, 12:14 p.m. <a href="/winnow/profile/jhon_doe/">jhon_doe</a>
+						commented on <a href="/winnow/object/cstar_june02_predictedreals_11939/">object cstar_june02_predictedreals_11939:</a>
+						<br clear=all>
+                    	"A case of misalignment bogus"
+						<br>
+						<hr>
+					    </li>
+						<li class="sidebarInteresting">
+					    <a href="/winnow/profile/jhon_doe/">
+                            <div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); float:left;"></div>
+						</a>
+                    	On Oct. 9, 2015, 3:52 p.m. <a href="/winnow/profile/jhon_doe/">jhon_doe</a>
+						commented on <a href="/winnow/object/cstar_june02_predictedreals_08750/">object cstar_june02_predictedreals_08750:</a>
+						<br clear=all>
+                    	"something double"
+						<br>
+						<hr>
+					    </li>
+
+						<li class="sidebarInteresting">
+
+					    <a href="/winnow/profile/peter/">
+							<div class="profilethumb" style="background-image:url(peter_profilepic.thumbnail.gif); float:left;"></div>
+						</a>
+                    	On Oct. 8, 2015, 10:08 a.m. <a href="/winnow/profile/peter/">peter</a>
+						commented on <a href="/winnow/object/cstar_june02_predictedreals_06912/">object cstar_june02_predictedreals_06912:</a>
+						<br clear=all>
+                    	"Woow"
+						<br>
+						<hr>
+					    </li>
+                 	</ul>
+				</li>
+				</ul>
+			</aside>
+			<div class="clear"></div>
+		</div>
+		<footer>
+			<div class="footer-content width">
+				<ul>
+					<li><h4>Participating Institutions</h4></li>
+					<li><a href="http://www.utrgv.edu/en-us/">University of Texas at Rio Grande Valley</a></li>
+					<li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
+					<li><a href="http://www.unc.edu.ar">Universidad Nacional de Cordoba</a></li>
+					<li><a href="http://www.tamu.edu">Texas A&M University</a></li>
+				</ul>
+				<ul class="endfooter">
+					<li><h4>Useful links</h4></li>
+					<li><a href="http://www.utrgv.edu/en-us/">University of Texas at Rio Grande Valley</a></li>
+					<li><a href="http://toros.phys.utb.edu">TOROS main website</a></li>
+					<li><a href="http://cgwa.phys.utb.edu">Center for Gravitational Wave Astronomy (CGWA)</a>
+					<li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
+				</ul>
+
+				<div class="clear"></div>
+			</div>
+			<div class="footer-bottom">
+				<p>&copy; UTRGV 2015. <a href="http://zypopwebtemplates.com/">Free CSS Website Templates</a> by ZyPOP</p>
+			</div>
+		</footer>
+	</div>
+</body>
+</html>

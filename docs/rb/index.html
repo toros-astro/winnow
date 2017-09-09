@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ML Experiment Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">RealBogus</a>
+        </div class="navbar-header">
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Graphs</a></li>
+            <li><a href="#">Compare</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+
+                <div class="btn-group">
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginmodal">Login</button>
+                  <a href="/winnow/register/" type="button" class="btn btn-success btn-sm">Sign Up!</a>
+                </div>
+                <!-- Modal -->
+<div id="loginmodal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Log in</h4>
+      </div>
+
+      <form method="post" role="form" action="/winnow/login/">
+      <div class="modal-body">
+      <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+        <div class="form-group">
+          <label class="sr-only" for="name">Username:</label>
+          <input name="username" id="name" value="" class="form-control" type="text" placeholder="Username"/>
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="password">Password:</label>
+          <input name="password" id="password" value=""  class="form-control" type="password" placeholder="Password" />
+        </div>
+        <input type="hidden" name="next" value="/winnow/rb/" />
+      </div class="modal-body">
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Log in</button>
+      </div class="modal-footer">
+      </form>
+
+    </div class="modal-content">
+
+  </div class="modal-dialog modal-sm">
+</div id="loginmodal" class="modal fade" role="dialog">
+
+
+            </li>
+          </ul class="nav navbar-nav navbar-right">
+        </div class="collapse navbar-collapse" id="myNavbar">
+    </div class="container-fluid">
+</nav class="navbar navbar-inverse">
+
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Real-Bogus Classifier</h1>
+    </div class="page-header">
+
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/winnow/rb/">Data</a></li>
+      <li><a href="#">Upload</a></li>
+  </ul>
+
+  <h1>Browse past experiments or input a new one</h1>
+
+
+
+  <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h6 class="panel-title">
+        <a data-toggle="collapse" href="#enterexp">
+        <span class="caret"></span>
+        Enter your new experiment here
+        </a>
+        </h6>
+
+      </div>
+      <div class="panel-collapse collapse" id="enterexp">
+      <div class="panel-body">
+
+            <form role="form" method="post" action="/winnow/rb/">
+            <input type='hidden' name='csrfmiddlewaretoken' value='ifTvyBPuiBx2ilclbZt6K9GaJye1dOg7' />
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_dataset">Dataset:</label>
+                </span>
+
+            <select id="id_dataset" name="dataset">
+<option value="" selected="selected">---------</option>
+<option value="1">cstar_june01</option>
+<option value="2">first_cstar_diff</option>
+<option value="3">cstar_june02_predictedreals</option>
+<option value="5">CSTAR</option>
+<option value="6">cstar_june_selection</option>
+<option value="7">cstar_june02</option>
+<option value="8">cstar_starsients</option>
+</select>
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_date">Date of experiment:</label>
+                </span>
+
+            <input class="datepicker" id="id_date" name="date" type="text" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_platform">Software used:</label>
+                </span>
+
+            <select id="id_platform" name="platform">
+<option value="0" selected="selected">Weka</option>
+<option value="1">RapidMiner</option>
+<option value="2">scikit-learn</option>
+<option value="3">Other</option>
+</select>
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_other_platform_name">Other platform name:</label>
+
+            <input id="id_other_platform_name" maxlength="20" name="other_platform_name" type="text" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_alg_name">Algorithm name:</label>
+                </span>
+
+            <input id="id_alg_name" maxlength="50" name="alg_name" type="text" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_params_file">Parameter file name:</label>
+
+            <input id="id_params_file" name="params_file" type="file" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_labels_file">Label file name:</label>
+
+            <input id="id_labels_file" name="labels_file" type="file" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_features">Features:</label>
+
+            <textarea cols="40" id="id_features" name="features" placeholder="feature1: some description, feature2, feature3, feature4: another description" rows="10">
+</textarea>
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_featureset_infofile">Feature set file name:</label>
+
+            <input id="id_featureset_infofile" name="featureset_infofile" type="file" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_featuretable_datafile">Feature table file name:</label>
+
+            <input id="id_featuretable_datafile" name="featuretable_datafile" type="file" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_conf_mat_rr">Reals classified as reals:</label>
+                </span>
+
+            <input id="id_conf_mat_rr" name="conf_mat_rr" type="number" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_conf_mat_rb">Reals classified as bogus:</label>
+                </span>
+
+            <input id="id_conf_mat_rb" name="conf_mat_rb" type="number" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_conf_mat_br">Bogus classified as reals:</label>
+                </span>
+
+            <input id="id_conf_mat_br" name="conf_mat_br" type="number" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <span class="required">
+                <label for="id_conf_mat_bb">Bogus classified as bogus:</label>
+                </span>
+
+            <input id="id_conf_mat_bb" name="conf_mat_bb" type="number" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_confusion_table_file">Confusion matrix file name:</label>
+
+            <input id="id_confusion_table_file" name="confusion_table_file" type="file" />
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_other_outputfiles">Other output files:</label>
+
+            <textarea cols="40" id="id_other_outputfiles" name="other_outputfiles" rows="10">
+</textarea>
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_other_inputfiles">Other input files:</label>
+
+            <textarea cols="40" id="id_other_inputfiles" name="other_inputfiles" rows="10">
+</textarea>
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_description">Description:</label>
+
+            <textarea cols="40" id="id_description" name="description" rows="10">
+</textarea>
+
+            </div class="form-group">
+
+            <div class="form-group">
+
+                <label for="id_is_favorite">Is favorite:</label>
+
+            <input id="id_is_favorite" name="is_favorite" type="checkbox" />
+
+            </div class="form-group">
+
+            <input name="submit" class="btn btn-default" value="Submit" type="submit" />
+            </form>
+
+        </div class="panel-body">
+      </div>
+  </div class="panel panel-primary">
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Latest Experiments</div>
+  <div class="panel-body">
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th class="col-sm-1">ID</th>
+                <th class="col-md-1">Date</th>
+                <th class="col-md-1">User</th>
+                <th class="col-md-1">Dataset</th>
+                <th class="col-md-1">Algorithm</th>
+                <th class="col-md-1">Features</th>
+                <th class="col-md-1">Confusion Matrix
+                  <table style="border: 1px solid;">
+                    <thead>
+                    <tr>
+                        <th style="padding: 2px; border-right: 1px solid; background-color: #9cf799; border-bottom: 1px solid;">true reals</td>
+                        <th style="padding: 2px; background-color: #f79292; border-bottom: 1px solid;">false reals</td>
+                        <th style="padding: 2px; border: 1px solid;">tr + fr</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 2px; border-right: 1px solid; background-color: #f79292; ">false bogus</td>
+                        <th style="padding: 2px; background-color: #9cf799;">true bogus</td>
+                        <th style="padding: 2px; border: 1px solid;">fb + tb</td>
+                    </tr>
+                    <tr>
+                        <th style="padding: 2px; border: 1px solid;">tr + fb</td>
+                        <th style="padding: 2px; border: 1px solid;">fr + tb</td>
+                        <th style="padding: 2px; border: 1px solid;">N</td>
+                    </tr>
+                </table>
+                </th>
+                <th class="col-md-1">Measures</th>
+                <th class="col-md-1">Platform</th>
+                <th class="col-md-1">Description</th>
+              </tr>
+            </thead>
+        <tbody>
+
+          <tr>
+            <td>5</td>
+            <td>Oct. 2, 2015</td>
+            <td><a href="/winnow/profile/user_01/">user_01</a></td>
+            <td>
+              <a data-toggle="modal" data-target="#datasetmodal">
+                cstar_june01
+              </a>
+                <!-- Modal -->
+<div id="datasetmodal" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">cstar_june01</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="well">
+        <dl>
+          <dt>Start Date:</dt> <dd>June 9, 2010, 7:30 p.m.</dd>
+          <dt>End Date:</dt> <dd>June 10, 2010, 4:30 a.m.</dd>
+          <dt>Cadence:</dt> <dd>3600.0 s</dd>
+          <dt>Number of files:</dt> <dd>10</dd>
+
+          <dt>Subset of:</dt> <dd>cstar_june_selection</dd>
+
+          <dt>Description:</dt> <dd>A set of 10 files to create some examples of reals to try different Machine Learning alg&#39;s.</dd>
+      </dl>
+      </div class="well">
+      </div class="modal-body">
+      <div class="modal-footer">
+
+      </div class="modal-footer">
+
+    </div class="modal-content">
+
+  </div class="modal-dialog">
+</div id="datasetmodal" class="modal fade" role="dialog">
+
+            </td>
+            <td>Random Forest </td>
+            <td>
+
+              <a href="#" data-toggle="tooltip" title="Extension in x in pixels">
+              deltax,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Extension in y in pixels">
+              deltay,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              ratio,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Distance from the highest intensity pixel to the centroid in pixels">
+              peak2centroid,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (x squared)">
+              x2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (y squared)">
+              y2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of x times y">
+              xy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxx,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cyy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-minor axis of fit ellipse">
+              a,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-major axis of fit ellipse">
+              b,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Inclination of ellipse">
+              theta,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude">
+              mag_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude error">
+              magerr_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Flux in aperture (in counts)">
+              flux_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Flux error in aperture (in counts)">
+              fluxerr_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              threshold,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              flux_max,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              fwhm_image,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              neg_pix,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              neg_pix_fraction,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="boolean">
+              close_to_mask
+              </a>
+
+            </td>
+            <td>
+                <div class="well" style="width: 100%;">
+                <div align=center>
+                <table>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid; border-bottom: 1px solid;">57</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">13</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">70</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-width: 0 1px 1px 0; border-style: solid;">59</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">1562</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">1621</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid;">116</td>
+                        <td style="padding: 2px; border-right: 1px solid;">1575</td>
+                        <td style="padding: 2px;">1691</td>
+                    </tr>
+                </table>
+                </div>
+                </div>
+            </td>
+            <td>
+                <p><strong>Recall</strong>: 0.49</p>
+                <p><strong>Precision</strong>: 0.81</p>
+                <p><strong>F-measure</strong>: 0.61</p>
+                <p><strong>FPR</strong>: 0.19</p>
+                <p><strong>Miss Rate</strong>: 0.04</p>
+            </td>
+
+            <td>Weka </td>
+
+            <td>RB_feat03</td>
+          </tr>
+
+          <tr>
+            <td>4</td>
+            <td>Aug. 14, 2015</td>
+            <td><a href="/winnow/profile/user_01/">user_01</a></td>
+            <td>
+              <a data-toggle="modal" data-target="#datasetmodal">
+                cstar_june01
+              </a>
+                <!-- Modal -->
+<div id="datasetmodal" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">cstar_june01</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="well">
+        <dl>
+          <dt>Start Date:</dt> <dd>June 9, 2010, 7:30 p.m.</dd>
+          <dt>End Date:</dt> <dd>June 10, 2010, 4:30 a.m.</dd>
+          <dt>Cadence:</dt> <dd>3600.0 s</dd>
+          <dt>Number of files:</dt> <dd>10</dd>
+
+          <dt>Subset of:</dt> <dd>cstar_june_selection</dd>
+
+          <dt>Description:</dt> <dd>A set of 10 files to create some examples of reals to try different Machine Learning alg&#39;s.</dd>
+      </dl>
+      </div class="well">
+      </div class="modal-body">
+      <div class="modal-footer">
+
+      </div class="modal-footer">
+
+    </div class="modal-content">
+
+  </div class="modal-dialog">
+</div id="datasetmodal" class="modal fade" role="dialog">
+
+            </td>
+            <td>Random Forest </td>
+            <td>
+
+              <a href="#" data-toggle="tooltip" title="Extension in x in pixels">
+              deltax,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Extension in y in pixels">
+              deltay,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              ratio,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Distance from the highest intensity pixel to the centroid in pixels">
+              peak2centroid,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (x squared)">
+              x2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (y squared)">
+              y2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of x times y">
+              xy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxx,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cyy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-minor axis of fit ellipse">
+              a,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-major axis of fit ellipse">
+              b,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Inclination of ellipse">
+              theta,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude">
+              mag_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude error">
+              magerr_aper
+              </a>
+
+            </td>
+            <td>
+                <div class="well" style="width: 100%;">
+                <div align=center>
+                <table>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid; border-bottom: 1px solid;">52</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">26</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">78</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-width: 0 1px 1px 0; border-style: solid;">64</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">1549</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">1613</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid;">116</td>
+                        <td style="padding: 2px; border-right: 1px solid;">1575</td>
+                        <td style="padding: 2px;">1691</td>
+                    </tr>
+                </table>
+                </div>
+                </div>
+            </td>
+            <td>
+                <p><strong>Recall</strong>: 0.45</p>
+                <p><strong>Precision</strong>: 0.67</p>
+                <p><strong>F-measure</strong>: 0.54</p>
+                <p><strong>FPR</strong>: 0.33</p>
+                <p><strong>Miss Rate</strong>: 0.04</p>
+            </td>
+
+            <td>Weka </td>
+
+            <td>RB02 features on cstar_june01</td>
+          </tr>
+
+          <tr>
+            <td>2</td>
+            <td>Aug. 12, 2015</td>
+            <td><a href="/winnow/profile/user_01/">user_01</a></td>
+            <td>
+              <a data-toggle="modal" data-target="#datasetmodal">
+                cstar_june01
+              </a>
+                <!-- Modal -->
+<div id="datasetmodal" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">cstar_june01</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="well">
+        <dl>
+          <dt>Start Date:</dt> <dd>June 9, 2010, 7:30 p.m.</dd>
+          <dt>End Date:</dt> <dd>June 10, 2010, 4:30 a.m.</dd>
+          <dt>Cadence:</dt> <dd>3600.0 s</dd>
+          <dt>Number of files:</dt> <dd>10</dd>
+
+          <dt>Subset of:</dt> <dd>cstar_june_selection</dd>
+
+          <dt>Description:</dt> <dd>A set of 10 files to create some examples of reals to try different Machine Learning alg&#39;s.</dd>
+      </dl>
+      </div class="well">
+      </div class="modal-body">
+      <div class="modal-footer">
+
+      </div class="modal-footer">
+
+    </div class="modal-content">
+
+  </div class="modal-dialog">
+</div id="datasetmodal" class="modal fade" role="dialog">
+
+            </td>
+            <td>Random Forest </td>
+            <td>
+
+              <a href="#" data-toggle="tooltip" title="Extension in x in pixels">
+              deltax,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Extension in y in pixels">
+              deltay,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              ratio,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Distance from the highest intensity pixel to the centroid in pixels">
+              peak2centroid,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (x squared)">
+              x2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (y squared)">
+              y2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of x times y">
+              xy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxx,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cyy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-minor axis of fit ellipse">
+              a,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-major axis of fit ellipse">
+              b,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Inclination of ellipse">
+              theta,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude">
+              mag_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude error">
+              magerr_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Flux in aperture (in counts)">
+              flux_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Flux error in aperture (in counts)">
+              fluxerr_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              threshold,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              flux_max,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              fwhm_image,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              neg_pix,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              neg_pix_fraction,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="boolean">
+              close_to_mask
+              </a>
+
+            </td>
+            <td>
+                <div class="well" style="width: 100%;">
+                <div align=center>
+                <table>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid; border-bottom: 1px solid;">1491</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">50</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">1541</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-width: 0 1px 1px 0; border-style: solid;">17</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">1525</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">1542</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid;">1508</td>
+                        <td style="padding: 2px; border-right: 1px solid;">1575</td>
+                        <td style="padding: 2px;">3083</td>
+                    </tr>
+                </table>
+                </div>
+                </div>
+            </td>
+            <td>
+                <p><strong>Recall</strong>: 0.99</p>
+                <p><strong>Precision</strong>: 0.97</p>
+                <p><strong>F-measure</strong>: 0.98</p>
+                <p><strong>FPR</strong>: 0.03</p>
+                <p><strong>Miss Rate</strong>: 0.01</p>
+            </td>
+
+            <td>Weka </td>
+
+            <td>RB_feat03 with SMOTE</td>
+          </tr>
+
+          <tr>
+            <td>3</td>
+            <td>Aug. 12, 2015</td>
+            <td><a href="/winnow/profile/user_01/">user_01</a></td>
+            <td>
+              <a data-toggle="modal" data-target="#datasetmodal">
+                cstar_june01
+              </a>
+                <!-- Modal -->
+<div id="datasetmodal" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">cstar_june01</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="well">
+        <dl>
+          <dt>Start Date:</dt> <dd>June 9, 2010, 7:30 p.m.</dd>
+          <dt>End Date:</dt> <dd>June 10, 2010, 4:30 a.m.</dd>
+          <dt>Cadence:</dt> <dd>3600.0 s</dd>
+          <dt>Number of files:</dt> <dd>10</dd>
+
+          <dt>Subset of:</dt> <dd>cstar_june_selection</dd>
+
+          <dt>Description:</dt> <dd>A set of 10 files to create some examples of reals to try different Machine Learning alg&#39;s.</dd>
+      </dl>
+      </div class="well">
+      </div class="modal-body">
+      <div class="modal-footer">
+
+      </div class="modal-footer">
+
+    </div class="modal-content">
+
+  </div class="modal-dialog">
+</div id="datasetmodal" class="modal fade" role="dialog">
+
+            </td>
+            <td>Random Forest </td>
+            <td>
+
+              <a href="#" data-toggle="tooltip" title="Extension in x in pixels">
+              deltax,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Extension in y in pixels">
+              deltay,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              ratio,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Distance from the highest intensity pixel to the centroid in pixels">
+              peak2centroid,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (x squared)">
+              x2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (y squared)">
+              y2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of x times y">
+              xy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxx,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cyy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-minor axis of fit ellipse">
+              a,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-major axis of fit ellipse">
+              b,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Inclination of ellipse">
+              theta,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude">
+              mag_aper,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Aperture magnitude error">
+              magerr_aper
+              </a>
+
+            </td>
+            <td>
+                <div class="well" style="width: 100%;">
+                <div align=center>
+                <table>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid; border-bottom: 1px solid;">1358</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">54</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">1412</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-width: 0 1px 1px 0; border-style: solid;">34</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">1521</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">1555</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid;">1392</td>
+                        <td style="padding: 2px; border-right: 1px solid;">1575</td>
+                        <td style="padding: 2px;">2967</td>
+                    </tr>
+                </table>
+                </div>
+                </div>
+            </td>
+            <td>
+                <p><strong>Recall</strong>: 0.98</p>
+                <p><strong>Precision</strong>: 0.96</p>
+                <p><strong>F-measure</strong>: 0.97</p>
+                <p><strong>FPR</strong>: 0.04</p>
+                <p><strong>Miss Rate</strong>: 0.02</p>
+            </td>
+
+            <td>Weka </td>
+
+            <td>RB_feat02 with SMOTE</td>
+          </tr>
+
+          <tr>
+            <td>1</td>
+            <td>Aug. 10, 2015</td>
+            <td><a href="/winnow/profile/user_01/">user_01</a></td>
+            <td>
+              <a data-toggle="modal" data-target="#datasetmodal">
+                cstar_june01
+              </a>
+                <!-- Modal -->
+<div id="datasetmodal" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">cstar_june01</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="well">
+        <dl>
+          <dt>Start Date:</dt> <dd>June 9, 2010, 7:30 p.m.</dd>
+          <dt>End Date:</dt> <dd>June 10, 2010, 4:30 a.m.</dd>
+          <dt>Cadence:</dt> <dd>3600.0 s</dd>
+          <dt>Number of files:</dt> <dd>10</dd>
+
+          <dt>Subset of:</dt> <dd>cstar_june_selection</dd>
+
+          <dt>Description:</dt> <dd>A set of 10 files to create some examples of reals to try different Machine Learning alg&#39;s.</dd>
+      </dl>
+      </div class="well">
+      </div class="modal-body">
+      <div class="modal-footer">
+
+      </div class="modal-footer">
+
+    </div class="modal-content">
+
+  </div class="modal-dialog">
+</div id="datasetmodal" class="modal fade" role="dialog">
+
+            </td>
+            <td>Random Forest </td>
+            <td>
+
+              <a href="#" data-toggle="tooltip" title="Extension in x in pixels">
+              deltax,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Extension in y in pixels">
+              deltay,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              ratio,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Distance from the highest intensity pixel to the centroid in pixels">
+              peak2centroid,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (x squared)">
+              x2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of (y squared)">
+              y2,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="sum of x times y">
+              xy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxx,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cyy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="No description">
+              cxy,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-minor axis of fit ellipse">
+              a,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Semi-major axis of fit ellipse">
+              b,
+              </a>
+
+              <a href="#" data-toggle="tooltip" title="Inclination of ellipse">
+              theta
+              </a>
+
+            </td>
+            <td>
+                <div class="well" style="width: 100%;">
+                <div align=center>
+                <table>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid; border-bottom: 1px solid;">42</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">18</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">60</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-width: 0 1px 1px 0; border-style: solid;">74</td>
+                        <td style="padding: 2px; border-bottom: 1px solid;">1557</td>
+                        <td style="padding: 2px; border-width: 0 0 1px 1px; border-style: solid;">1631</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2px; border-right: 1px solid;">116</td>
+                        <td style="padding: 2px; border-right: 1px solid;">1575</td>
+                        <td style="padding: 2px;">1691</td>
+                    </tr>
+                </table>
+                </div>
+                </div>
+            </td>
+            <td>
+                <p><strong>Recall</strong>: 0.36</p>
+                <p><strong>Precision</strong>: 0.70</p>
+                <p><strong>F-measure</strong>: 0.48</p>
+                <p><strong>FPR</strong>: 0.30</p>
+                <p><strong>Miss Rate</strong>: 0.05</p>
+            </td>
+
+            <td>Weka </td>
+
+            <td>RB_feat01 on cstar_june01</td>
+          </tr>
+
+        </tbody>
+        </table>
+    </div class="table-responsive">
+
+  </div class="panel-body">
+</div class="panel panel-primary">
+
+</div class="container-fluid">
+
+
+<script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "2000:2100",
+      setDate: +0
+    });
+  });
+  </script>
+
+
+</body>
+</html>
