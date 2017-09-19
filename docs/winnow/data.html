@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+
+
+
+<html>
+<head>
+	<meta name="description" content="An astronomy citizen science project for transient classification"/>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="styles.css" />
+	<link rel="stylesheet" type="text/css" href="aboutmenu.css" />
+
+	<!-- you can skip the following line if your page already integrates the jQuery library -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>
+
+	<title>Winnow - Home</title>
+
+
+</head>
+
+<body>
+	<div id="container">
+		<header>
+			<div id="authbox">
+					<a href="userprofile.html">
+							<div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); margin:0px auto;"></div>
+
+					</a>
+					<div style="clear:both; display:block; float:left; padding:5px;">
+						<a href="userprofile">john_doe</a> | <a href="#">Log out</a>
+					</div>
+
+			</div><!-- authbox -->
+
+			<div class="width">
+				<h1><a href="/winnow/">TOROS<span>training</span></a></h1>
+				<h2>Training website</h2>
+			</div>
+		</header>
+
+		<nav>
+			<!-- <div class="width"> -->
+			<div class="width">
+                <ul>
+					<!-- The main horizontal menu bar common to all pages -->
+					<li class="start "><a href="index.html">Home</a></li>
+					<li class=""><a href="classify.html">Classify</a></li>
+					<li class="selected"><a href="#">Data</a></li>
+					<li class="end "><a href="aboutus.html">About Us</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<div id="body" class="width">
+
+
+<section id="content">
+
+<div id="block" style="width:90%; margin:1em auto; border:2px; display:inline-block">
+    <h1>Data Set Information</h1>
+    <br>
+    <form id="dump_db" method="post" action="/winnow/data/">
+        <input type='hidden' name='csrfmiddlewaretoken' value='MOYI9RXiY1fAPyplK05eAwvDe3mvbkms' />
+        <fieldset>
+            <legend>Request a DB Dump</legend>
+            <p>
+            <label>Select Data Set</label>
+            <select name="dataset">
+
+               <option value = "cstar_june01">cstar_june01</option>
+
+               <option value = "first_cstar_diff">first_cstar_diff</option>
+
+               <option value = "cstar_june02_predictedreals">cstar_june02_predictedreals</option>
+
+               <option value = "CSTAR">CSTAR</option>
+
+               <option value = "cstar_june_selection">cstar_june_selection</option>
+
+               <option value = "cstar_june02">cstar_june02</option>
+
+               <option value = "cstar_starsients">cstar_starsients</option>
+
+            </select>
+          </p>
+       </fieldset>
+        Click here to get all your data: <input type="submit" class="button" name="submit" value="Request DB Dump" />
+    </form>
+</div>
+
+<div id="block" style="width:90%; margin:1em auto; border:2px; display:inline-block">
+    <h3>Statistics</h3>
+    <table cellspacing="0">
+        <tr>
+            <th>Dataset Name</th>
+            <th>Reals</th>
+            <th>Bogus</th>
+            <th>Unclassified</th>
+            <th>Not Ranked</th>
+            <th>Total</th>
+        </tr>
+
+        <tr>
+            <td>cstar_june01</td>
+            <td>137</td>
+            <td>1539</td>
+            <td>15</td>
+            <td>1691</td>
+            <td>1691</td>
+        </tr>
+
+        <tr>
+            <td>first_cstar_diff</td>
+            <td>24</td>
+            <td>670</td>
+            <td>45</td>
+            <td>738</td>
+            <td>739</td>
+        </tr>
+
+        <tr>
+            <td>cstar_june02_predictedreals</td>
+            <td>1738</td>
+            <td>1924</td>
+            <td>197</td>
+            <td>3859</td>
+            <td>3859</td>
+        </tr>
+
+        <tr>
+            <td>CSTAR</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>cstar_june_selection</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>cstar_june02</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>cstar_starsients</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+
+    </table>
+</div>
+</section>
+
+<aside class="sidebar">
+<ul>
+    <li>
+        <h4>Latest interesting objects</h4>
+        <ul>
+            <a href="/winnow/object/first_cstar_diff_00010/">
+                <li class="sidebarInteresting">
+                <img src="first_cstar_diff_00010_subt.thumbnail.png" width="40" height="40" align=bottom>
+                Object first_cstar_diff_00010 at (327.702, -87.3902) from file: 151K5947_diff.fits.gz
+                </li>
+                </a>
+        </ul>
+    </li>
+    <li>
+        <h4>Latest comments</h4>
+        <ul>
+            <li class="sidebarInteresting">
+            <a href="/winnow/profile/jhon_doe/">
+                <div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); float:left;"></div>
+            </a>
+            On Oct. 20, 2015, 12:14 p.m. <a href="/winnow/profile/jhon_doe/">jhon_doe</a>
+            commented on <a href="/winnow/object/cstar_june02_predictedreals_11939/">object cstar_june02_predictedreals_11939:</a>
+            <br clear=all>
+            "A case of misalignment bogus"
+            <br>
+            <hr>
+            </li>
+            <li class="sidebarInteresting">
+            <a href="/winnow/profile/jhon_doe/">
+                <div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); float:left;"></div>
+            </a>
+            On Oct. 9, 2015, 3:52 p.m. <a href="/winnow/profile/jhon_doe/">jhon_doe</a>
+            commented on <a href="/winnow/object/cstar_june02_predictedreals_08750/">object cstar_june02_predictedreals_08750:</a>
+            <br clear=all>
+            "something double"
+            <br>
+            <hr>
+            </li>
+
+            <li class="sidebarInteresting">
+
+            <a href="/winnow/profile/peter/">
+                <div class="profilethumb" style="background-image:url(peter_profilepic.thumbnail.gif); float:left;"></div>
+            </a>
+            On Oct. 8, 2015, 10:08 a.m. <a href="/winnow/profile/peter/">peter</a>
+            commented on <a href="/winnow/object/cstar_june02_predictedreals_06912/">object cstar_june02_predictedreals_06912:</a>
+            <br clear=all>
+            "Woow"
+            <br>
+            <hr>
+            </li>
+        </ul>
+    </li>
+    </ul>
+</aside>
+<div class="clear"></div>
+</div>
+<footer>
+<div class="footer-content width">
+    <ul>
+        <li><h4>Participating Institutions</h4></li>
+        <li><a href="http://www.utrgv.edu/en-us/">University of Texas at Rio Grande Valley</a></li>
+        <li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
+        <li><a href="http://www.unc.edu.ar">Universidad Nacional de Cordoba</a></li>
+        <li><a href="http://www.tamu.edu">Texas A&M University</a></li>
+    </ul>
+    <ul class="endfooter">
+        <li><h4>Useful links</h4></li>
+        <li><a href="http://www.utrgv.edu/en-us/">University of Texas at Rio Grande Valley</a></li>
+        <li><a href="http://toros.phys.utb.edu">TOROS main website</a></li>
+        <li><a href="http://cgwa.phys.utb.edu">Center for Gravitational Wave Astronomy (CGWA)</a>
+        <li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
+    </ul>
+
+    <div class="clear"></div>
+</div>
+<div class="footer-bottom">
+    <p>&copy; UTRGV 2015. <a href="http://zypopwebtemplates.com/">Free CSS Website Templates</a> by ZyPOP</p>
+</div>
+</footer>
+</div>
+</body>
+</html>

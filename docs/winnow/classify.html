@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="description" content="An astronomy citizen science project for transient classification"/>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="styles.css" />
+	<link rel="stylesheet" type="text/css" href="aboutmenu.css" />
+	<!-- you can skip the following line if your page already integrates the jQuery library -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>
+	<title>Winnow - Training Page</title>
+</head>
+<body>
+	<div id="container">
+		<header>
+			<div id="authbox">
+					<a href="/winnow/profile/john_doe/">
+							<div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); margin:0px auto;"></div>
+					</a>
+					<div style="clear:both; display:block; float:left; padding:5px;">
+						<a href="/winnow/profile/john_doe/">john_doe</a> | <a href="/winnow/logout/">Log out</a>
+					</div>
+			</div><!-- authbox -->
+			<div class="width">
+				<h1><a href="/winnow/">TOROS<span>training</span></a></h1>
+				<h2>Training website</h2>
+			</div>
+		</header>
+
+		<nav>
+			<!-- <div class="width"> -->
+			<div class="width">
+				<ul>
+					<!-- The main horizontal menu bar common to all pages -->
+					<li class="start "><a href="index.html">Home</a></li>
+					<li class="selected"><a href="#">Classify</a></li>
+					<li class=""><a href="data.html">Data</a></li>
+					<li class="end "><a href="aboutus.html">About Us</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<div id="body" class="width">
+
+	<section id="content">
+	<h1 style="margin-top:1em;">Is this a real transient?</h1>
+	<div id="all_plots" style="width:90%; margin:1em auto; background-color:#eee; border:2px outset #aaa; display:inline-block; border-radius:10px">
+		<div id="orig" class="plot">
+			<img src="cstar_june02_predictedreals_06912_orig.normal.png" width=100%/>
+			<h5 style="text-align:center;">Candidate</h5>
+		</div><!--orig-->
+		<div id="ref" class="plot">
+			<img src="cstar_june02_predictedreals_06912_ref.normal.png" width=100%/>
+			<h5 style="text-align:center;">Reference</h5>
+		</div><!--ref-->
+		<div id="subtraction" class="plot">
+			<img src="cstar_june02_predictedreals_06912_subt.normal.png" width=100%/>
+			<h5 style="text-align:center;">Subtraction</h5>
+		</div><!--subtraction-->
+	</div><!-- all_plots -->
+
+	<div style="clear:both;"></div>
+
+    <h5>Meta data</h5>
+
+<link rel="stylesheet" href="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+<!-- you can skip the following line if your page already integrates the jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js" charset="utf-8"></script>
+
+
+<div id="SEPInfoBox" style="width:50%; padding:0.5em; border:1px solid #000; border-radius:5px; background-color:#ddd;">
+    <!-- insert this snippet where you want Aladin Lite viewer to appear and after the loading of jQuery -->
+            <div id="aladin-lite-div"></div>
+            <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript">
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:0.08, target: "51 55 -87 53",
+                                                    showZoomControl: false, showFullscreenControl: false, showLayersControl: false,
+                                                    showGotoControl: false, showReticle: false, showFrame: false, fullscreen: false});
+            </script>
+    <b>id:</b> cstar_june02_predictedreals_00008</br>
+    <b>file:</b> 16AA3125_diff.fits</br>
+    <b>RA:</b> 51.932130 deg.</br>
+    <b>Dec:</b> -87.890930 deg.</br>
+    <b>mag (candidate):</b> 0.00</br>
+
+
+    <b>a:</b> 0.93</br>
+    <b>b:</b> 0.80</br>
+    <b>fwhm (x):</b> 2.17 px</br>
+    <b>fwhm (y):</b> 1.92 px</br>
+    <b>flags:</b>
+    <ul>
+
+        None
+
+    </ul>
+
+        Query this object on <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?output.format=HTML&Coord=&Radius=10&Radius.unit=arcmin" target="_blank">Simbad</a>
+    </br>
+</div>
+
+
+	<form id="page_form" method="post" action="/winnow/rank/">
+	<div id="form_widgets" style="padding:1em;">
+		<style type="text/css">
+			#id_rank {
+				list-style-type: none;
+				display:inline;
+			}
+			#id_rank li {
+				display:inline;
+				margin:0px 1em;
+			}
+		</style>
+
+		<input type="hidden" value="2436" name="tc_id">
+            <div style="border-bottom:1px #ddd solid; padding:1em;">
+				<h5>Options:</h5>
+
+			<ul id="id_rank"><li><label for="id_rank_0"><input id="id_rank_0" name="rank" type="radio" value="1" /> Yes</label></li>
+<li><label for="id_rank_1"><input id="id_rank_1" name="rank" type="radio" value="-1" /> No</label></li>
+<li><label for="id_rank_2"><input id="id_rank_2" name="rank" type="radio" value="0" /> I don&#39;t know</label></li></ul>
+			</div>
+
+			<div style="border-bottom:1px #ddd solid; padding:1em;">
+				<h5 style="display:inline;">Mark as interesting:</h5>
+
+			<input id="id_isInteresting" name="isInteresting" type="checkbox" />
+			</div>
+
+
+	</div><!-- form_widgets -->
+
+	<div id="add_comment" style="padding:1em;">
+		You can add a comment below<br>
+			<div class="profilethumb" style="background-image:url(/winnow/media/profile_images/john_doe_profilepic.thumbnail.png); float:left; margin:0.3em"></div>
+		<textarea name="comment" rows="5" cols="50" wrap="soft" maxlength="3000" style="float:left; display:inline-block; height:50px; margin:0.3em;"></textarea>
+	</div><!-- add_comment -->
+	<div style="clear:both;"></div>
+	<br>
+	<input type="submit" class="formbutton" name="submit" value="Rank Transient" />
+	</form>
+	</section>
+    <aside class="sidebar">
+    <ul>
+        <li>
+            <h4>Latest interesting objects</h4>
+            <ul>
+                <a href="/winnow/object/first_cstar_diff_00010/">
+                    <li class="sidebarInteresting">
+                    <img src="first_cstar_diff_00010_subt.thumbnail.png" width="40" height="40" align=bottom>
+                    Object first_cstar_diff_00010 at (327.702, -87.3902) from file: 151K5947_diff.fits.gz
+                    </li>
+                    </a>
+            </ul>
+        </li>
+        <li>
+            <h4>Latest comments</h4>
+            <ul>
+                <li class="sidebarInteresting">
+                <a href="/winnow/profile/jhon_doe/">
+                    <div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); float:left;"></div>
+                </a>
+                On Oct. 20, 2015, 12:14 p.m. <a href="/winnow/profile/jhon_doe/">jhon_doe</a>
+                commented on <a href="/winnow/object/cstar_june02_predictedreals_11939/">object cstar_june02_predictedreals_11939:</a>
+                <br clear=all>
+                "A case of misalignment bogus"
+                <br>
+                <hr>
+                </li>
+                <li class="sidebarInteresting">
+                <a href="/winnow/profile/jhon_doe/">
+                    <div class="profilethumb" style="background-image:url(john_doe_profilepic.thumbnail.png); float:left;"></div>
+                </a>
+                On Oct. 9, 2015, 3:52 p.m. <a href="/winnow/profile/jhon_doe/">jhon_doe</a>
+                commented on <a href="/winnow/object/cstar_june02_predictedreals_08750/">object cstar_june02_predictedreals_08750:</a>
+                <br clear=all>
+                "something double"
+                <br>
+                <hr>
+                </li>
+
+                <li class="sidebarInteresting">
+
+                <a href="/winnow/profile/peter/">
+                    <div class="profilethumb" style="background-image:url(peter_profilepic.thumbnail.gif); float:left;"></div>
+                </a>
+                On Oct. 8, 2015, 10:08 a.m. <a href="/winnow/profile/peter/">peter</a>
+                commented on <a href="/winnow/object/cstar_june02_predictedreals_06912/">object cstar_june02_predictedreals_06912:</a>
+                <br clear=all>
+                "Woow"
+                <br>
+                <hr>
+                </li>
+            </ul>
+        </li>
+        </ul>
+    </aside>
+    <div class="clear"></div>
+</div>
+<footer>
+    <div class="footer-content width">
+        <ul>
+            <li><h4>Participating Institutions</h4></li>
+            <li><a href="http://www.utrgv.edu/en-us/">University of Texas at Rio Grande Valley</a></li>
+            <li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
+            <li><a href="http://www.unc.edu.ar">Universidad Nacional de Cordoba</a></li>
+            <li><a href="http://www.tamu.edu">Texas A&M University</a></li>
+        </ul>
+        <ul class="endfooter">
+            <li><h4>Useful links</h4></li>
+            <li><a href="http://www.utrgv.edu/en-us/">University of Texas at Rio Grande Valley</a></li>
+            <li><a href="http://toros.phys.utb.edu">TOROS main website</a></li>
+            <li><a href="http://cgwa.phys.utb.edu">Center for Gravitational Wave Astronomy (CGWA)</a>
+            <li><a href="http://www.iate.oac.uncor.edu/en">Instituto de Astronomía Teórica y Experimental</a></li>
+        </ul>
+
+        <div class="clear"></div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; UTRGV 2015. <a href="http://zypopwebtemplates.com/">Free CSS Website Templates</a> by ZyPOP</p>
+    </div>
+</footer>
+</div>
+</body>
+</html>
