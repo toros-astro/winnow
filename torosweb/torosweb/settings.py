@@ -45,6 +45,15 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.humanize',
     'django_comments',
+    'django_nyt',
+    'mptt',
+    'sekizai',
+    'sorl.thumbnail',
+    'wiki',
+    'wiki.plugins.attachments',
+    'wiki.plugins.notifications',
+    'wiki.plugins.images',
+    'wiki.plugins.macros',
     'stdimage',
     'winnow',
     'rbmanager',
@@ -73,6 +82,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.debug',
+                'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -99,6 +110,11 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 COMMENTS_ALLOW_PROFANITIES = True
+
+# Settings for Wiki app
+WIKI_ACCOUNT_HANDLING = True
+WIKI_ACCOUNT_SIGNUP_ALLOWED = False
+ANONYMOUS = False
 
 try:
     from local_settings import *  # noqa

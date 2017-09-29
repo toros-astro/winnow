@@ -1,2 +1,3 @@
 django<1.10
 pillow
+wiki==0.2.4
