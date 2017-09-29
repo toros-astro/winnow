@@ -1,0 +1,18 @@
+{% extends "wiki/base_site.html" %}
+
+{% block wiki_site_title %} - TOROS Wiki{% endblock %}
+
+{% block wiki_header_branding %}
+<a class="navbar-brand" href="/">The TOROS Project</a>
+{% endblock %}
+
+{% block wiki_header_navlinks %}
+<ul class="nav navbar-nav">
+  <li class="active"><a href="{% url 'winnow:index' %}">Winnow</a></li>
+  <li class="active"><a href="{% url 'broker:index' %}">Broker</a></li>
+  <li class="active"><a href="{% url 'wiki:root' %}">Wiki</a></li>
+</ul>
+{% endblock %}
+
+{% block wiki_footer_logo %}
+{% endblock %}
