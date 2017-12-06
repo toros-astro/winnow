@@ -57,7 +57,7 @@ def rank(request):
             # Fetch any tc not ranked yet
             ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
             tc = TransientCandidate.objects.filter(dataset=ds).\
-                exclude(ranking=Ranking.objects.all())[0]
+                exclude(ranking__in=Ranking.objects.all())[0]
         except IndexError:
             # Fetch any tc not ranked by the current user
             try:
@@ -65,7 +65,7 @@ def rank(request):
                 ds = Dataset.objects.filter(isCurrent=True).reverse()[0]
                 tc = TransientCandidate.objects.filter(dataset=ds)\
                     .exclude(
-                        ranking=Ranking.objects.filter(ranker=current_user))[0]
+                        ranking__in=Ranking.objects.filter(ranker=current_user))[0]
             except IndexError:
                 tc = None
 
